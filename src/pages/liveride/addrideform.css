@@ -1,0 +1,42 @@
+/* AddRideForm.css */
+
+.add-ride-form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .add-ride-form h2 {
+    margin-top: 0;
+  }
+  
+  .add-ride-form label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .add-ride-form input,
+  .add-ride-form textarea,
+  .add-ride-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .add-ride-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-ride-form button:hover {
+    background-color: #45a049;
+  }
+  

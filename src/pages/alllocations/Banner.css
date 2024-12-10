@@ -1,0 +1,57 @@
+/* Default styles for desktop */
+.video-container {
+  height: 450px;
+  position: relative;
+  margin-top: 70px;
+
+}
+
+/* Media query for mobile devices */
+@media only screen and (max-width: 600px) {
+  .video-container {
+      height: 150px;
+      margin-top: 70px;
+  }
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Just styling the content of the div, the *magic* in the previous rules */
+.video-container .content {
+  z-index: 1;
+  position: relative;
+  padding: 10px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(47, 45, 45, 0), rgba(47, 45, 45, 0.638) 40%, rgba(47, 45, 45, 0.9));
+}
+
+.BannerHeader{
+  text-align: center;
+  font-family: 'inter', sans-serif;
+  color: white;
+  margin-top: 28%;
+  margin-bottom: 2px;
+  font-weight: bolder;
+}
+
+.BannerSearchBar{
+  width: 600px;
+
+
+}
+
+.BannerButtonGroup{
+  margin-bottom: 10px;
+
+}
+.scoreHolder{
+  width: 500px;
+ height: 570px;
+ 
+}

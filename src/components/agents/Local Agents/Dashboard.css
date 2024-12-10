@@ -1,0 +1,267 @@
+.dashboard-container {
+    display: flex;
+    height: 100%;
+    min-height: 100vh;
+    font-family: 'Noto serif Sinhala',sans-serif;
+  }
+  .powermain{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-image: url('../../../assets/ahentdashbg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: overlay;
+  }
+  .dsbHeader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 10vh;
+    color: #f3f4ff;
+    background-color: #cccccc0e;
+    border-radius: 20px;
+  }
+  .dsbHeader h2{
+    -webkit-box-reflect: below 1px linear-gradient(transparent,rgba(0, 0, 0, 0.137));
+  }
+  /* Sidebar */
+  .logobox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .logobox img{
+    width: 50px;
+    margin: 10px 0px 10px 0px;
+  }
+
+  .sidebar {
+    width: 250px;
+    background-color: #06101bee;
+    padding: 10px;
+  }
+  
+  .sidebar .dbbtns {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: #252633;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+    border-radius: 10px;
+  }
+  .sidebar .dbbtns i {
+    font-size: 14px;
+  }
+  
+  .sidebar .dbbtns:hover {
+    background-color: #8d91a6;
+    color: black;
+  }
+  
+  /* Main content */
+  .main-content {
+    width: auto;
+    max-width: 100%;
+    flex: 1;
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.164);
+    background-blend-mode: overlay;
+    color: white;
+  }
+  
+  /* Section headings */
+  h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  /* Example section styling */
+  .section-container {
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .v-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.v-cards{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  flex-wrap: wrap;
+  z-index: 1;
+  padding: 15px;
+}
+
+.v-cards .v-text-card{
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 30px;
+  box-shadow: 20px 20px 50px rgba(0,0,0,0.5);
+  border-radius: 15px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.5);
+  border-left: 1px solid rgba(255,255,255,0.5);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+  transition: 0.4s;
+}
+.v-cards .v-text-card:hover{
+  transform: scale(1.1);
+}
+.v-cards .v-text-card .v-content{
+  padding: 20px;
+  text-align: center;
+}
+
+.v-cards .v-text-card .v-content h2{
+  position: absolute;
+  top: -100px;
+  right: 30px;
+  font-size: 8em;
+  color: rgba(255,255,255,0.03);
+  pointer-events: none;
+}
+.v-cards .v-text-card .v-content h3{
+  font-size: 1.6em;
+  color: #fff;
+  z-index: 1;
+  padding-top: 10px;
+  margin-bottom: 10px;
+  font-family: 'Noto serif Sinhala',sans-serif;
+}
+.v-cards .v-text-card .v-content h5{
+  font-size: .5m;
+  color: #fff;
+  font-weight: 50;
+  padding: 20px;
+  
+}
+.v-cards .v-text-card .v-content a{
+  position: relative;
+  display: inline-block;
+  padding: 8px 20px;
+  margin-top: 15px;
+  background: rgb(231, 224, 224);
+  color: #000;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transition: .4s;
+}
+.v-cards .v-text-card .v-content a:hover{
+  opacity: 0.7;
+}
+
+.activee {
+  display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: #e4e4ffd2;
+    color: #080a22;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+    border-radius: 10px; /* Text color when active */
+}
+.active {
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: left;
+    font-weight: 800;
+    background-color: #77fcd413 ;
+    padding: 5px 8px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+}
+.useremailindb{
+  font-size: 10px;
+  color: #cfcbcb;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+@media (max-width: 580px) {
+  .sidebar .dbbtns {
+    font-size: 1px;
+  }
+  .sidebar .dbbtns i {
+    font-size: 14px;
+  }
+  .activee {
+      padding: 15px;
+      font-size: 10px;   
+  }
+  h2 {
+    margin-top: 20px;
+    padding: 5px;
+    font-size: 15px;
+  }
+  .v-cards{
+    max-width: 1000px;
+    
+  }
+  .v-cards .v-text-card{
+    position: relative;
+    width: 200px;
+    height: 300px;
+    margin: 30px;
+    box-shadow: 20px 20px 50px rgba(0,0,0,0.5);
+    border-radius: 15px;
+    background: rgba(255,255,255,0.1);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.5);
+    border-left: 1px solid rgba(255,255,255,0.5);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+    transition: 0.4s;
+  }
+  .useremailindb{
+    display: none;
+  }
+  
+}
+
+.red-dot {
+  display: inline-block;
+  width: 6px;  /* Size of the dot */
+  height: 6px; /* Size of the dot */
+  border-radius: 50%; /* Makes it a circle */
+  background-color: red; /* Color of the dot */
+}

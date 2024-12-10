@@ -1,0 +1,91 @@
+.mkting {
+    position: relative;
+    width: 100%;
+    height: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: overlay;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.mkting1 {
+    background-image: url(https://www.tenstickers-srilanka.com/webp/photomural/large/5f438a876d7ba.webp);
+    border-radius: 10%;
+}
+
+.mkting2 {
+    background-image: url(https://media.assettype.com/outlooktraveller%2F2023-09%2Ff966fef8-9f32-44dd-b30c-ca73f5567cf9%2Fshutterstock_2223350811.jpg);
+    border-radius: 10%;
+}
+
+.mkting3 {
+    background-image: url(https://res.cloudinary.com/dqdcmluxj/image/upload/v1733430777/pexels-lokmansevim-9307952_z0vyej_unfgdk.webp);
+    border-radius: 10%;
+}
+
+.mkting4 {
+    background-image: url(https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?cs=srgb&dl=pexels-chanwalrus-958545.jpg&fm=jpg);
+    border-radius: 10%;
+}
+
+.mktingconntent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    height: auto;
+    min-height: 400px;
+    background: rgba(19, 19, 19, 0);
+    border-radius: 20px;
+    border-radius: 20px;
+    padding: 10px;
+    margin-top: 30px;
+    z-index: 0;
+    box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.979);
+    background: rgba(14, 14, 14, 0);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.082);
+}
+
+.mktingboxes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    width: 500px;
+    height: 350px;
+    background: #16161652;
+    margin: 10px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(82, 82, 82, 0.37);
+    transition: 0.2s;
+    border-top: 3px solid #cfcfcf00;
+    border-left: 3px solid #cfcfcf00;
+    border: 1px solid rgba(255, 255, 255, 0.192);
+}
+
+.mktingboxes:hover {
+    transform: translateY(-10px);
+}
+
+.mktfont {
+    font-family: "Poppins", sans-serif;
+    font-size: 24px;
+    color: white;
+    text-transform: uppercase;
+}
+
+@media only screen and (max-width: 766px) {
+    .mktingconntent {
+        flex-direction: column;
+    }
+    .mktingboxes {
+        width: 300px;
+    }
+    
+}

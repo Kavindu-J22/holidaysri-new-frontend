@@ -1,0 +1,192 @@
+.agentfemaincont{
+    width: 90%;
+    display: flex;
+    flex-direction: space-between;
+    padding: 20px;
+    gap: 20px;
+}
+.agffedisccipbox{
+    color: #fff;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+}
+.agffedisccipbox p{
+    font-family: "Jost", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+.front-face, .contentafe, .back-face{
+    position: absolute;
+}
+.agentfeimgbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    background-color: antiquewhite;
+    padding: 25px;
+    box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.979);
+    background: rgba(14, 14, 14, 0);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.082);
+    border-radius: 10px;
+}
+.agfecentr{
+    top: 50%;
+    left: 50%;
+    height: 400px;
+    width: 290px;
+    transform-style: preserve-3d;
+    perspective: 1000px;  
+}
+.agfecentr:hover > .back-face{
+    transform: rotateY(0deg);
+}
+.agfecentr:hover > .front-face{
+    transform: rotateY(-180deg);
+}
+.ff1, .bb1{
+    height: 400px;
+    width: 290px;
+    text-align: center;
+    background: linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)) ,url(https://media.istockphoto.com/id/1316971089/photo/yes-how-can-i-help-you-with-your-flight.jpg?s=612x612&w=0&k=20&c=VftR7Jc5GUD2RAU4s9IXEsLq_eKBGhpGZ8OhwPYyAFI=);
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px; 
+    backface-visibility: hidden;
+    transition: transform .7s cubic-bezier(.4, .3, .3, 1);
+    transform-style: preserve-3d;
+    box-shadow: 10px 10px 20px rgba(0,0,0,.5);
+}
+.ff2, .bb2{
+    height: 400px;
+    width: 290px;
+    text-align: center;
+    background: linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)) ,url(https://cdn.mos.cms.futurecdn.net/wPJMtZM65m52Em4uqE6qK9.jpg);
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px; 
+    backface-visibility: hidden;
+    transition: transform .7s cubic-bezier(.4, .3, .3, 1);
+    transform-style: preserve-3d;
+    box-shadow: 10px 10px 20px rgba(0,0,0,.5);
+}
+
+.contentafe{
+    left: 0;
+    top: 50%;
+    width: 100%;
+    perspective: 100px;
+    transform: translateY(-50%) translateZ(60px) scale(.94);
+    padding: 20px;
+}
+.front p{
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-shadow: 0 5px 5px rgba(0,0,0,.5);
+}
+.front p::after{
+    content: '';
+    display: block;
+    left: 0;
+    right: 0;
+    height: 2px;
+    width: 100px;
+    margin: 0 auto;
+    margin-top: 10px;
+    background: #fff;
+}
+.front span{
+    color: #fff;
+    font-weight: 500;
+    font-size: 1em;
+    text-shadow: 0 5px 5px rgba(0,0,0,.5);
+}
+.back-face{
+    background: #0a2942;
+    transform: rotateY(180deg);
+}
+.back{
+    color: #fff;
+}
+.back h2{
+    font-size: 30px;
+    padding-bottom: 5px;
+}
+.back a{
+    color: #fff;
+    font-size: 1em;
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+@media screen and (max-width: 768px){
+    .agentfemaincont{
+        width: 95%;
+        flex-direction: column;
+    }
+    .agffedisccipbox{
+        width: 100%;
+        display: flex;
+    }
+    .agfecentr{
+        height: 300px;
+        width: 100px;  
+        transform: translateX(-40px);
+    }
+    .front-face, .back-face{
+        height: 300px;
+        width: 200px;
+        text-align: center;
+        
+    }
+    .agentfeimgbox{
+        margin-top: 20PX;
+        flex-direction: column;
+        margin-left: 40px;
+        transform: translateX(-40px);
+    }
+
+    .front p{
+        font-size: 1.2em;
+    }
+    .front span{
+        font-size: .8em;
+    }
+    .back h2{
+        font-size: 1.5em;
+    }
+    .back a{
+        font-size: .8em;
+    }
+
+    .about-us-header h2 {
+        font-size: 2rem;
+    }
+    
+    .about-us-header p {
+        padding: 5px;
+        font-size: .8rem;
+    }
+    .main-abt-Content{
+        flex-direction: column-reverse;
+    }
+    .main-abt-Content img {
+        max-width: 100px;
+        margin-bottom: 10px;
+    }
+    .about-us-content p {
+        font-size: .8rem;
+    }
+}

@@ -1,0 +1,50 @@
+.loginform {
+    margin-top: 2%;
+    background-color: rgba(255, 255, 255, 0.5); 
+    width: 70%;
+    padding: 24px;
+    border-radius: 30px;
+    margin-left: 35px;
+    padding-bottom: 16px;
+}
+.googlecoluricon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 20px;
+    padding: 5px 8px;
+    background-color: #ffffff7b;
+    border-radius: 50px;
+}
+.joinwithUs{
+    display: flex;
+    color: #045444;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0px 5px;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.joinwithUs:hover{
+    transform: translateX(10px);
+    color: #045444;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .joinwithUs{
+        display: flex;
+        color: #045444;
+        font-size: 15px;
+        margin: 0px 5px;
+        text-decoration: none;
+        transition: .3s;
+    }
+    .fogotpw{
+        display: flex;
+        justify-content: center;
+        margin: 15px 0px;
+    }
+}

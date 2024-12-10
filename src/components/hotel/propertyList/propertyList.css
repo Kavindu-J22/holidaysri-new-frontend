@@ -1,0 +1,270 @@
+/* .myProgressBar{
+  min-height: 50vh;
+  background: hsla(214, 20%, 21%, 0.678);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+}
+.myProgressBar-wrapper{
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  gap: 25px;
+  padding: 20px 0px 60px 0px;
+}
+.honecontentdiv{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.homeTitlen{
+  width: 100%;
+  font-size: 23px;
+  color: rgb(221, 218, 218);
+  padding: 20px 0px 20px 20px;
+  font-family: "Edu AU VIC WA NT Hand", cursive;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.myProgressBar-container{
+  width: 28vmin;
+  height: 28vmin;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  align-items: center;  
+  justify-content: space-around;
+  padding: 1em 0;
+  position: relative;
+  font-size: 16px;
+  border-radius: .5em;
+  background: #cfd2d888;
+  border-top: 1px solid rgba(255, 255, 255, 0.359);
+  border-left: 1px solid rgba(255, 255, 255, 0.359);
+  overflow: hidden;
+  -webkit-box-reflect: below 1px linear-gradient(transparent,rgba(0, 0, 0, 0.103));
+  transition: .4s;
+  
+}
+.myProgressBar-container:nth-child(1){
+  background-image: url(https://cf.bstatic.com/xdata/images/xphoto/square300/57584488.webp?k=bf724e4e9b9b75480bbe7fc675460a089ba6414fe4693b83ea3fdd8e938832a6&o=);
+  background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.493);
+    background-blend-mode: overlay;
+}
+.myProgressBar-container:nth-child(2){
+  background-image: url(https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-apartments_300/9f60235dc09a3ac3f0a93adbc901c61ecd1ce72e.jpg);
+  background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.493);
+    background-blend-mode: overlay;
+}
+.myProgressBar-container:nth-child(3){
+  background-image: url(https://cf.bstatic.com/static/img/theme-index/carousel_320x240/bg_resorts/6f87c6143fbd51a0bb5d15ca3b9cf84211ab0884.jpg);
+  background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.493);
+    background-blend-mode: overlay;
+}
+.myProgressBar-container:nth-child(4){
+  background-image: url(https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-villas_300/dd0d7f8202676306a661aa4f0cf1ffab31286211.jpg);
+  background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.493);
+    background-blend-mode: overlay;
+}
+.myProgressBar-container:nth-child(5){
+  background-image: url(https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-chalet_300/8ee014fcc493cb3334e25893a1dee8c6d36ed0ba.jpg);
+  background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.493);
+    background-blend-mode: overlay;
+}
+
+.myProgressBar-container:hover{
+  transform: translateY(-10px);
+}
+.myProgressBar-container::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.082);
+  transform: skew(25deg);
+}
+.myProgressBar-container i{
+  color: #115fc4;
+  font-size: 3em;
+  text-align: center;
+}
+.myProgressBar-container span.upnums{
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 2em;
+}
+.myProgressBar-container span.upnumsText{
+  color: rgb(226, 217, 217);
+  font-size: 1.5em;
+  text-align: center;
+  pad: 0.7em 0;
+  font-weight: 400;
+  line-height: 0;
+}
+.myProgressBar-container img{
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  opacity: 0.8;
+
+}
+
+@media screen and (max-width: 1024px){
+  .myProgressBar-wrapper{
+      width: 80vw;
+  }
+  .myProgressBar-container{
+      height: 30vmin;
+      width: 30vmin;
+      font-size: 14px;
+  }
+}
+@media screen and (max-width: 768px){
+  .myProgressBar-wrapper{
+      width: 90vw;
+      flex-wrap: wrap;
+      gap: 30px;
+  }
+  .myProgressBar-container{
+      height: 26vmin;
+      width: calc(50% -40%);
+      font-size: 14px;
+  }
+}
+@media screen and (max-width: 480px){
+  .myProgressBar-wrapper{
+      gap: 15px;
+  }
+  .myProgressBar-container{
+      height: 25vmin;
+      width: 80%;
+      font-size: 14px;
+  }
+}
+.forPlussmark{
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.forPlussmark p{
+  font-size: 25px;
+} */
+
+.myProgressBar{
+  min-height: 50vh;
+  background: hsla(214, 20%, 21%, 0.678);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  border-top: 7px solid #15191d8a;
+  border-bottom: 7px solid #15191d8a;
+}
+
+.homeTitlen{
+  width: 100%;
+  font-size: 23px;
+  color: rgb(221, 218, 218);
+  padding: 20px 0px 20px 20px;
+  font-family: "Jost", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.myProgressBar-wrapper{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  gap: 25px;
+  padding: 60px 20px 60px 20px;
+  box-shadow: 0 16px 32px 0 rgba(0, 0, 0, 0.979);
+  background: rgba(14, 14, 14, 0);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.082);
+  border-radius: 10px;
+  margin-bottom: 60px;
+}
+
+.myProgressBar-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(8, 8, 8, 0.329);
+  border-radius: 10px;
+  padding: 25px;
+  border-top: 1px solid #616060;
+  border-left: 1px solid #616060;
+}
+
+.myProgressBar-container img{
+  width: 200px;
+  height: 150px;
+  border-radius: 20px;
+}
+
+.forPlussmark{
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  margin-top: 10px;
+  color: #4bd0c1;
+}
+
+.forPlussmark span{
+  font-size: 1em;
+}
+.forPlussmark p{
+  font-size: .7em;
+}
+.upnumsText{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+.bpexbtn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  padding: 5px;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  background-color: #ffffff0f;
+  transition: .2s;
+}
+.bpexbtn:hover{
+  transform: scale(1.1);
+}
+
+@media screen and (max-width: 768px){
+  .myProgressBar-wrapper{
+    flex-direction: column;
+  }
+}

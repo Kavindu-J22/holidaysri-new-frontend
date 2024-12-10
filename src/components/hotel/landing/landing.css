@@ -1,0 +1,197 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.main {
+    width: 100%;
+    height: 100vh;
+}
+.Mainlogo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+    
+}
+.logoimg{
+    width: 45%;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.title {
+    font-size: 80px;
+    transition: 2s ease;
+}
+
+.desc {
+    font-size: 20px;
+    transition: 2s ease;
+    margin-left: 5px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.glass {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    width: 150px;
+    height: 150px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: border-color 1s ease;
+}
+
+.glass:hover {
+    border-radius: 20px;
+    border: 2px solid #48BB78;
+}
+
+.menu {
+    width: 100%;
+    max-width: 1024px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    z-index: 1;
+}
+
+.hamburgerMenu {
+    display: none;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: .4s;
+}
+.navbar:hover{
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.navContainer {
+    width: 100%;
+    max-width: 1024px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    font-weight: 500;
+}
+
+.navButton {
+    margin-left: 20px;
+    border: none;
+    padding: 5px 10px;
+    font-size: 15px;
+    cursor: pointer;
+    color: white;
+    background-color: transparent;
+    border-radius: 20px;
+    transition: border-color 1s ease;
+}
+
+.navButton:hover {
+    border: 2px solid #48BB78;
+    border-radius: 20px;
+}
+
+.travelAgent {
+    position: absolute;
+    display: flexbox;
+    align-items: center;
+    justify-content: center;
+    bottom: 40px;
+    font-size: 16px;
+}
+
+.travelAgentButton {
+    border: none;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.travelAgentButtonWrap {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px;
+}
+
+
+@media only screen and (max-width: 480px) {
+    .title {
+        font-size: 50px;
+    }
+
+    .desc {
+        font-size: 18px;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    .menu.is-open {
+        display: block;
+    }
+
+    .hamburgerMenu {
+        margin-top: 10px;
+        display: block;
+    }
+
+    .glass {
+        height: 30px;
+    }
+} */

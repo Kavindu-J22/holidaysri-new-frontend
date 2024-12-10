@@ -1,0 +1,90 @@
+.full-home-container{
+  overflow-x: hidden;
+}
+.homeContainer { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.main_container{
+  background-image: url('../../assets/background.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: overlay;
+    font-family: Poppins;
+    
+}
+
+.homeTitle {
+  width: 1024px;
+  font-size: 20px;
+  color: rgb(245, 240, 240);
+  padding: 25px 0px 25px 0px;
+}
+
+.vehicleContiner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding-block: var(--section-padding); 
+  background-color: rgba(210, 221, 233, 0.212); 
+  width: 100%; 
+  backdrop-filter: blur(8px);
+}
+.agentContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding-block: var(--section-padding); 
+  background-color: hsla(215, 22%, 20%, 0.678);
+  width: 100%; 
+  border-bottom: 8px solid #09090f52;
+}
+
+.marketPlaceContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding-block: var(--section-padding); 
+  background-color: rgba(210, 221, 233, 0.212); 
+  width: 100%; 
+  backdrop-filter: blur(8px);
+}
+
+.travelPartnerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding-block: var(--section-padding); 
+  background-color: rgba(210, 221, 233, 0.212); 
+  width: 100%; 
+  backdrop-filter: blur(8px);
+}
+
+.tourGuideContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding-block: var(--section-padding); 
+  background-color: rgba(210, 221, 233, 0.212); 
+  width: 100%; 
+  backdrop-filter: blur(8px);
+}
+
+.tourPackageContainer {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+.hotels{
+  width: 100%;
+}

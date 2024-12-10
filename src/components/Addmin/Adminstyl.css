@@ -1,0 +1,36 @@
+ .Adminback{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-image: url('../.././assets/AdminImg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: overlay;
+}
+.sidebarAdmin {
+    width: 250px;
+    background-color: #111214ee;
+    padding: 10px;
+  }
+  
+  .sidebarAdmin button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: #1e1e27;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+    border-radius: 10px;
+  }
+  
+  .sidebarAdmin button:hover {
+    background-color: #53576b;
+    color: black;
+  }

@@ -1,0 +1,73 @@
+.maintaxcont{
+    background: url(https://wallpapers.com/images/hd/finance-gold-coins-and-graphs-7a9ktmlo09qgrhtc.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.maintaxcont h2{
+    margin-top: 10px;
+    color: #fff;
+    font-size: 2rem;
+    text-shadow: 10px 5px 40px #fff;
+}
+.ratecontentcont{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(212, 221, 221, 0.411);
+    border-top: 1px solid #3f3d3d;
+    border-right: 1px solid #3f3d3d;
+    border-radius: 20px;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.ratelables{
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    text-shadow: 5px 5px 10px #111;
+}
+.ratelables label{
+    width: 250px;
+}
+
+.ratelables input{
+    color: #fff;
+    width: 250px;
+    border: 1px solid #fff;
+    background-color: none;
+    border-radius: 10px;
+    padding: 5px;
+    transition: .3s;
+}
+.ratelables input:hover{
+    background-color: #353333;
+    border: #353333;
+}
+.backtohomebtn{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 20px;
+    font-size: .7em;
+    color: #fff;
+    padding: 5px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    background-color: #ffffff1b;
+    backdrop-filter: blur(10px);
+    transition: .2s;
+}
+.backtohomebtn:hover{
+    transform: translate(5px);
+    color: #111;
+    background-color: #ffffffa1;
+    border: none;
+}

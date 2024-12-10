@@ -1,0 +1,74 @@
+/* styles.css */
+
+.add-hotel-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+ .add-hotel-form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .add-hotel-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  .add-hotel-form input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  .add-hotel-form textarea {
+    height: 120px;
+  }
+  
+  .add-hotel-form select {
+    appearance: none;
+    padding-right: 30px;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+  }
+  
+  .add-hotel-form button[type="submit"] {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+ .add-hotel-form button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Form Success Message */
+  .success-message {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    color: #155724;
+  }
+  
