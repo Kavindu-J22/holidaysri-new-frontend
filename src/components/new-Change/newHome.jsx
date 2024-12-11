@@ -112,7 +112,7 @@ const HomePage = () => {
           backgroundImage: "url('https://res.cloudinary.com/dqdcmluxj/image/upload/v1733868433/Hsllogo_dfvrap.png')",  // Replace with your logo path
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
-          animation: "upDown 3s ease-in-out infinite",
+          animation: "upDown 2s ease-in-out infinite",
           marginBottom: "20px",
         }}
       />

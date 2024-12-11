@@ -1514,7 +1514,7 @@ body {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px); /* Move logo up */
+    transform: translateY(-15px); /* Move logo up */
   }
   100% {
     transform: translateY(0); /* Move logo back down */
