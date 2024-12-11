@@ -21,6 +21,9 @@ import {
 import InputAdornment from "@mui/material/InputAdornment";
 import { useNavigate } from "react-router-dom";
 import { LocationOn, Hotel, DirectionsCar, Route as RouteIcon, LocalOffer, Event, AccessTime, Email, Work, Person, MyLocation, Category } from '@mui/icons-material';
+import { FaSignInAlt } from "react-icons/fa";
+import { GiArchiveRegister } from "react-icons/gi";
+import { MdDashboardCustomize } from "react-icons/md";
 
 // Custom hook to fetch data from API
 const fetchData = async (url) => {
@@ -265,7 +268,7 @@ const handlePrevious = () => {
             }}
             onClick={() => navigate('/signin')} // Navigate to Sign In page
           >
-            Sign In
+            Sign In &nbsp; <FaSignInAlt /> 
           </Button>
           <Button
             variant="contained"
@@ -277,7 +280,7 @@ const handlePrevious = () => {
             }}
             onClick={() => navigate('/signup')} // Navigate to Sign Up page
           >
-            Sign Up
+            Sign Up &nbsp; <GiArchiveRegister />
           </Button>
         </Box>
       ) : (
@@ -300,7 +303,7 @@ const handlePrevious = () => {
             }}
             onClick={() => navigate('/dashboard')} // Navigate to the dashboard page
           >
-            Go to your Dashboard
+            Go to your Dashboard &nbsp; <MdDashboardCustomize />
           </Button>
         </Box>
       )}
@@ -673,7 +676,7 @@ const Section = ({ title, icon, data }) => {
             width: "95%",
           }}
         >
-          This category currently has no advertisements.
+          No Results founded at this moment..🛫
         </Typography>
       )}
       {data.length > 0 && (

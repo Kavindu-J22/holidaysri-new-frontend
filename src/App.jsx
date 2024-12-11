@@ -73,7 +73,7 @@ const SidebarWithNavbar = () => {
     // Simulate loading time (e.g., fetching data)
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3500); // Change 3000 to the desired loading time in milliseconds
+    }, 3000); // Change 3000 to the desired loading time in milliseconds
 
     return () => clearTimeout(timer);
   }, []);
