@@ -1,89 +1,104 @@
-import { CircularProgress, Box, Typography } from '@mui/material';
-import loader from "../../assets/loader.mp4";
+import React from 'react';
+import Lottie from 'lottie-react';
+import animationData from '../../assets/Animation -.json'; // Adjust path as needed
+import logo from '../../assets/BlackLogo.png'; // Import your logo image (adjust path as needed)
 
-const Loader = () => {
+const Loafer = () => {
   return (
-    <Box
-      sx={{
+<div
+      style={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative',
+        alignItems: 'center',
         height: '100vh',
-        overflow: 'hidden',
+        background: `url('https://res.cloudinary.com/dqdcmluxj/image/upload/v1733950122/lodback_rehp6e.webp') no-repeat center center`, // Replace with your image URL
+        backgroundSize: 'cover', // Ensures the image covers the entire background
+        textAlign: 'center',
+        position: 'relative',
       }}
     >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)', // Center the video
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: { xs: '100%', sm: '80%', md: '700px' }, // Responsive width
-          height: 'auto',
-        }}
-      >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          style={{
-            width: '100%',
-            height: 'auto',
-            objectFit: 'cover',
-          }}
-        >
-          <source src={loader} type="video/mp4" />
-        </video>
-      </Box>
 
-      <CircularProgress
-        sx={{
-          color: '#00ffd9', // Cyan color with green-blue mix
-          animation: 'spin 1s linear infinite',
-          zIndex: 1,
-          filter: 'brightness(1.5) drop-shadow(0 0 6px #00e5ff)', // Brighten and add glow
+      {/* Logo Behind the GIF */}
+      <img
+        src={logo}
+        alt="Logo"
+        style={{
+          position: 'absolute',
+          width: '220px',
+          height: '220px',
+          marginBottom: '115px',
+          opacity: 0.4,
+          zIndex: 1, // Place logo behind the GIF
+          animation: 'fadeInlogo 0.8s ease-in-out infinite alternate',
         }}
       />
-      <Typography
-        variant="h6"
-        sx={{
-          mt: 2,
-          color: '#fff',
-          animation: 'fadeIn 1s infinite alternate',
-          zIndex: 1,
+
+      {/* Lottie Animation with Border Radius */}
+      <div
+        style={{
+          borderRadius: '100px',
+          overflow: 'hidden', // Ensures border-radius applies to the GIF
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Optional shadow for a modern look
+          position: 'relative',
+          opacity: 0.7, // Slight transparency for the logo
+          zIndex: 2, // Place GIF above the logo
         }}
       >
-        HolidaySri Loading...
-      </Typography>
+        <Lottie animationData={animationData} loop style={{ width: 300, height: 300 }} />
+      </div>
 
+      {/* Text Below the GIF */}
+      <h1
+        style={{
+          marginTop: '50px',
+          fontSize: '24px',
+          color: '#333',
+          fontFamily: "'Roboto', sans-serif", // Modern font
+          animation: 'fadeIn 1s ease-in-out infinite alternate', // Simple animation
+          position: 'relative',
+          zIndex: 2, // Place text above the logo
+        }}
+      >
+        Holidaysri Loading...
+      </h1>
+
+      {/* Circular Loader Below the Text */}
+      <div
+        style={{
+          marginTop: '15px',
+          width: '50px',
+          height: '50px',
+          border: '5px solid #ddd',
+          borderTop: '5px solid #4CAF50', // Customizable color for the circular loader
+          borderRadius: '50%',
+          animation: 'spin 0.7s linear infinite', // Animation for spinning
+          position: 'relative',
+          zIndex: 2, // Place loader above the logo
+        }}
+      ></div>
+
+      {/* Keyframes for Animations */}
       <style>
         {`
           @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
           }
+
           @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { opacity: 0.1; }
+            100% { opacity: 1; }
           }
-          
-          /* Adjust video size for mobile view */
-          @media (max-width: 600px) {
-            video {
-              max-width: 100%;
-              height: auto;
-            }
+
+          @keyframes fadeInlogo {
+            0% { opacity: 0.1; }
+            100% { opacity: 0.4; }
           }
         `}
       </style>
-    </Box>
+    </div>
   );
 };
 
-export default Loader;
+export default Loafer;

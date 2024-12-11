@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import {
   Box,
@@ -26,6 +26,8 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import MenuIcon from "@mui/icons-material/Menu";
 
+                  // Pages
+
 //New Imports
 import Navbar from "./components/new-Change/navbar"; // Import your implemented Navbar component
 import NewHome from "./components/new-Change/newHome"
@@ -34,6 +36,7 @@ import NewHome from "./components/new-Change/newHome"
 import LoginMobile from "./components/hotel/Login/LoginMobile";
 import Register from "./components/hotel/Register/Register";
 import AllLocation from "./pages/alllocations/Locations";
+import Loader from "./components/loader/Loader";
 
 
 // Sidebar items with icons
@@ -63,6 +66,23 @@ const PageContent = ({ title }) => (
 
 // Main Layout Component
 const SidebarWithNavbar = () => {
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time (e.g., fetching data)
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3500); // Change 3000 to the desired loading time in milliseconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <Loader />; // Show Loading component when loading
+  }
+
+
   return (
     <Router>
       <CssBaseline />
