@@ -12,6 +12,9 @@ import { useTheme } from "@mui/material/styles";
 import { Avatar } from "@mui/material";
 import Logo from "../../assets/Hsllogo.png";
 import { useNavigate } from "react-router-dom";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'; 
+import LoginIcon from '@mui/icons-material/Login'; // Login icon
+import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Register icon
 
 const Navbar = ({ isLoggedIn }) => {
   const theme = useTheme();
@@ -72,8 +75,8 @@ const Navbar = ({ isLoggedIn }) => {
             src={Logo}
             alt="Logo"
             style={{
-              width: "40px",
-              height: "40px",
+              width: "37px",
+              height: "37px",
               objectFit: "contain",
             }}
           />
@@ -123,6 +126,7 @@ const Navbar = ({ isLoggedIn }) => {
               textTransform: "capitalize",
               display: "flex",
               alignItems: "center",
+              padding: { xs: "5px 7px", sm: "8px 16px" }, // Smaller button padding on mobile view
               gap: 1,
               '&:hover': {
                 borderColor: "white",
@@ -166,49 +170,79 @@ const Navbar = ({ isLoggedIn }) => {
 
         {/* Right Side Icons/Buttons */}
         <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            alignItems: "center",
-          }}
-        >
-          {(authToken && userRole) || userEmail ? (
-            <>
-              <IconButton color="inherit">
-                <NotificationsIcon />
-              </IconButton>
-              <IconButton color="inherit" onClick={handleProfileClick}>
-                <AccountCircleIcon />
-              </IconButton>
-              <Button color="inherit" sx={{ fontWeight: 500 }} onClick={handleSignout}>
-                Logout
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                color="inherit"
-                sx={{ fontWeight: 500 }}
-                onClick={() => navigate("/login")}
-              >
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.primary.contrastText,
-                  "&:hover": {
-                    backgroundColor: theme.palette.primary.dark,
-                  },
-                }}
-                onClick={() => navigate("/register")}
-              >
-                Register
-              </Button>
-            </>
-          )}
-        </Box>
+  sx={{
+    display: "flex",
+    gap: 1,
+    alignItems: "center",
+    flexDirection: "row", // Keep items in a row for larger screens
+  }}
+>
+  {(authToken && userRole) || userEmail ? (
+    <>
+      <IconButton
+        color="inherit"
+        sx={{
+          fontSize: { xs: "15px", sm: "24px" }, // Smaller icons on mobile view
+        }}
+      >
+        <NotificationsIcon />
+      </IconButton>
+      <IconButton
+        color="inherit"
+        onClick={handleProfileClick}
+        sx={{
+          fontSize: { xs: "15px", sm: "24px" }, // Smaller icons on mobile view
+        }}
+      >
+        <AccountCircleIcon />
+      </IconButton>
+      <Button
+        color="inherit"
+        sx={{
+          fontWeight: 500,
+          fontSize: { xs: "10px", sm: "10px" }, // Smaller button text on mobile view
+          padding: { xs: "5px 5px", sm: "8px 16px" }, // Smaller button padding on mobile view
+        }}
+        onClick={handleSignout}
+        startIcon={<ExitToAppIcon />}
+      >
+        Logout
+      </Button>
+    </>
+  ) : (
+    <>
+      <Button
+        color="inherit"
+        sx={{
+          fontWeight: 500,
+          fontSize: { xs: "10px", sm: "10px" }, // Smaller button text on mobile view
+          padding: { xs: "6px 8px", sm: "8px 16px" }, // Smaller button padding on mobile view
+        }}
+        onClick={() => navigate("/login")}
+        startIcon={<LoginIcon />}
+      >
+        Login
+      </Button>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: "#075a48",
+          color: "white",
+          "&:hover": {
+            backgroundColor: "#093f34",
+          },
+          fontSize: { xs: "10px", sm: "10px" }, // Smaller button text on mobile view
+          padding: { xs: "5px 8px", sm: "8px 16px" }, // Smaller button padding on mobile view
+        }}
+        onClick={() => navigate("/register")}
+        startIcon={<PersonAddIcon />}
+      >
+        Register
+      </Button>
+    </>
+  )}
+</Box>
+
       </Toolbar>
     </AppBar>
   );

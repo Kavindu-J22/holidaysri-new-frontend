@@ -1,16 +1,30 @@
 /* Default styles for desktop */
 .video-container {
-  height: 450px;
+  height: 350px;
   position: relative;
   margin-top: 70px;
-
+  border-radius: 40px;
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.2),  /* Soft shadow */
+    0 1px 3px rgba(0, 0, 0, 0.06), /* Subtle inner shadow */
+    0 10px 15px rgba(0, 0, 0, 0.4); /* Deeper shadow for depth */
+  transition: transform 0.3s, box-shadow 0.3s;
 }
+
+.video-container:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 
+    0 8px 10px rgba(0, 0, 0, 0.15),
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 20px 25px rgba(0, 0, 0, 0.45); /* Enhanced shadow on hover */
+}
+
 
 /* Media query for mobile devices */
 @media only screen and (max-width: 600px) {
   .video-container {
       height: 150px;
-      margin-top: 70px;
+      margin-top: 40px;
   }
 }
 
@@ -29,6 +43,7 @@
   padding: 10px;
   height: 100%;
   background: linear-gradient(to bottom, rgba(47, 45, 45, 0), rgba(47, 45, 45, 0.638) 40%, rgba(47, 45, 45, 0.9));
+  border-radius: 40px;
 }
 
 .BannerHeader{

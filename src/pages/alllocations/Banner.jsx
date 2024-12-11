@@ -7,7 +7,7 @@ export default function Banner() {
     <div className="video-container">
       <Grid sx={{width:'300px'}}>
 
-      <video autoPlay muted loop style={{width:"100%",height:"100%"}}>
+      <video autoPlay muted loop style={{width:"100%", height:"100%", borderRadius:"40px",}}>
         <source
           src="https://res.cloudinary.com/dqdcmluxj/video/upload/v1733431924/Sri_Lanka_-_Heart_of_the_Indian_Ocean_eb32zv.mp4"
           type="video/mp4"
@@ -16,18 +16,20 @@ export default function Banner() {
       </Grid>
      
       <div className="content">
-        <Grid display={{ md: "block", xs: "none" }}>
-          <h2 style={{  textAlign: 'center',
-  fontFamily: 'inter', 
-  color: 'white',
-  marginTop: '380px',
-  marginBottom: '2px',
-  fontWeight: '500',}}>
-            Discover Paradise: Embark on a Journey Through Sri Lanka's
-            Enchanting Beauty{" "}
-          </h2>
-        </Grid>
-        <Grid display={{ lg: "none", xs: "block" }}></Grid>
+      <Grid display={{ md: "block", xs: "none" }}>
+        <h2
+          style={{
+            textAlign: "center",
+            fontFamily: "'Dancing Script', cursive", // Use the new decorative font
+            color: "#d3d4c7c1",
+            marginTop: "280px",
+            marginBottom: "2px",
+            fontWeight: "200",
+          }}
+        >
+          Discover Paradise: Embark on a Journey Through Sri Lanka's Enchanting Beauty{" "}
+        </h2>
+      </Grid>
       </div>
     </div>
   );
