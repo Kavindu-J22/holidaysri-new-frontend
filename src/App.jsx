@@ -25,6 +25,8 @@ import GuideIcon from "@mui/icons-material/EmojiPeople";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import MenuIcon from "@mui/icons-material/Menu";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 
                   // Pages
 
@@ -52,6 +54,8 @@ const navItems = [
   { name: "Tour Guide", path: "/tour-guide", icon: <GuideIcon /> },
   { name: "Market Advertisements", path: "/market-ads", icon: <CampaignIcon /> },
   { name: "Photos From Travelers", path: "/photos", icon: <PhotoLibraryIcon /> },
+  { name: "Pricing & Memberships", path: "/pricing", icon: <AttachMoneyIcon /> },
+  { name: "Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
 ];
 
 // Component for rendering pages
@@ -191,26 +195,26 @@ const SideBarWithConditionalRender = () => {
 
           {/* Sidebar Drawer */}
           <Drawer
-  variant="temporary"
-  open={open}
-  onClose={toggleSidebar}
-  sx={{
-    display: { xs: "block", md: "none" },
-    "& .MuiDrawer-paper": {
-      width: 240,
-      boxSizing: "border-box",
-      paddingTop: "55px",
-      backgroundImage: `url("https://res.cloudinary.com/dqdcmluxj/image/upload/v1733864317/wallpaperflare.com_wallpaper_yv6p0n.webp")`, // Set your background image URL
-      backgroundSize: "cover", // Ensure the image covers the drawer area
-      backgroundPosition: "center", // Center the image
-      backgroundRepeat: "no-repeat", // Prevent image repetition
-      display: "flex", // Make the drawer content flexible
-      flexDirection: "column", // Arrange items in a column
-      minHeight: "100vh", // Ensure the drawer takes full height of the screen
-      overflowY: "auto", // Enable scrolling when content exceeds the height
-    },
-  }}
->
+          variant="temporary"
+          open={open}
+          onClose={toggleSidebar}
+          sx={{
+            display: { xs: "block", md: "none" },
+            "& .MuiDrawer-paper": {
+              width: 240,
+              boxSizing: "border-box",
+              paddingTop: "55px",
+              backgroundImage: `url("https://res.cloudinary.com/dqdcmluxj/image/upload/v1733864317/wallpaperflare.com_wallpaper_yv6p0n.webp")`, // Set your background image URL
+              backgroundSize: "cover", // Ensure the image covers the drawer area
+              backgroundPosition: "center", // Center the image
+              backgroundRepeat: "no-repeat", // Prevent image repetition
+              display: "flex", // Make the drawer content flexible
+              flexDirection: "column", // Arrange items in a column
+              minHeight: "100vh", // Ensure the drawer takes full height of the screen
+              overflowY: "auto", // Enable scrolling when content exceeds the height
+            },
+          }}
+        >
   {/* Service Menu Topic */}
   <Typography
     variant="h6"
@@ -232,6 +236,7 @@ const SideBarWithConditionalRender = () => {
         key={item.name}
         component={Link}
         to={item.path}
+        onClick={toggleSidebar}
         sx={{
           backgroundColor: location.pathname === item.path ? "rgba(0, 0, 0, 0.3)" : "transparent", // Active link highlight
           fontWeight: "600",
@@ -284,26 +289,33 @@ const SideBarWithConditionalRender = () => {
 
 
 
-          {/* Permanent Sidebar for desktop */}
-          <Drawer
-  variant="permanent"
-  sx={{
-    display: { xs: "none", md: "block" },
-    width: 240,
-    flexShrink: 0,
-    "& .MuiDrawer-paper": {
-      width: 240,
-      boxSizing: "border-box",
-      backgroundImage: `url("https://res.cloudinary.com/dqdcmluxj/image/upload/v1733864317/wallpaperflare.com_wallpaper_yv6p0n.webp")`, // Set your background image URL
-      backgroundSize: "cover", // Ensure the image covers the drawer area
-      backgroundPosition: "center", // Center the image
-      backgroundRepeat: "no-repeat", // Prevent image repetition
-      display: "flex", // Make the drawer content flexible
-      flexDirection: "column", // Arrange items in a column
-      justifyContent: "space-between", // Space between top and bottom content
-    },
-  }}
->
+    {/* Permanent Sidebar for desktop */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: "none", md: "block" },
+          width: 240,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: 240,
+            boxSizing: "border-box",
+            backgroundImage: `url("https://res.cloudinary.com/dqdcmluxj/image/upload/v1733864317/wallpaperflare.com_wallpaper_yv6p0n.webp")`, // Set your background image URL
+            backgroundSize: "cover", // Ensure the image covers the drawer area
+            backgroundPosition: "center", // Center the image
+            backgroundRepeat: "no-repeat", // Prevent image repetition
+            display: "flex", // Make the drawer content flexible
+            flexDirection: "column", // Arrange items in a column
+            justifyContent: "space-between", // Space between top and bottom content
+            overflow: "hidden", // Hide any overflow
+            overflowY: "scroll", // Allow scrolling but hide scrollbar
+            scrollbarWidth: "none", // For Firefox
+            "&::-webkit-scrollbar": {
+              display: "none", // For Chrome, Safari, and Edge
+            },
+          },
+        }}
+      >
+
   {/* Service Menu Section */}
   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
     <Typography
