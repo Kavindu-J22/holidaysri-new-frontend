@@ -40,8 +40,8 @@ const Locations = (props) => {
 <div
   style={{
     paddingTop: "15px",
-    paddingLeft: "40px",
-    paddingRight: "40px",
+    paddingLeft: "30px",
+    paddingRight: "30px",
     background: "none",
     minHeight: "100vh", // Corrected capitalization
     width: "100%", // Ensure full width
@@ -53,8 +53,8 @@ const Locations = (props) => {
 
       <Box
   sx={{
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    margin: { lg: "40px", xs: "60px 5px" },
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    margin: { lg: "20px", xs: "65px 5px" },
     padding: { lg: "24px", xs: "10px" },
     borderRadius: "20px",
   }}

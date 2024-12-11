@@ -19,6 +19,8 @@ import {
   Business as BusinessIcon,
 } from "@mui/icons-material";
 import InputAdornment from "@mui/material/InputAdornment";
+import { useNavigate } from "react-router-dom";
+import { LocationOn, Hotel, DirectionsCar, Route as RouteIcon, LocalOffer, Event, AccessTime, Email, Work, Person, MyLocation, Category } from '@mui/icons-material';
 
 // Custom hook to fetch data from API
 const fetchData = async (url) => {
@@ -40,59 +42,380 @@ const HomePage = () => {
   const [partners, setPartners] = useState([]);
   const [advertisements, setAdvertisements] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetching data from all the APIs
     fetchData("https://holidaysri-backend-9xm4.onrender.com/location/").then(
-      setDestinations
+      (data) =>setDestinations(data.reverse()) // No reverse here for Destinations
     );
     fetchData("https://holidaysri-backend-9xm4.onrender.com/hotel/").then(
-      setHotels
+      (data) => setHotels(data.reverse()) // Reverse the data here
     );
     fetchData("https://holidaysri-backend-9xm4.onrender.com/package/").then(
-      setPackages
+      (data) => setPackages(data.reverse()) // Reverse the data here
     );
     fetchData("https://holidaysri-backend-9xm4.onrender.com/vehicle/").then(
-      setVehicles
+      (data) => setVehicles(data.reverse()) // Reverse the data here
     );
     fetchData("https://holidaysri-backend-9xm4.onrender.com/realTime/").then(
-      setLiveRides
+      (data) => setLiveRides(data.reverse()) // Reverse the data here
     );
     fetchData(
       "https://holidaysri-backend-9xm4.onrender.com/localPackage/"
-    ).then(setLocalPackages);
+    ).then((data) => setLocalPackages(data.reverse())); // Reverse the data here
     fetchData("https://holidaysri-backend-9xm4.onrender.com/event/").then(
-      setEvents
+      (data) => setEvents(data.reverse()) // Reverse the data here
     );
     fetchData(
       "https://holidaysri-backend-9xm4.onrender.com/api/agent/allAgentProfiles"
-    ).then(setAgents);
+    ).then((data) => setAgents(data.reverse())); // Reverse the data here
     fetchData(
       "https://holidaysri-backend-9xm4.onrender.com/api/guide/allGuideProfiles"
-    ).then(setGuiders);
+    ).then((data) => setGuiders(data.reverse())); // Reverse the data here
     fetchData(
       "https://holidaysri-backend-9xm4.onrender.com/api/partner/allPartnerProfiles"
-    ).then(setPartners);
+    ).then((data) => setPartners(data.reverse())); // Reverse the data here
     fetchData("https://holidaysri-backend-9xm4.onrender.com/product/").then(
-      setAdvertisements
+      (data) => setAdvertisements(data.reverse()) // Reverse the data here
     );
   }, []);
-
-  // Function to filter data by search term
+  
   const filteredData = (data) => {
-    return data.filter(
-      (item) =>
-        item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.location?.toLowerCase().includes(searchTerm.toLowerCase())
+    return data
+      .filter(
+        (item) =>
+          item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.locationName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.district?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.hotelName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.vehicleNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.CurrentLocation?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.Route?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.eventName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.productName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.packageName?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .reverse(); // Reverse the filtered data to maintain the last-to-first order
+  };
+
+  const AnimatedLogo = () => {
+    return (
+      <Box
+        sx={{
+          width: "100px",  // Adjust logo size
+          height: "100px",  // Adjust logo size
+          backgroundImage: "url('https://res.cloudinary.com/dqdcmluxj/image/upload/v1733868433/Hsllogo_dfvrap.png')",  // Replace with your logo path
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          animation: "upDown 3s ease-in-out infinite",
+          marginBottom: "20px",
+        }}
+      />
     );
   };
 
+  const authToken = localStorage.getItem("authToken");
+  const userRole = localStorage.getItem("userRole");
+  const userEmail = localStorage.getItem("userEmail");
+
+  const handleProfileClick = () => {
+    const role = localStorage.getItem("userRole");
+
+    if (role === "admin") {
+        window.location.href = "/admin";
+    } else if (role === "seller") {
+        window.location.href = "/foreign-dashboard";
+    } else if (role === "agent") {
+        window.location.href = "/local-dashboard";
+    } else if (role === "guide") {
+        window.location.href = "/Guider-Dashboard";
+    }else if (role === "partner") {
+        window.location.href = "/Partner-Dashboard";
+    } else {
+        window.location.href = "/MainuserDashboard";
+    }
+};
+
+const images = [
+  {
+    src: "https://res.cloudinary.com/dqdcmluxj/image/upload/v1733936634/Green_and_Yellow_Illustration_Minimalist_Travel_Agency_Facebook_Cover_1_wdgc4e.webp",
+    title: "Beautiful Beach 🏝️",
+    description: "Experience the serene beauty of sandy beaches and crystal-clear waters.",
+  },
+  {
+    src: "https://res.cloudinary.com/dqdcmluxj/image/upload/v1733936634/Colorful_Travel_Agency_Facebook_Cover_lnx2ax.webp",
+    title: "Majestic Mountains 🏕️",
+    description: "Explore breathtaking mountain ranges and connect with nature.",
+  },
+  {
+    src: "https://res.cloudinary.com/dqdcmluxj/image/upload/v1733936633/Peach_Travel_Facebook_Cover_b8oqdm.webp",
+    title: "Historic Landmarks 🏯",
+    description: "Discover the rich history and culture of iconic landmarks.",
+  },
+  {
+    src: "https://res.cloudinary.com/dqdcmluxj/image/upload/v1733936633/Ginger_Sunny_Just_Living_Photo_Collage_Facebook_Cover_pailhl.webp",
+    title: "Vibrant Cityscapes 🌇",
+    description: "Enjoy the energy and excitement of bustling cities around the world.",
+  },
+  {
+    src: "https://res.cloudinary.com/dqdcmluxj/image/upload/v1733936634/Yellow_And_White_Illustrated_Time_To_Travel_Facebook_Cover_vjptif.webp",
+    title: "Tranquil Forests 🍃",
+    description: "Immerse yourself in the calm and tranquility of lush green forests.",
+  },
+  {
+    src: "https://res.cloudinary.com/dqdcmluxj/image/upload/v1733936633/Blue_Creative_Photocentric_Travel_Facebook_Cover_jas9fd.webp",
+    title: "Exotic Islands 🪸",
+    description: "Relax and rejuvenate on the most stunning islands on the planet.",
+  },
+];
+
+const [currentIndex, setCurrentIndex] = useState(0);
+
+// Auto-advance the slider
+useEffect(() => {
+  const interval = setInterval(() => {
+    handleNext();
+  }, 3000); // Change slide every 3 seconds
+  return () => clearInterval(interval);
+}, [currentIndex]);
+
+const handleNext = () => {
+  setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+};
+
+const handlePrevious = () => {
+  setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+};
+  
   return (
-    <Box sx={{ paddingTop: "90px", paddingLeft: "20px", paddingRight: "20px", paddingBottom: "10px",
+    <Box sx={{ paddingTop: "70px", paddingLeft: "20px", paddingRight: "20px", paddingBottom: "10px",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         minHeight: "100vh",
         color: "white",
      }}>
+
+<Box
+      sx={{
+        paddingTop: '50px',
+        paddingLeft: '20px',
+        paddingRight: '20px',
+        paddingBottom: '10px',
+        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+        height: "auto",
+        color: 'white',
+        textAlign: 'center',
+        borderRadius: '20px',
+        marginBottom: '20px',
+        '@media (max-width: 600px)': {
+          paddingTop: '35px',
+          paddingLeft: '10px',
+          paddingRight: '10px',
+          maxHeight: 'unset',
+          borderRadius: '10px',
+          minHeight: '40vh',
+          height: "auto"
+        },
+      }}
+    >
+      {/* Welcome Section */}
+      <Box
+      sx={{
+        marginBottom: '20px',
+        maxHeight: '50vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        '@media (max-width: 600px)': {
+          maxHeight: 'unset',
+          marginBottom: '10px',
+        },
+      }}
+    >
+      <AnimatedLogo />
+      <Typography variant="h4" sx={{ marginBottom: '5px', fontSize: { xs: '1.5rem', sm: '2rem' }, fontWeight: "600", }}>
+        Welcome to Holidaysri..!
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          marginBottom: '30px',
+          fontSize: { xs: '0.9rem', sm: '1rem' },
+          fontStyle: 'italic',
+          color: 'lightgray',
+        }}
+      >
+        Discover amazing places, travel packages, and services. Let's plan your next adventure together!
+      </Typography>
+
+
+      {(!authToken && !userRole) || !userEmail ? (
+        // Display Sign In and Sign Up Buttons for logged-out users
+        <Box>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              marginRight: '10px',
+              backgroundColor: 'rgb(12, 74, 97)',
+              '&:hover': { backgroundColor: 'rgb(18, 96, 124)' },
+              fontSize: { xs: '0.8rem', sm: '1rem' },
+            }}
+            onClick={() => navigate('/signin')} // Navigate to Sign In page
+          >
+            Sign In
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{
+              backgroundColor: 'rgb(19, 130, 138)',
+              '&:hover': { backgroundColor: 'rgb(25, 160, 170)' },
+              fontSize: { xs: '0.8rem', sm: '1rem' },
+            }}
+            onClick={() => navigate('/signup')} // Navigate to Sign Up page
+          >
+            Sign Up
+          </Button>
+        </Box>
+      ) : (
+        // Display user-specific info when logged in
+        <Box>
+          <Typography variant="h5" sx={{ marginBottom: '10px', fontSize: { xs: '1.2rem', sm: '1.5rem' }, fontWeight: "600", paddingTop: "10px", }}>
+            Hello.. {userEmail.split('@')[0]} 🖐️
+          </Typography>
+
+          <Typography variant="body2" sx={{ marginBottom: '30px', fontSize: { xs: '0.8rem', sm: '1rem' }, paddingLeft: "10px", paddingRight: "10px", color: 'lightgray', }}>
+            Your personalized experience awaits. Manage your bookings, view your progress, and more!
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: 'rgb(18, 104, 82)',
+              '&:hover': { backgroundColor: 'rgb(18, 104, 72, 0.7)' },
+              fontSize: { xs: '0.8rem', sm: '1rem' },
+            }}
+            onClick={() => navigate('/dashboard')} // Navigate to the dashboard page
+          >
+            Go to your Dashboard
+          </Button>
+        </Box>
+      )}
+    </Box>
+
+    <Box
+      sx={{
+        position: "relative",
+        width: "100%",
+        maxWidth: "1000px",
+        margin: "0 auto",
+        padding: "20px 0",
+        textAlign: "center",
+      }}
+    >
+      {/* Image Container */}
+      <Box
+  sx={{
+    position: "relative",
+    overflow: "hidden",
+    borderRadius: "85px",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  }}
+>
+  <Box
+    sx={{
+      display: "flex",
+      transition: "transform 0.5s ease-in-out",
+      transform: `translateX(-${currentIndex * 100}%)`,
+      width: `${images.length * 100}%`,
+    }}
+  >
+    {images.map((image, index) => (
+      <Box
+        key={index}
+        sx={{
+          flex: "0 0 100%",
+          textAlign: "center",
+          position: "relative", // Ensure overlay is on top of the image
+        }}
+      >
+        {/* Dark Overlay */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.1)", // Dark overlay
+            borderRadius: "80px", // Matching border radius of image
+            zIndex: 1, // Ensure the overlay is above the image
+          }}
+        />
+        
+        <Box
+          component="img"
+          src={image.src}
+          alt={image.title}
+          sx={{
+            width: { xs: "18%", md: "1000px" },
+            height: { xs: "200px", md: "330px" },
+            objectFit: "cover",
+            borderRadius: "80px",
+            zIndex: 0, // Ensure image stays behind overlay
+          }}
+        />
+      </Box>
+    ))}
+  </Box>
+</Box>
+
+
+      {/* Text Content */}
+      <Box sx={{ marginTop: "20px" }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+          {images[currentIndex].title}
+        </Typography>
+        <Typography variant="body1" sx={{ marginTop: "10px", color: "gray" }}>
+          {images[currentIndex].description}
+        </Typography>
+      </Box>
+
+      {/* Navigation Buttons */}
+      <Button
+        onClick={handlePrevious}
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "10px",
+          transform: "translateY(-50%)",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          color: "white",
+          "&:hover": { backgroundColor: "black" },
+        }}
+      >
+        {"<"}
+      </Button>
+      <Button
+        onClick={handleNext}
+        sx={{
+          position: "absolute",
+          top: "50%",
+          right: "10px",
+          transform: "translateY(-50%)",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          color: "white",
+          "&:hover": { backgroundColor: "black" },
+        }}
+      >
+        {">"}
+      </Button>
+    </Box>
+
+</Box>
         
       {/* Search Bar */}
       <Box
@@ -141,7 +464,7 @@ const HomePage = () => {
 
 
       {/* Sections */}
-      <Section title="Destinations" icon={<LocationIcon />} data={(destinations)} />
+      <Section title="Destinations" icon={<LocationIcon />} data={filteredData(destinations)} />
       <Section title="Hotels & Accommodations" icon={<HotelIcon />} data={filteredData(hotels)} />
       <Section title="Tour Packages" icon={<LocalOfferIcon />} data={filteredData(packages)} />
       <Section title="Vehicles" icon={<DirectionsCarIcon />} data={filteredData(vehicles)} />
@@ -156,7 +479,23 @@ const HomePage = () => {
   );
 };
 
-const Section = ({ title, icon, data }) => (
+
+const Section = ({ title, icon, data }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto change the image every 3 seconds
+  useEffect(() => {
+    if (data[0]?.images?.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % data[0].images.length); // Handle images in the first item
+      }, 3000); // Change image every 3 seconds
+
+      return () => clearInterval(interval); // Cleanup on component unmount
+    }
+  }, [data]);
+
+  return (
+  
     <Box sx={{ marginBottom: "40px", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", }}>
       <Typography
         variant="h5"
@@ -190,27 +529,108 @@ const Section = ({ title, icon, data }) => (
                   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                 }}
               >
+                {/* Image Slider */}
                 <Box
                   sx={{
-                    height: { xs: "100px", sm: "180px" },
-                    background: `url(${item.images?.[0]}) center/cover no-repeat`,
-                    borderRadius: "8px",
-                    marginBottom: "15px",
+                    height: { xs: '100px', sm: '180px' },
+                    background: `url(${item.images?.[currentIndex] || item.images?.[0] || 'https://res.cloudinary.com/dqdcmluxj/image/upload/v1733916761/pie-chart-svgrepo-com_azn0zv.svg'}) center/cover no-repeat`,
+                    borderRadius: '8px',
+                    marginBottom: '15px',
+                    transition: 'background-image 0.5s ease-in-out', // Smooth transition for image change
                   }}
-                />
+                />    
+
                 <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
-                  {item.name}
+                  {item.name && <><LocationOn sx={{ marginRight: 1 }} />{item.name}</>}
                 </Typography>
+
                 <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
-                  {item.locationName}
+                  {item.locationName && <><LocationOn sx={{ marginRight: 1 }} />{item.locationName}</>}
                 </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  {item.hotelName && <><Hotel sx={{ marginRight: 1 }} />{item.hotelName}</>}
+                </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  {item.packageName && <><LocalOffer sx={{ marginRight: 1 }} />{item.packageName}</>}
+                </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  {item.vehicleNumber && <><DirectionsCar sx={{ marginRight: 1 }} />{item.vehicleNumber}</>}
+                </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  {item.Route && <><RouteIcon sx={{ marginRight: 1 }} />{item.Route}</>}
+                </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  {item.localPackageName && <><LocalOffer sx={{ marginRight: 1 }} />{item.localPackageName}</>}
+                </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  {item.eventName && <><Event sx={{ marginRight: 1 }} />{item.eventName}</>}
+                </Typography>
+
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  {item.productName && <>{item.productName}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.eventLocation && <><LocationOn sx={{ marginRight: 1 }} />{item.eventLocation}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.date && <><AccessTime sx={{ marginRight: 1 }} />{item.date}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.subrole && <><Work sx={{ marginRight: 1 }} />{item.subrole}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.email && <><Email sx={{ marginRight: 1 }} />{item.email}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.experience && <><Work sx={{ marginRight: 1 }} />{item.experience}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.vehicleOwnerName && <><Person sx={{ marginRight: 1 }} />{item.vehicleOwnerName}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.CurrentLocation && <><MyLocation sx={{ marginRight: 1 }} />{item.CurrentLocation}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.location && <><LocationOn sx={{ marginRight: 1 }} />{item.location}</>}
+                </Typography>
+
+                <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "10px" }}>
+                  {item.category && <><Category sx={{ marginRight: 1 }} />{item.category}</>}
+                </Typography>
+
                 <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "20px" }}>
-                  {item.location}
+                  {item.Vehiclecategory && <><Category sx={{ marginRight: 1 }} />{item.Vehiclecategory}</>}
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "15px", marginTop: "10px", color: "#d3f4e7" }}>
+                  {item.price ? (
+                    title === "Tour Packages" ? (
+                      `${item.price} USD`
+                    ) : (
+                      `${item.price} LKR`
+                    )
+                  ) : null}
+                </Typography>
+                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "15px", marginTop: "10px", color: "#d3f4e7" }}>
+                  {item.ticketPrice}
                 </Typography>
 
                 {title === "Destinations" && (
                 <Typography variant="body2" sx={{ color: "#ccc", marginBottom: "15px" }}>
-                    {item.district} District
+                    <MyLocation /> {item.district} District
                 </Typography>
 
                 )}
@@ -286,6 +706,7 @@ const Section = ({ title, icon, data }) => (
       )}
     </Box>
   );
+};
   
 
 export default HomePage;

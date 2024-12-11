@@ -146,19 +146,19 @@ const SideBarWithConditionalRender = () => {
           onClick={toggleSidebar}
           sx={{
             display: { xs: "flex", md: "none" },
-            position: "absolute",
+            position: "fixed",
             top: 62,
             left: 5,
-            zIndex: 3000, // Ensures the menu icon is always on top
+            zIndex: 5000, // Ensures the menu icon is always on top
             color: "#fff",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", // Background color of the button
+            backgroundColor: "rgba(0, 0, 0, 0.7)", // Background color of the button
             width: 40, // Set a fixed width for the button
             height: 40, // Set a fixed height for the button
             padding: 0, // Remove padding to keep the button a perfect square
             borderRadius: "50%", // Make the button round (optional)
             boxShadow: "none", // Optional: remove shadow for flat look
             "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.1)", // Hover effect for better UX
+              backgroundColor: "rgba(0, 0, 0, 0.3)", // Hover effect for better UX
               color: "#333",
             },
             
@@ -216,7 +216,7 @@ const SideBarWithConditionalRender = () => {
           backgroundColor: location.pathname === item.path ? "rgba(0, 0, 0, 0.3)" : "transparent", // Active link highlight
           fontWeight: "600",
           "&:hover": {
-            backgroundColor: "rgba(0, 0, 0, 0.2)", // Hover effect
+            backgroundColor: { xs: "rgba(0, 0, 0, 0.2)", md: "rgba(0, 0, 0, 0.2)" }, // Hover effect
           },
         }}
       >
