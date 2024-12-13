@@ -279,8 +279,26 @@ const SideBarWithConditionalRender = () => {
           <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
             {item.icon}
           </IconButton>
-          <ListItemText primary={item.name} sx={{ color: "#222" }} />
-          {expandedCategory === item.name ? <ExpandMore /> : <ExpandLess />}
+          <ListItemText
+            primary={item.name}
+            sx={{ color: "#222" }}
+          />
+          <Box
+            sx={{
+              width: 25,
+              height: 25,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.3)", // Dark transparency
+              cursor: "pointer",
+            }}
+            onClick={() => handleExpandToggle(item.name)} // Add your expand/collapse logic here
+          >
+            {expandedCategory === item.name ? <ExpandMore sx={{ color: "#fff" }} /> : <ExpandLess sx={{ color: "#fff" }} />}
+          </Box>
+
         </ListItem>
         <Collapse in={expandedCategory === item.name} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
@@ -437,7 +455,21 @@ const SideBarWithConditionalRender = () => {
             primary={item.name}
             sx={{ color: "#222" }}
           />
-          {expandedCategory === item.name ? <ExpandMore /> : <ExpandLess />}
+          <Box
+            sx={{
+              width: 25,
+              height: 25,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.3)", // Dark transparency
+              cursor: "pointer",
+            }}
+            onClick={() => handleExpandToggle(item.name)} // Add your expand/collapse logic here
+          >
+            {expandedCategory === item.name ? <ExpandMore sx={{ color: "#fff" }} /> : <ExpandLess sx={{ color: "#fff" }} />}
+          </Box>
         </ListItem>
         <Collapse in={expandedCategory === item.name} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
