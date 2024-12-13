@@ -35,7 +35,17 @@ import RedeemIcon from "@mui/icons-material/Redeem";
 import CategoryIcon from "@mui/icons-material/Category";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-
+import { Fastfood } from "@mui/icons-material";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import SpaIcon from "@mui/icons-material/Spa";
+import WorkIcon from "@mui/icons-material/Work";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import CardTravelIcon from "@mui/icons-material/CardTravel";
+import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
+import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
 
                   // Pages
 
@@ -54,30 +64,40 @@ import PrisingNew from "./components/prising"
 // Sidebar items with icons
 const navItems = [
   { name: "All Advertisements", path: "/", icon: <HomeIcon /> },
+  { name: "Plan Your Dream Tour with Us", path: "/destinations", icon: <AirplaneTicketIcon /> },
   { name: "Explore Destinations", path: "/destinations", icon: <TravelExploreIcon /> },
   { name: "Hotels & Accommodations", path: "/hotels", icon: <HotelIcon /> },
-  { name: "Live Rides & Pick your Rides", path: "/vehicles", icon: <DirectionsCarIcon /> },
+  { name: "Foods & Beverages", path: "/hotels", icon: <Fastfood /> },
+  { name: "Live Rides Updates", path: "/vehicles", icon: <DepartureBoardIcon /> },
   { name: "Travel Agents & Promo codes", path: "/promo-agents", icon: <LocalOfferIcon /> },
   {
     name: "Other Categories",
     icon: <CampaignIcon />,
     subcategories: [
-      { name: "Doctors", path: "/other-categories/doctors", icon: <MedicalServicesIcon /> },
-      { name: "Lawyers", path: "/other-categories/lawyers", icon: <GavelIcon /> },
-      { name: "Consultants", path: "/other-categories/consultants", icon: <PersonSearchIcon /> },
-      { name: "Buy Gift Packs", path: "/other-categories/gift-packs", icon: <RedeemIcon /> },
+      { name: "Meet Expert Doctors", path: "/other-categories/doctors", icon: <MedicalServicesIcon /> },
+      { name: "Professional Lawyers", path: "/other-categories/lawyers", icon: <GavelIcon /> },
+      { name: "Expert Consultants", path: "/other-categories/consultants", icon: <PersonSearchIcon /> },
+      { name: "Talented Entertainers", path: "/other-categories/consultants", icon: <MusicNoteIcon  /> },
+      { name: "Creative Photographers", path: "/other-categories/consultants", icon: <CameraAltIcon  /> },
+      { name: "Exclusive Gift Packs", path: "/other-categories/gift-packs", icon: <RedeemIcon /> },
       { name: "Souvenirs & Collectibles", path: "/other-categories/collectibles", icon: <CategoryIcon /> },
+      { name: "Daily Grocery Essentials", path: "/other-categories/collectibles", icon: <ShoppingCartIcon  /> },
+      { name: "Organic Herbal Products", path: "/other-categories/collectibles", icon: <SpaIcon  /> },
+      { name: "Exciting Job Opportunities", path: "/other-categories/consultants", icon: <WorkIcon  /> },
     ],
   },
-  { name: "Foreign Tour Packages. ", path: "/tour-packages", icon: <TourIcon /> },
+  { name: "Foreign Tour Packages ", path: "/tour-packages", icon: <TourIcon /> },
   { name: "Local Tour Packages", path: "/tour-packages", icon: <HikingIcon /> },
+  { name: "Customize Tour Package", path: "/tour-packages", icon: <CardTravelIcon /> },
   { name: "Events & Manage Your Event", path: "/events-manage", icon: <EventIcon /> },
-  { name: "Vehicles & Hire Vehicles", path: "/vehicles", icon: <DirectionsCarIcon /> },
-  { name: "Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
-  { name: "Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
+  { name: "Vehicle Rentals & Hire Services", path: "/vehicles", icon: <DirectionsCarIcon /> },
+  { name: "Find Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
+  { name: "Expert Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
   { name: "Photos From Travelers", path: "/photos", icon: <PhotoLibraryIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
+  { name: "Holidaysri Coins", path: "/prising", icon: <CurrencyExchangeIcon /> },
   { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
+  { name: "Customer Support", path: "/partners", icon: <SupportAgentIcon /> },
 ];
 
 // Component for rendering pages
@@ -312,7 +332,9 @@ const SideBarWithConditionalRender = () => {
                 sx={{
                   pl: 4,
                   backgroundColor:
-                    location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "transparent", // Active link highlight for subcategories
+                    location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "#d9f0e65d", // Active link highlight for subcategories
+                    borderBottom: "1px solid #b2b3aafe",
+                  borderRadius: "10px",
                   "&:hover": {
                     backgroundColor: {
                       xs: "rgba(0, 0, 0, 0.2)",
@@ -481,7 +503,9 @@ const SideBarWithConditionalRender = () => {
                 to={subItem.path}
                 sx={{
                   pl: 4,
-                  backgroundColor: location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "transparent",
+                  backgroundColor: location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "#d9f0e65d",
+                  borderBottom: "1px solid #b2b3aafe",
+                  borderRadius: "10px",
                   "&:hover": {
                     backgroundColor: "rgba(0, 0, 0, 0.2)",
                   },
