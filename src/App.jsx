@@ -12,6 +12,7 @@ import {
   IconButton,
   Collapse,
   Divider,
+  Button,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -46,6 +47,9 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import CardTravelIcon from "@mui/icons-material/CardTravel";
 import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
 import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
+import FlashOnIcon from "@mui/icons-material/FlashOn";
+import { BsFillMotherboardFill } from "react-icons/bs";
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
                   // Pages
 
@@ -64,6 +68,7 @@ import PrisingNew from "./components/prising"
 // Sidebar items with icons
 const navItems = [
   { name: "All Advertisements", path: "/", icon: <HomeIcon /> },
+  { name: "Post Your Advertiesment", path: "/destinations", icon: <CampaignIcon /> },
   { name: "Plan Your Dream Tour with Us", path: "/destinations", icon: <AirplaneTicketIcon /> },
   { name: "Explore Destinations", path: "/destinations", icon: <TravelExploreIcon /> },
   { name: "Hotels & Accommodations", path: "/hotels", icon: <HotelIcon /> },
@@ -72,7 +77,7 @@ const navItems = [
   { name: "Travel Agents & Promo codes", path: "/promo-agents", icon: <LocalOfferIcon /> },
   {
     name: "Other Categories",
-    icon: <CampaignIcon />,
+    icon: <BsFillMotherboardFill />,
     subcategories: [
       { name: "Meet Expert Doctors", path: "/other-categories/doctors", icon: <MedicalServicesIcon /> },
       { name: "Professional Lawyers", path: "/other-categories/lawyers", icon: <GavelIcon /> },
@@ -84,6 +89,7 @@ const navItems = [
       { name: "Daily Grocery Essentials", path: "/other-categories/collectibles", icon: <ShoppingCartIcon  /> },
       { name: "Organic Herbal Products", path: "/other-categories/collectibles", icon: <SpaIcon  /> },
       { name: "Exciting Job Opportunities", path: "/other-categories/consultants", icon: <WorkIcon  /> },
+      { name: "Crypto Consulting & Signals", path: "/other-categories/consultants", icon: <TrendingUpIcon  /> },
     ],
   },
   { name: "Foreign Tour Packages ", path: "/tour-packages", icon: <TourIcon /> },
@@ -94,6 +100,7 @@ const navItems = [
   { name: "Find Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
   { name: "Expert Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
   { name: "Photos From Travelers", path: "/photos", icon: <PhotoLibraryIcon /> },
+  { name: "Exclusive Offers & Promotions", path: "/prising", icon: <FlashOnIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
   { name: "Holidaysri Coins", path: "/prising", icon: <CurrencyExchangeIcon /> },
   { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
@@ -177,6 +184,8 @@ const SidebarWithNavbar = () => {
     <Route path="/login" element={<LoginMobile />} />
   </Routes>
 </Box>
+
+
 
       </Box>
     </Router>

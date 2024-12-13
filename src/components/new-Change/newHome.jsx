@@ -24,6 +24,7 @@ import { LocationOn, Hotel, DirectionsCar, Route as RouteIcon, LocalOffer, Event
 import { FaSignInAlt } from "react-icons/fa";
 import { GiArchiveRegister } from "react-icons/gi";
 import { MdDashboardCustomize } from "react-icons/md";
+import CampaignIcon from "@mui/icons-material/Campaign";
 
 // Custom hook to fetch data from API
 const fetchData = async (url) => {
@@ -478,6 +479,37 @@ const handlePrevious = () => {
       <Section title="Tour Guiders" icon={<PersonIcon />} data={filteredData(guiders)} />
       <Section title="Travel Partners" icon={<BusinessIcon />} data={filteredData(partners)} />
       <Section title="Market Advertisements" icon={<BusinessIcon />} data={filteredData(advertisements)} />
+
+            {/* Fixed "Post Your Advertisement" Button */}
+      <Button
+        variant="contained"
+        className="button-post-now"
+        sx={{
+          position: "fixed",
+          top: 80,
+          right: 30,
+          bgcolor: "#09803dd2", // Green color
+          color: "#fff", // Text color
+          fontWeight: "600",
+          borderRadius: "50px", // Rounded edges
+          padding: "8px 15px",
+          animation: "zoomInOut 1s ease-in-out infinite", // Zoom in and out animation
+          transition: "background-color 0.3s ease", // Smooth transition for background color
+          "&:hover": {
+            bgcolor: "darkgreen", // Dark green on hover
+          },
+          // Mobile responsiveness
+          "@media (max-width: 600px)": {
+            top: 70, // Adjust the top margin on small screens
+            right: 10, // Keep it aligned to the right
+            padding: "5px 13px", // Smaller padding for mobile
+            fontSize: "8px", // Smaller font size for mobile
+          },
+        }}
+        startIcon={<CampaignIcon />}
+      >
+        POST Now
+      </Button>
     </Box>
   );
 };
