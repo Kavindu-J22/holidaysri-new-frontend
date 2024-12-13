@@ -9,10 +9,6 @@ const LoginMobile = ({  }) => {
   return (
     <Box
     sx={{
-      backgroundImage: `url(${LoginMobileimg})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
       height: '100vh',
       display: 'flex',
       justifyContent: 'center',

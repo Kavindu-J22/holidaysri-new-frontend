@@ -106,6 +106,7 @@ const Pricing = () => {
           backgroundSize: 'cover', 
           backgroundPosition: 'center', 
           backgroundRepeat: 'no-repeat', 
+          paddingTop: '85px',
           minHeight: '100vh', 
           color: '#fff', 
           display: 'flex', 

@@ -27,6 +27,15 @@ import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import MenuIcon from "@mui/icons-material/Menu";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandshakeIcon from '@mui/icons-material/Handshake';
+import HikingIcon from '@mui/icons-material/Hiking';
+import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import GavelIcon from "@mui/icons-material/Gavel";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import RedeemIcon from "@mui/icons-material/Redeem";
+import CategoryIcon from "@mui/icons-material/Category";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+
 
                   // Pages
 
@@ -39,6 +48,7 @@ import LoginMobile from "./components/hotel/Login/LoginMobile";
 import Register from "./components/hotel/Register/Register";
 import AllLocation from "./pages/alllocations/Locations";
 import Loader from "./components/loader/Loader";
+import PrisingNew from "./components/prising"
 
 
 // Sidebar items with icons
@@ -46,16 +56,28 @@ const navItems = [
   { name: "All Advertisements", path: "/", icon: <HomeIcon /> },
   { name: "Explore Destinations", path: "/destinations", icon: <TravelExploreIcon /> },
   { name: "Hotels & Accommodations", path: "/hotels", icon: <HotelIcon /> },
-  { name: "Tour Packages & Ent. ", path: "/tour-packages", icon: <TourIcon /> },
-  { name: "Events & Manage Events", path: "/events-manage", icon: <EventIcon /> },
-  { name: "Vehicles & Live Rides", path: "/vehicles", icon: <DirectionsCarIcon /> },
-  { name: "Promo Codes & Agents", path: "/promo-agents", icon: <LocalOfferIcon /> },
-  { name: "Travel Partner", path: "/travel-partner", icon: <GroupsIcon /> },
-  { name: "Tour Guide", path: "/tour-guide", icon: <GuideIcon /> },
-  { name: "Market Advertisements", path: "/market-ads", icon: <CampaignIcon /> },
+  { name: "Live Rides & Pick your Rides", path: "/vehicles", icon: <DirectionsCarIcon /> },
+  { name: "Travel Agents & Promo codes", path: "/promo-agents", icon: <LocalOfferIcon /> },
+  {
+    name: "Other Categories",
+    icon: <CampaignIcon />,
+    subcategories: [
+      { name: "Doctors", path: "/other-categories/doctors", icon: <MedicalServicesIcon /> },
+      { name: "Lawyers", path: "/other-categories/lawyers", icon: <GavelIcon /> },
+      { name: "Consultants", path: "/other-categories/consultants", icon: <PersonSearchIcon /> },
+      { name: "Buy Gift Packs", path: "/other-categories/gift-packs", icon: <RedeemIcon /> },
+      { name: "Souvenirs & Collectibles", path: "/other-categories/collectibles", icon: <CategoryIcon /> },
+    ],
+  },
+  { name: "Foreign Tour Packages. ", path: "/tour-packages", icon: <TourIcon /> },
+  { name: "Local Tour Packages", path: "/tour-packages", icon: <HikingIcon /> },
+  { name: "Events & Manage Your Event", path: "/events-manage", icon: <EventIcon /> },
+  { name: "Vehicles & Hire Vehicles", path: "/vehicles", icon: <DirectionsCarIcon /> },
+  { name: "Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
+  { name: "Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
   { name: "Photos From Travelers", path: "/photos", icon: <PhotoLibraryIcon /> },
-  { name: "Pricing & Memberships", path: "/pricing", icon: <AttachMoneyIcon /> },
-  { name: "Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
+  { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
+  { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
 ];
 
 // Component for rendering pages
@@ -128,6 +150,7 @@ const SidebarWithNavbar = () => {
     <Route path="/tour-guide" element={<PageContent title="Tour Guide" />} />
     <Route path="/market-ads" element={<PageContent title="Market Advertisements" />} />
     <Route path="/photos" element={<PageContent title="Photos From Travelers" />} />
+    <Route path="/prising" element={<PrisingNew title="Prising page" />} />
 
     {/* No-side bar pages */}
     <Route path="/register" element={<Register />} />
@@ -153,6 +176,12 @@ const SideBarWithConditionalRender = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false); // State to manage the sidebar toggle
   const [expanded, setExpanded] = useState(true); // State to manage the collapse/expand of the sidebar on mobile
+
+  const [expandedCategory, setExpandedCategory] = useState(null); // Tracks expanded dropdowns
+
+  const handleToggle = (categoryName) => {
+    setExpandedCategory((prev) => (prev === categoryName ? null : categoryName));
+  };
 
   // Toggle sidebar for mobile
   const toggleSidebar = () => setOpen(!open);
@@ -193,8 +222,8 @@ const SideBarWithConditionalRender = () => {
 
 
 
-          {/* Sidebar Drawer */}
-          <Drawer
+        {/* Sidebar Drawer */}
+        <Drawer
           variant="temporary"
           open={open}
           onClose={toggleSidebar}
@@ -215,22 +244,75 @@ const SideBarWithConditionalRender = () => {
             },
           }}
         >
-  {/* Service Menu Topic */}
-  <Typography
-    variant="h6"
-    sx={{
-      marginLeft: "60px",
-      marginTop: "15px",
-      fontWeight: "bold",
-      color: "#333", // Ensure text is visible over the background image
-    }}
-  >
-    Service Menu
-  </Typography>
+          {/* Service Menu Topic */}
+          <Typography
+            variant="h6"
+            sx={{
+              marginLeft: "60px",
+              marginTop: "15px",
+              fontWeight: "bold",
+              color: "#333", // Ensure text is visible over the background image
+            }}
+          >
+            Service Menu
+          </Typography>
 
-  {/* Navigation List */}
-  <List sx={{ mt: 1 }}>
-    {navItems.map((item) => (
+          {/* Navigation List */}
+          <List sx={{ mt: 1 }}>
+  {navItems.map((item) =>
+    item.subcategories ? (
+      <React.Fragment key={item.name}>
+        <ListItem
+          button
+          onClick={() => handleToggle(item.name)}
+          sx={{
+            backgroundColor: expandedCategory === item.name ? "rgba(0, 0, 0, 0.3)" : "transparent", // Highlight expanded category
+            fontWeight: "600",
+            "&:hover": {
+              backgroundColor: {
+                xs: "rgba(0, 0, 0, 0.2)",
+                md: "rgba(0, 0, 0, 0.2)",
+              },
+            },
+          }}
+        >
+          <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
+            {item.icon}
+          </IconButton>
+          <ListItemText primary={item.name} sx={{ color: "#222" }} />
+          {expandedCategory === item.name ? <ExpandMore /> : <ExpandLess />}
+        </ListItem>
+        <Collapse in={expandedCategory === item.name} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {item.subcategories.map((subItem) => (
+              <ListItem
+                button
+                key={subItem.name}
+                component={Link}
+                to={subItem.path}
+                onClick={toggleSidebar}
+                sx={{
+                  pl: 4,
+                  backgroundColor:
+                    location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "transparent", // Active link highlight for subcategories
+                  "&:hover": {
+                    backgroundColor: {
+                      xs: "rgba(0, 0, 0, 0.2)",
+                      md: "rgba(0, 0, 0, 0.2)",
+                    },
+                  },
+                }}
+              >
+                <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
+                  {subItem.icon}
+                </IconButton>
+                <ListItemText primary={subItem.name} sx={{ color: "#222" }} />
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
+      </React.Fragment>
+    ) : (
       <ListItem
         button
         key={item.name}
@@ -241,50 +323,52 @@ const SideBarWithConditionalRender = () => {
           backgroundColor: location.pathname === item.path ? "rgba(0, 0, 0, 0.3)" : "transparent", // Active link highlight
           fontWeight: "600",
           "&:hover": {
-            backgroundColor: { xs: "rgba(0, 0, 0, 0.2)", md: "rgba(0, 0, 0, 0.2)" }, // Hover effect
+            backgroundColor: {
+              xs: "rgba(0, 0, 0, 0.2)",
+              md: "rgba(0, 0, 0, 0.2)",
+            },
           },
         }}
       >
         <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
           {item.icon}
         </IconButton>
-        <ListItemText
-          primary={item.name}
-          sx={{ color: "#222" }} // Ensure text is visible
-        />
+        <ListItemText primary={item.name} sx={{ color: "#222" }} />
       </ListItem>
-    ))}
-  </List>
+      )
+      )}
+    </List>
 
-  {/* Footer Section */}
-  <Box
-    sx={{
-      textAlign: "center",
-      padding: "16px",
-      color: "white",
-      fontSize: "12px",
-      backgroundColor: "rgba(0, 0, 0, 0.5)", // Slight overlay for readability
-      marginTop: "auto", // Ensure footer is pushed to the bottom
-    }}
-  >
-    <Typography variant="body2" sx={{ mb: 1 }}>
-      © holidaysri.com PVT (LTD)
-    </Typography>
-    <Typography variant="body2">
-      <Link to="/privacy-policy" style={{ color: "white", textDecoration: "none", marginRight: "8px" }}>
-        Privacy Policy
-      </Link>
-      |
-      <Link to="/terms-conditions" style={{ color: "white", textDecoration: "none", marginLeft: "8px", marginRight: "8px" }}>
-        Term & Condition
-      </Link>
-      |
-      <Link to="/refund-policy" style={{ color: "white", textDecoration: "none", marginLeft: "8px" }}>
-        Refund Policy
-      </Link>
-    </Typography>
-  </Box>
-</Drawer>
+
+          {/* Footer Section */}
+          <Box
+            sx={{
+              textAlign: "center",
+              padding: "16px",
+              color: "white",
+              fontSize: "12px",
+              backgroundColor: "rgba(0, 0, 0, 0.5)", // Slight overlay for readability
+              marginTop: "auto", // Ensure footer is pushed to the bottom
+            }}
+          >
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              © holidaysri.com PVT (LTD)
+            </Typography>
+            <Typography variant="body2">
+              <Link to="/privacy-policy" style={{ color: "white", textDecoration: "none", marginRight: "8px" }}>
+                Privacy Policy
+              </Link>
+              |
+              <Link to="/terms-conditions" style={{ color: "white", textDecoration: "none", marginLeft: "8px", marginRight: "8px" }}>
+                Term & Condition
+              </Link>
+              |
+              <Link to="/refund-policy" style={{ color: "white", textDecoration: "none", marginLeft: "8px" }}>
+                Refund Policy
+              </Link>
+            </Typography>
+          </Box>
+        </Drawer>
 
 
 
@@ -332,30 +416,77 @@ const SideBarWithConditionalRender = () => {
 
   {/* Navigation List */}
   <List sx={{ mt: 1 }}>
-    {navItems.map((item) => (
+  {navItems.map((item) =>
+    item.subcategories ? (
+      <React.Fragment key={item.name}>
+        <ListItem
+          button
+          onClick={() => handleToggle(item.name)}
+          sx={{
+            backgroundColor: location.pathname === item.path ? "rgba(0, 0, 0, 0.3)" : "transparent",
+            fontWeight: "600",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.2)",
+            },
+          }}
+        >
+          <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
+            {item.icon}
+          </IconButton>
+          <ListItemText
+            primary={item.name}
+            sx={{ color: "#222" }}
+          />
+          {expandedCategory === item.name ? <ExpandMore /> : <ExpandLess />}
+        </ListItem>
+        <Collapse in={expandedCategory === item.name} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {item.subcategories.map((subItem) => (
+              <ListItem
+                button
+                key={subItem.name}
+                component={Link}
+                to={subItem.path}
+                sx={{
+                  pl: 4,
+                  backgroundColor: location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "transparent",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.2)",
+                  },
+                }}
+              >
+                <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
+                  {subItem.icon}
+                </IconButton>
+                <ListItemText primary={subItem.name} sx={{ color: "#222" }} />
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
+      </React.Fragment>
+    ) : (
       <ListItem
         button
         key={item.name}
         component={Link}
         to={item.path}
         sx={{
-          backgroundColor: location.pathname === item.path ? "rgba(0, 0, 0, 0.3)" : "transparent", // Active link highlight
+          backgroundColor: location.pathname === item.path ? "rgba(0, 0, 0, 0.3)" : "transparent",
           fontWeight: "600",
           "&:hover": {
-            backgroundColor: "rgba(0, 0, 0, 0.2)", // Hover effect
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
           },
         }}
       >
         <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
           {item.icon}
         </IconButton>
-        <ListItemText
-          primary={item.name}
-          sx={{ color: "#222" }} // Ensure text is visible
-        />
+        <ListItemText primary={item.name} sx={{ color: "#222" }} />
       </ListItem>
-    ))}
-  </List>
+        )
+      )}
+    </List>
+
 
   {/* Footer Section */}
   <Box

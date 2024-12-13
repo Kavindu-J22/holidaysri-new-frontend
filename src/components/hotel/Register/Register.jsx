@@ -820,11 +820,6 @@ const handleMenuClick = () => {
   return (
     <Grid
       sx={{
-        backgroundImage:
-          'url("https://res.cloudinary.com/dqdcmluxj/image/upload/v1733336447/pexels-photo-1072179_frjk63_js026i.webp")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
         height: "100%",
         paddingLeft: { lg: "0px", xs: "16px" },
         paddingBottom: "24px",
