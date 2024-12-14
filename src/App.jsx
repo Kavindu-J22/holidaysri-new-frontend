@@ -50,12 +50,15 @@ import DepartureBoardIcon from "@mui/icons-material/DepartureBoard";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import { BsFillMotherboardFill } from "react-icons/bs";
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
                   // Pages
 
 //New Imports
 import Navbar from "./components/new-Change/navbar"; // Import your implemented Navbar component
 import NewHome from "./components/new-Change/newHome"
+import Coins from "./components/new-Change/coin"
+
 
 // Old Imports
 import LoginMobile from "./components/hotel/Login/LoginMobile";
@@ -102,7 +105,7 @@ const navItems = [
   { name: "Photos From Travelers", path: "/photos", icon: <PhotoLibraryIcon /> },
   { name: "Exclusive Offers & Promotions", path: "/prising", icon: <FlashOnIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
-  { name: "Holidaysri Coins", path: "/prising", icon: <CurrencyExchangeIcon /> },
+  { name: "Holidaysri Coins", path: "/coins", icon: <CurrencyExchangeIcon /> },
   { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
   { name: "Customer Support", path: "/partners", icon: <SupportAgentIcon /> },
 ];
@@ -121,6 +124,7 @@ const PageContent = ({ title }) => (
 const SidebarWithNavbar = () => {
 
   const [loading, setLoading] = useState(true);
+  const [buttonState, setButtonState] = useState(false); // State to toggle button display
 
   useEffect(() => {
     // Simulate loading time (e.g., fetching data)
@@ -141,6 +145,64 @@ const SidebarWithNavbar = () => {
       <CssBaseline />
       {/* Conditionally render Navbar */}
       <NavbarWithConditionalRender />
+
+      {/* Fixed Button */}
+      <Button
+        onClick={() => setButtonState(!buttonState)}
+        sx={{
+          position: "fixed",
+          top: "150px",
+          right: "0",
+          zIndex: 1000,
+          backgroundColor: "rgba(0,0,0,0.6)", // Default background color
+          boxShadow: "0 4px 8px rgba(64, 64, 64, 0.8)", // Dark gray shadow
+          display: "flex",
+          alignItems: "center",
+          padding: "8px 12px",
+          borderRadius: "20px 0 0 20px", // Top-left and bottom-left border-radius only
+          transition: "width 0.3s ease-in-out, background-color 0.3s ease", // Smooth transitions
+          width: buttonState ? "200px" : "50px", // Dynamic width based on state
+          overflow: "hidden", // Ensure content stays within the button
+          "&:hover": {
+            backgroundColor: "rgba(0,0,0,0.5)", // Hover background color
+            boxShadow: "0 6px 12px rgba(64, 64, 64, 0.9)", // Darker shadow on hover
+          },
+        }}
+      >
+        {buttonState ? (
+          <>
+            <ChevronRight style={{ color: "#fff", marginRight: "8px" }} />
+            <img
+              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp" // Replace with your coin image URL
+              alt="Coin"
+              style={{ width: "25px", height: "25px", marginRight: "8px" }}
+            />
+            <span>
+              <a
+                href="/coins"
+                style={{
+                  color: "gold", // Text color
+                  fontWeight: "bold", // Make the text bold
+                  textDecoration: "none", // Remove underline
+                  cursor: "pointer", // Show pointer on hover
+                }}
+              >
+                Total Coins : 100.05 (Add +)
+              </a>
+            </span>
+          </>
+        ) : (
+          <>
+            <ChevronLeft style={{ color: "#fff" }} />
+            <img
+              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp" // Replace with your coin image URL
+              alt="Coin"
+              style={{ width: "25px", height: "25px" }}
+            />
+          </>
+        )}
+      </Button>
+
 
       <Box sx={{ display: "flex" }}>
         {/* Conditionally render Sidebar */}
@@ -177,7 +239,9 @@ const SidebarWithNavbar = () => {
     <Route path="/tour-guide" element={<PageContent title="Tour Guide" />} />
     <Route path="/market-ads" element={<PageContent title="Market Advertisements" />} />
     <Route path="/photos" element={<PageContent title="Photos From Travelers" />} />
+
     <Route path="/prising" element={<PrisingNew title="Prising page" />} />
+    <Route path="/coins" element={<Coins title="Coins page" />} />
 
     {/* No-side bar pages */}
     <Route path="/register" element={<Register />} />
