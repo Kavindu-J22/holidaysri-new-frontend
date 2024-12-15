@@ -11,6 +11,7 @@ import {
   InputLabel,
   FormControl,
   Link,
+  Modal,
 } from "@mui/material";
 import { IoMdCloseCircle } from "react-icons/io";
 import axios from "axios";
@@ -29,6 +30,9 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const [popupOpen, setPopupOpen] = useState(false); // State for popup visibility
+  const [userName, setUserName] = useState("");
 
   const handleMenuClick = () => {
     setPopupVisible(!isPopupVisible);
@@ -79,9 +83,8 @@ const Register = () => {
           role: selectedRole,
         }
       );
-      alert("Registration successful!");
-      console.log(response.data);
-      window.location = `/login`;
+      setUserName(name); // Set the user's name for the popup
+      setPopupOpen(true); // Show the popup
       // Redirect or perform additional actions here
     } catch (error) {
       console.error("Error during registration:", error);
@@ -421,6 +424,97 @@ const Register = () => {
             >
             {loading ? <CircularProgress size={24} /> : "Sign Up"}
             </Button>
+
+             {/* Popup Modal */}
+             <Modal
+              open={popupOpen}
+              onClose={() => setPopupOpen(false)}
+              aria-labelledby="registration-success-title"
+              aria-describedby="registration-success-description"
+            >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: { xs: 300, sm: 400, md: 450 }, // Adjust width for different screen sizes
+                  backgroundColor: "rgba(1, 22, 20, 0.64)", // Gradient background
+                  backdropFilter: "blur(2px)",
+                  border: "none",
+                  boxShadow: 24,
+                  p: { xs: 2, sm: 3, md: 4 }, // Adjust padding for different screen sizes
+                  borderRadius: "15px",
+                  textAlign: "center",
+                  color: "#fff", // White text color for contrast
+                }}
+              >
+                {/* Icon or Image for Coins */}
+                <Box
+                  component="img"
+                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp" // Replace with actual coin image URL
+                  alt="Coins"
+                  sx={{
+                    width: { xs: 60, sm: 70, md: 80 }, // Adjust image size for different screen sizes
+                    height: { xs: 60, sm: 70, md: 80 },
+                    margin: "0 auto 15px",
+                  }}
+                />
+
+                <Typography
+                  id="registration-success-title"
+                  variant="h5"
+                  component="h2"
+                  sx={{
+                    fontWeight: "bold",
+                    marginBottom: "15px",
+                    fontSize: { xs: "18px", sm: "20px", md: "24px" }, // Responsive font size
+                    color: "#fff",
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)", // Text shadow for depth
+                  }}
+                >
+                  Congratulations, {userName}!
+                </Typography>
+
+                <Typography
+                  id="registration-success-description"
+                  sx={{
+                    marginBottom: "20px",
+                    fontSize: { xs: "14px", sm: "15px", md: "16px" }, // Responsive font size
+                    lineHeight: "1.5",
+                    color: "#fdfdfd",
+                  }}
+                >
+                  You are successfully registered! 🎉 <br />
+                  As a welcome gift, you have earned{" "}
+                  <strong style={{ color: "#ffd700" }}>100 HSC</strong> for free. <br />
+                  Use it to earn money and enjoy your journey!
+                </Typography>
+
+                {/* Login Button */}
+                <Button
+                  variant="contained"
+                  onClick={() => (window.location = "/login")}
+                  sx={{
+                    marginTop: "15px",
+                    width: "100%",
+                    padding: { xs: "10px", sm: "12px" }, // Adjust padding for mobile
+                    fontWeight: "bold",
+                    backgroundImage: "linear-gradient(90deg, rgb(248, 196, 83), rgb(252, 121, 20))", // Gradient color
+                    color: "#fff",
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)", // Text shadow
+                    "&:hover": {
+                      backgroundImage: "linear-gradient(90deg, rgb(252, 121, 20), rgb(248, 196, 83))", // Reverse gradient on hover
+                    },
+                    borderRadius: "8px",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Button shadow
+                    textTransform: "uppercase", // Optional: Makes the text uppercase
+                  }}
+                >
+                  Login Now
+                </Button>
+              </Box>
+            </Modal>
 
             <Typography
             variant="body2"

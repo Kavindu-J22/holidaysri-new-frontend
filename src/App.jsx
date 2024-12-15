@@ -14,6 +14,7 @@ import {
   Collapse,
   Divider,
   Button,
+  Modal,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -137,39 +138,48 @@ const SidebarWithNavbar = () => {
   const [buttonState, setButtonState] = useState(false); // State to toggle button display
   const [coins, setCoins] = useState(0);
   const userEmail = localStorage.getItem("userEmail");
+  const [showAd, setShowAd] = useState(false); // Advertisement state
 
   useEffect(() => {
-    // Simulate loading time (e.g., fetching data)
     const timer = setTimeout(() => {
-      setLoading(false);  // Change loading state after 3 seconds
+      setLoading(false);
     }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
-    return () => clearTimeout(timer);  // Cleanup on component unmount
-  }, []); // This useEffect runs once on mount
+  useEffect(() => {
+    if (!userEmail) {
+      // Check if ad was already shown
+      const adShown = localStorage.getItem("adShown");
+      if (!adShown) {
+        const adTimer = setTimeout(() => {
+          setShowAd(true);
+          localStorage.setItem("adShown", "true"); // Mark ad as shown
+        }, 10000); // Display ad after 10 seconds
+        return () => clearTimeout(adTimer);
+      }
+    }
+  }, [userEmail]);
 
   useEffect(() => {
     if (userEmail) {
-      // Fetch coins if userEmail exists
       axios
         .get(`http://localhost:8000/coin/coins/${userEmail}`)
         .then((response) => {
           if (response.data.success) {
             setCoins(response.data.coins);
           } else {
-            console.error("Error fetching coins:", response.data.message);
-            setCoins(0); // Fallback to 0 if the request fails
+            setCoins(0);
           }
         })
-        .catch((error) => {
-          console.error("Error fetching coins:", error);
-          setCoins(0); // Fallback to 0 on error
-        });
+        .catch(() => setCoins(0));
     } else {
-      setCoins(0); // If no userEmail in local storage, set coins to 0
+      setCoins(0);
     }
-  }, [userEmail]); // This runs every time userEmail changes
+  }, [userEmail]);
 
-  // If still loading, show Loader
+  const handleCloseAd = () => setShowAd(false);
+
   if (loading) {
     return <Loader />;
   }
@@ -179,6 +189,160 @@ const SidebarWithNavbar = () => {
       <CssBaseline />
       {/* Conditionally render Navbar */}
       <NavbarWithConditionalRender />
+
+
+      {showAd && (
+        <Modal
+          open={showAd}
+          onClose={handleCloseAd}
+          aria-labelledby="advertisement-title"
+          aria-describedby="advertisement-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: { xs: "90%", sm: 450 }, // Responsive width
+              backgroundColor: "rgba(237, 253, 249, 0.8)",
+              backdropFilter: "blur(5px)",
+              border: "1px solid #ddd",
+              boxShadow: 24,
+              p: { xs: 3, sm: 4 }, // Adjust padding for mobile
+              borderRadius: "15px",
+              textAlign: "center",
+            }}
+          >
+            {/* Title Section */}
+            <Typography
+              id="advertisement-title"
+              variant="h5"
+              component="h2"
+              sx={{
+                fontWeight: "bold",
+                color: "#333",
+                mb: 2,
+                fontSize: { xs: "1.5rem", sm: "1.8rem" },
+              }}
+            >
+              🎉 Welcome Holidaysri Platform! 🎉
+            </Typography>
+
+            {/* Centered Coin Image */}
+            <Box
+              sx={{
+                mb: 3,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp"
+                alt="HSC Coins"
+                style={{ width: "80px", height: "80px" }}
+              />
+            </Box>
+
+            {/* Content Section */}
+            <Typography
+              id="advertisement-description"
+              sx={{
+                fontSize: { xs: "0.95rem", sm: "1rem" },
+                lineHeight: 1.6,
+                color: "#555",
+                mb: 4,
+              }}
+            >
+              🚀 <strong>Register with Us</strong> and receive 
+              <span style={{ color: "rgba(168, 117, 7, 0.8)", fontWeight: "bold" }}> 100 HSC Coins </span>
+              as a New User Gift!  
+              <br />
+              Already have an account? <strong>Login</strong> to enjoy our services and start earning money!
+            </Typography>
+
+            {/* Link Section */}
+            <Typography
+              sx={{
+                fontSize: { xs: "0.9rem", sm: "1rem" },
+                color: "rgba(102, 93, 7, 0.8)",
+                textDecoration: "underline",
+                cursor: "pointer",
+                mb: 4,
+              }}
+              onClick={() => {
+                handleCloseAd();
+                window.location.href = "/coins";
+              }}
+            >
+              What is HSC and Why It's Important? Learn More!
+            </Typography>
+
+            {/* Buttons Section */}
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "rgba(13, 105, 67, 0.8)",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  width: "100%",
+                  borderRadius: "8px",
+                  "&:hover": {
+                    backgroundColor: "rgba(18, 148, 94, 0.8)",
+                  },
+                }}
+                onClick={() => {
+                  handleCloseAd();
+                  window.location.href = "/register";
+                }}
+              >
+                Register Now 🍃
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "rgba(80, 92, 25, 0.8)",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  width: "100%",
+                  borderRadius: "8px",
+                  "&:hover": {
+                    backgroundColor: "rgba(103, 119, 34, 0.8)",
+                  },
+                }}
+                onClick={() => {
+                  handleCloseAd();
+                  window.location.href = "/login";
+                }}
+              >
+                Login Now 🍂
+              </Button>
+            </Box>
+
+            {/* Close Button */}
+            <Button
+              onClick={handleCloseAd}
+              variant="text"
+              sx={{
+                mt: 3,
+                color: "#888",
+                fontWeight: "bold",
+                textTransform: "none",
+                "&:hover": {
+                  color: "#555",
+                },
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        </Modal>
+      )}
+
+
 
       {/* Fixed Button */}
       <Button
