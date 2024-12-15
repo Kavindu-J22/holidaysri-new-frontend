@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Customtextfield from './Customtextfield';
 import CircularProgress from '@mui/material/CircularProgress';
-import "./login.css";
 import { signInWithGooglePopup } from '../Login/firebase'; // Ensure this is correctly imported from your Firebase setup
 import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
@@ -182,14 +181,13 @@ const LoginForm = () => {
     };
 
     return (
-        <Box className="loginform" sx={{ width: { lg: '500px', xs: '310px', sm: "540px", md: "520px" }, marginLeft: { lg: '0px', xs: '20px', sm: '40px', md: "50px" }, marginTop: { xs: '30px', lg: '32px' } }}>
-            <a href='/register' className="Registermeninewico"><ImMenu3 /></a>
-            <Typography sx={{ color: 'black', fontSize: '32px', fontWeight: '550' }}>Login</Typography>
+        <Box className="loginform" sx={{ width: { lg: '500px', xs: '330px', sm: "540px", md: "520px" }, marginLeft: { lg: '0px', xs: '0px', sm: '40px', md: "50px" }, marginTop: { xs: '30px', lg: '32px' } }}>
+            <Typography sx={{ color: 'black', fontSize: '20px', fontWeight: '600' }}>HOLIDAYSRI - LOGIN 🍃</Typography>
             <form onSubmit={sendData}>
                 <div>
-                    <Customtextfield color='black' label="Email" marginTop="8px" width={{ xl: "75%", lg: "75%", xs: "260px", md: "105%", sm: "110%" }}
+                    <Customtextfield color='#222' label="Email :" marginTop="16px" width={{ xl: "75%", lg: "75%", xs: "280px", md: "105%", sm: "110%" }}
                         onChange={(e) => setEmail(e.target.value)} />
-                    <Customtextfield color='black' label="Password" marginTop="16px" width={{ xl: "75%", lg: "75%", xs: "260px", md: "105%", sm: "110%" }}
+                    <Customtextfield color='#222' label="Password :" marginTop="16px" width={{ xl: "75%", lg: "75%", xs: "280px", md: "105%", sm: "110%" }}
                         type="password" onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <Button
@@ -197,50 +195,60 @@ const LoginForm = () => {
                     variant="outlined"
                     sx={{
                         borderRadius: "30px",
-                        borderColor: "black",
                         boxShadow: "none",
                         width: { lg: "100%", xs: '100%' },
-                        color: "black",
+                        backgroundColor: "rgb(8, 73, 67)",
+                        color: "#fff",
                         marginTop: "32px",
                         height: "48px",
                         "&:hover": {
-                            backgroundColor: "black",
+                            backgroundColor: "rgb(17, 97, 89)",
                             color: "white",
-                            borderColor: "black",
                             boxShadow: "none",
                         },
                     }}
                 >
-                    {loading ? <CircularProgress size={24} /> : "Login"}
+                    {loading ? <CircularProgress size={24} /> : "SIgn in"}
                 </Button>
             </form>
             <Button
-                variant="outlined"
-                size="medium"
-                sx={{
-                    borderRadius: "30px",
-                    borderColor: "black",
-                    boxShadow: "none",
-                    width: { lg: "100%", xs: '100%' },
-                    color: "black",
-                    marginTop: "10px",
-                    height: "48px",
-                    "&:hover": {
-                        backgroundColor: "black",
-                        color: "white",
-                        borderColor: "black",
-                        boxShadow: "none",
-                    },
-                }}
-                onClick={handleGoogleSignIn}
+            variant="outlined"
+            size="medium"
+            sx={{
+                borderRadius: "30px",
+                borderColor: "black",
+                boxShadow: "none",
+                width: { lg: "100%", xs: '100%' },
+                backgroundColor: "rgb(7, 59, 54)",
+                color: "#fff",
+                marginTop: "10px",
+                height: "48px",
+                display: 'flex',
+                alignItems: 'center', // Vertically align the icon and text
+                justifyContent: 'center', // Center the content horizontally
+                "&:hover": {
+                backgroundColor: "rgb(14, 82, 75)",
+                color: "white",
+                boxShadow: "none",
+                },
+            }}
+            onClick={handleGoogleSignIn}
             >
-                {googleLoading ? <CircularProgress size={24} /> : <><FcGoogle /> Sign in with Google</>}
+            {googleLoading ? (
+                <CircularProgress size={24} />
+            ) : (
+                <>
+                <FcGoogle style={{ fontSize: '24px', marginRight: '10px' }} /> {/* Icon size and spacing */}
+                Continue with Google
+                </>
+            )}
             </Button>
+
             <Typography
                 sx={{
-                    color: "black",
-                    fontSize: { lg: "16px", xs: '15px' },
-                    marginTop: "8px",
+                    color: "#333",
+                    fontSize: { lg: "14px", xs: '13px' },
+                    marginTop: "15px",
                     marginLeft: { lg: "40%", xs: '8px' },
                 }}
             >
@@ -258,24 +266,35 @@ const LoginForm = () => {
                 </a>
             </Typography>
             <Typography
-                sx={{
-                    color: "black",
-                    fontSize: { lg: "16px", xs: '15px' },
-                    marginTop: "8px",
-                    marginLeft: { lg: "1px", xs: '8px' },
-                    display: "flex",
-                    justifyContent: "center"
+            sx={{
+                color: "#333",
+                fontSize: { lg: "12px", xs: '14px' },
+                marginTop: "8px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center", // Center align the entire text block
+                flexDirection: "column", // Stack text in a column format
+            }}
+            >
+            New to HolidaySri? (Don't have an account?)
+            <a
+                href="/register"
+                style={{
+                fontWeight: '550',
+                fontSize: '12px',
+                color: 'rgb(3, 29, 21)', // Use a standout color
+                marginTop: '7px', // Add spacing between the sentences
+                textDecoration: 'none', // Remove underline by default
+                "&:hover": {
+                    textDecoration: 'underline', // Add underline on hover
+                },
                 }}
             >
-                New to HolidaySri?{" "}
-                <a
-                    href="/Register"
-                    
-                >
-                    {" "}
-                    <p className='joinwithUs'>Sign Up with us..!</p>{" "}
-                </a>{" "}
+                CLICK HERE TO SIGN-UP NOW !
+            </a>
             </Typography>
+
         </Box>
     );
 }

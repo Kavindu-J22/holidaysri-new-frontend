@@ -51,6 +51,10 @@ import FlashOnIcon from "@mui/icons-material/FlashOn";
 import { BsFillMotherboardFill } from "react-icons/bs";
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { AiFillPropertySafety } from "react-icons/ai";
+import { FaSitemap } from "react-icons/fa6";
+import { GiCampingTent } from "react-icons/gi";
+import { GiClothes } from "react-icons/gi";
 
                   // Pages
 
@@ -58,6 +62,7 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import Navbar from "./components/new-Change/navbar"; // Import your implemented Navbar component
 import NewHome from "./components/new-Change/newHome"
 import Coins from "./components/new-Change/coin"
+import NewRegister from "./components/new-Change/newRegister"
 
 
 // Old Imports
@@ -82,6 +87,7 @@ const navItems = [
     name: "Other Categories",
     icon: <BsFillMotherboardFill />,
     subcategories: [
+      { name: "Rent, Buy Or Sell Your Property", path: "/other-categories/doctors", icon: <AiFillPropertySafety /> },
       { name: "Meet Expert Doctors", path: "/other-categories/doctors", icon: <MedicalServicesIcon /> },
       { name: "Professional Lawyers", path: "/other-categories/lawyers", icon: <GavelIcon /> },
       { name: "Expert Consultants", path: "/other-categories/consultants", icon: <PersonSearchIcon /> },
@@ -89,8 +95,11 @@ const navItems = [
       { name: "Creative Photographers", path: "/other-categories/consultants", icon: <CameraAltIcon  /> },
       { name: "Exclusive Gift Packs", path: "/other-categories/gift-packs", icon: <RedeemIcon /> },
       { name: "Souvenirs & Collectibles", path: "/other-categories/collectibles", icon: <CategoryIcon /> },
-      { name: "Daily Grocery Essentials", path: "/other-categories/collectibles", icon: <ShoppingCartIcon  /> },
+      { name: "Other Items & Ect:", path: "/other-categories/collectibles", icon: <FaSitemap /> },
+      { name: "Daily Grocery Essentials", path: "/other-categories/collectibles", icon: <ShoppingCartIcon /> },
       { name: "Organic Herbal Products", path: "/other-categories/collectibles", icon: <SpaIcon  /> },
+      { name: "Rent a Land for Camping or Parking purpose's ", path: "/other-categories/collectibles", icon: <GiCampingTent /> },
+      { name: "Clothing Items", path: "/other-categories/collectibles", icon: <GiClothes  /> },
       { name: "Exciting Job Opportunities", path: "/other-categories/consultants", icon: <WorkIcon  /> },
       { name: "Crypto Consulting & Signals", path: "/other-categories/consultants", icon: <TrendingUpIcon  /> },
     ],
@@ -102,7 +111,7 @@ const navItems = [
   { name: "Vehicle Rentals & Hire Services", path: "/vehicles", icon: <DirectionsCarIcon /> },
   { name: "Find Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
   { name: "Expert Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
-  { name: "Photos From Travelers", path: "/photos", icon: <PhotoLibraryIcon /> },
+  { name: "Travelers Gallery & Share Travel Memories With Others", path: "/photos", icon: <PhotoLibraryIcon /> },
   { name: "Exclusive Offers & Promotions", path: "/prising", icon: <FlashOnIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
   { name: "Holidaysri Coins", path: "/coins", icon: <CurrencyExchangeIcon /> },
@@ -244,7 +253,7 @@ const SidebarWithNavbar = () => {
     <Route path="/coins" element={<Coins title="Coins page" />} />
 
     {/* No-side bar pages */}
-    <Route path="/register" element={<Register />} />
+    <Route path="/register" element={<NewRegister />} />
     <Route path="/login" element={<LoginMobile />} />
   </Routes>
 </Box>

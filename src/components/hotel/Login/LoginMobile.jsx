@@ -7,36 +7,55 @@ import LoginForm from "./Loginform";
 const LoginMobile = ({  }) => {
   
   return (
-    <Box
+<Box
+  sx={{
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: { xs: '20px', lg: '0px' }, // Padding for mobile screens
+  }}
+>
+  <div
     sx={{
-      height: '100vh',
+      padding: '32px',
+      borderRadius: '20px',
+      boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.1)',
+      width: { xs: '100%', sm: '80%', md: '60%', lg: '40%' }, // Adjust width for different screens
       display: 'flex',
-      justifyContent: 'center',
+      flexDirection: 'column',
       alignItems: 'center',
+      justifyContent: 'center',
     }}
   >
-    
-    <div padding='32px' >
     <a href="/">
-            <Button
-              variant="contained"
-              sx={{
-                borderRadius: "30px",
-                backgroundColor: "black",
-                boxShadow: "none",
-                "&:hover": {
-                  backgroundColor: "black",
-                  boxShadow: "none",
-                },
-                marginLeft:{xs:'10%',lg:'0px'}
-              }}
-            >
-              Back
-            </Button>
-          </a>
-      <LoginForm />
-    </div>
-  </Box>
+      <Button
+        variant="contained"
+        sx={{
+          borderRadius: '20px',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          boxShadow: 'none',
+          '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            color: "Black",
+            border: "1px solid #333",
+            boxShadow: 'none',
+          },
+          marginBottom: '10px',
+          marginLeft: "5px",
+          padding: '10px 30px',
+          color: '#fff',
+          fontWeight: 'bold',
+          textTransform: 'none',
+        }}
+      >
+        Back
+      </Button>
+    </a>
+    <LoginForm /> {/* The LoginForm component should inherit styling automatically */}
+  </div>
+</Box>
+
   );
 };
 

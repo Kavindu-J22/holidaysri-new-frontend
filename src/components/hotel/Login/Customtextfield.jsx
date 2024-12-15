@@ -33,7 +33,7 @@ const Customtextfield = ( props) => {
         <Box width={{ lg: "590px",sm:'440px' }} height="auto">
           <Typography
             sx={{
-                fontSize:'16px',
+                fontSize:'12px',
               color:color|| "black",
               marginBottom: "12px",
               textAlign: "left",
@@ -49,7 +49,7 @@ const Customtextfield = ( props) => {
     "& input": {
       backgroundColor: 'rgba(255, 255, 255, 0)', // Fully transparent background
       boxSizing: "unset !important",
-      height: "13px",
+      height: "10px",
       fontSize: "16px",
       fontFamily: 'inter',
       fontWeight: 400,
@@ -65,7 +65,7 @@ const Customtextfield = ( props) => {
       background: 'rgba(255, 255, 255, 0)', // Fully transparent background
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      border: "1px solid var(--error-300, black) !important",
+      border: "1px solid var(--error-300, rgba(6, 15, 20, 0.32)) !important",
     },
     "&.Mui-error": {
       borderRadius: "10px",
