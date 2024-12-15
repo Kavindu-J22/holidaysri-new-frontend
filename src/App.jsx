@@ -211,19 +211,34 @@ const SidebarWithNavbar = () => {
               alt="Coin"
               style={{ width: "25px", height: "25px", marginRight: "8px" }}
             />
-            <span>
               <a
                 href="/coins"
                 style={{
-                  color: "gold", // Text color
+                  color: "gold", // Text color for "Total Coins"
                   fontWeight: "bold", // Make the text bold
                   textDecoration: "none", // Remove underline
                   cursor: "pointer", // Show pointer on hover
+                  fontSize: "10px", // Optional: Adjust font size
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "center" // Center the content
                 }}
               >
-                Total Coins: {coins} (Add +)
+                <span>
+                  Total Coins: {coins}
+                </span>
+                <span
+                  style={{
+                    color: "rgb(241, 220, 97)", // Text color for "Add More HSC +"
+                    fontWeight: "bold", // Make the text bold
+                    cursor: "pointer", // Show pointer on hover
+                    marginTop: "5px", // Space between total coins and "Add +"
+                    fontSize: "10px", // Optional: Adjust font size
+                  }}
+                >
+                  ( Add More HSC + )
+                </span>
               </a>
-            </span>
           </>
         ) : (
           <>
