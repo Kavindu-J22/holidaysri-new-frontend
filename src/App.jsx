@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import {
   Box,
@@ -134,20 +135,44 @@ const SidebarWithNavbar = () => {
 
   const [loading, setLoading] = useState(true);
   const [buttonState, setButtonState] = useState(false); // State to toggle button display
+  const [coins, setCoins] = useState(0);
+  const userEmail = localStorage.getItem("userEmail");
 
   useEffect(() => {
     // Simulate loading time (e.g., fetching data)
     const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000); // Change 3000 to the desired loading time in milliseconds
+      setLoading(false);  // Change loading state after 3 seconds
+    }, 3000);
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => clearTimeout(timer);  // Cleanup on component unmount
+  }, []); // This useEffect runs once on mount
 
+  useEffect(() => {
+    if (userEmail) {
+      // Fetch coins if userEmail exists
+      axios
+        .get(`http://localhost:8000/coin/coins/${userEmail}`)
+        .then((response) => {
+          if (response.data.success) {
+            setCoins(response.data.coins);
+          } else {
+            console.error("Error fetching coins:", response.data.message);
+            setCoins(0); // Fallback to 0 if the request fails
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching coins:", error);
+          setCoins(0); // Fallback to 0 on error
+        });
+    } else {
+      setCoins(0); // If no userEmail in local storage, set coins to 0
+    }
+  }, [userEmail]); // This runs every time userEmail changes
+
+  // If still loading, show Loader
   if (loading) {
-    return <Loader />; // Show Loading component when loading
+    return <Loader />;
   }
-
 
   return (
     <Router>
@@ -170,7 +195,7 @@ const SidebarWithNavbar = () => {
           padding: "8px 12px",
           borderRadius: "20px 0 0 20px", // Top-left and bottom-left border-radius only
           transition: "width 0.3s ease-in-out, background-color 0.3s ease", // Smooth transitions
-          width: buttonState ? "200px" : "50px", // Dynamic width based on state
+          width: buttonState ? "210px" : "50px", // Dynamic width based on state
           overflow: "hidden", // Ensure content stays within the button
           "&:hover": {
             backgroundColor: "rgba(0,0,0,0.5)", // Hover background color
@@ -196,7 +221,7 @@ const SidebarWithNavbar = () => {
                   cursor: "pointer", // Show pointer on hover
                 }}
               >
-                Total Coins : 100.05 (Add +)
+                Total Coins: {coins} (Add +)
               </a>
             </span>
           </>
