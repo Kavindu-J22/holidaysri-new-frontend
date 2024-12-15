@@ -175,12 +175,13 @@ const Register = () => {
               width: '100%',
               borderRadius: '20px',
               fontWeight: '600',
-              boxShadow: 'none',
               padding: "9px",
-              backgroundColor: 'rgb(41, 104, 12)',
+              background: "linear-gradient(55deg, rgb(11, 78, 41), rgb(34, 139, 80))",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+              transition: "all 0.4s ease-in-out", // Smooth transition
               '&:hover': {
-                backgroundColor: 'rgb(93, 148, 20)', // Custom hover color
-                boxShadow: 'none',
+                background: "linear-gradient(45deg, rgb(34, 139, 80), rgb(17, 90, 50))", // Reverse gradient on hover
+                boxShadow: "0 6px 15px rgba(0, 0, 0, 0.3)", // Stronger shadow on hover
               },
               marginBottom: '10px',
             }}
