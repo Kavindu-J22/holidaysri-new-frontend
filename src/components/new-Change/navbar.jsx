@@ -27,12 +27,13 @@ const Navbar = ({ isLoggedIn }) => {
   const handleSignout = () => {
     const confirmation = window.confirm("Are you sure you want to sign out?");
     if (confirmation) {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("userRole");
-      localStorage.removeItem("userEmail");
-      window.location.href = "/";
+        // Clear all items from local storage
+        localStorage.clear();
+
+        // Redirect to the homepage
+        window.location.href = "/";
     }
-  };
+};
 
   const handleProfileClick = () => {
     const role = localStorage.getItem("userRole");

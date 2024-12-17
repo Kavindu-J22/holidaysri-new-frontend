@@ -43,7 +43,7 @@ const CoinsPage = () => {
         }}
       >
         <img
-          src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp"
+          src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp"
           alt="Logo"
           style={{ width: '120px', height: '120px' }}
         />

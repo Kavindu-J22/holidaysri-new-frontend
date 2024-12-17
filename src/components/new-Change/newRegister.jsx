@@ -65,6 +65,16 @@ const Register = () => {
       return;
     }
 
+    if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)) {
+      alert("Invalid email Address. Please Check and enter a valid email address.");
+      return;
+  }
+
+  if (/[A-Z]/.test(email)) {
+      alert("Email should not contain capital letters.");
+      return;
+  }
+
     if (!selectedRole) {
       alert("Please select a role before submitting.");
       return;
@@ -78,9 +88,11 @@ const Register = () => {
         {
           name,
           email,
-          contactNumber: `${countryCode}${contactNumber}`,
+          contactNumber,
+          countryCode,
           password,
           role: selectedRole,
+          RegisterType: "Manualy Registerd User",
         }
       );
       setUserName(name); // Set the user's name for the popup
@@ -88,11 +100,24 @@ const Register = () => {
       // Redirect or perform additional actions here
     } catch (error) {
       console.error("Error during registration:", error);
-      alert("Registration failed. Please try again later.");
+
+      // Handle different error responses
+      if (error.response) {
+        // Error response from the server
+        if (error.response.status === 400) {
+          alert("This user email is already registered in our services. Please try with another one or check again if it's correct.");
+        } else if (error.response.status === 500) {
+          alert("User registration failed. Please try again later.");
+        } else {
+          alert("An unexpected error occurred. Please try again.");
+        }
+      } else {
+        alert("Network error. Please check your internet connection.");
+      }
     } finally {
       setLoading(false);
     }
-  };
+};
 
   const handleBackClick = () => {
     navigate(-1); // This will navigate back to the previous page
@@ -107,6 +132,7 @@ const Register = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
     }}
   >
     {/* Popup Box */}
@@ -209,7 +235,7 @@ const Register = () => {
         <Grid
             className="registerform"
             sx={{
-            backgroundColor: "rgba(255, 255, 255, 0.6)",  // semi-transparent background
+            backgroundColor: "rgba(255, 255, 255, 0.7)",  // semi-transparent background
             borderRadius: "15px",
             boxShadow: 3,
             padding: "20px",
@@ -270,72 +296,227 @@ const Register = () => {
                 onChange={handleInputChange}
                 label="Country Code"
             >
-                <MenuItem value="+1">+1 - United States</MenuItem>
-                <MenuItem value="+44">+44 - United Kingdom</MenuItem>
-                <MenuItem value="+91">+91 - India</MenuItem>
-                <MenuItem value="+61">+61 - Australia</MenuItem>
-                <MenuItem value="+33">+33 - France</MenuItem>
-                <MenuItem value="+49">+49 - Germany</MenuItem>
-                <MenuItem value="+81">+81 - Japan</MenuItem>
-                <MenuItem value="+1">+1 - Canada</MenuItem>
-                <MenuItem value="+39">+39 - Italy</MenuItem>
-                <MenuItem value="+34">+34 - Spain</MenuItem>
-                <MenuItem value="+55">+55 - Brazil</MenuItem>
-                <MenuItem value="+66">+66 - Thailand</MenuItem>
-                <MenuItem value="+52">+52 - Mexico</MenuItem>
-                <MenuItem value="+20">+20 - Egypt</MenuItem>
-                <MenuItem value="+234">+234 - Nigeria</MenuItem>
-                <MenuItem value="+27">+27 - South Africa</MenuItem>
-                <MenuItem value="+54">+54 - Argentina</MenuItem>
-                <MenuItem value="+62">+62 - Indonesia</MenuItem>
-                <MenuItem value="+64">+64 - New Zealand</MenuItem>
-                <MenuItem value="+63">+63 - Philippines</MenuItem>
-                <MenuItem value="+94">+94 - Sri Lanka</MenuItem>
-                <MenuItem value="+7">+7 - Russia</MenuItem>
-                <MenuItem value="+41">+41 - Switzerland</MenuItem>
-                <MenuItem value="+46">+46 - Sweden</MenuItem>
-                <MenuItem value="+971">+971 - United Arab Emirates</MenuItem>
-                <MenuItem value="+48">+48 - Poland</MenuItem>
-                <MenuItem value="+381">+381 - Serbia</MenuItem>
-                <MenuItem value="+356">+356 - Malta</MenuItem>
-                <MenuItem value="+961">+961 - Lebanon</MenuItem>
-                <MenuItem value="+972">+972 - Israel</MenuItem>
-                <MenuItem value="+353">+353 - Ireland</MenuItem>
-                <MenuItem value="+380">+380 - Ukraine</MenuItem>
-                <MenuItem value="+82">+82 - South Korea</MenuItem>
-                <MenuItem value="+54">+54 - Argentina</MenuItem>
-                <MenuItem value="+64">+64 - New Zealand</MenuItem>
-                <MenuItem value="+254">+254 - Kenya</MenuItem>
-                <MenuItem value="+213">+213 - Algeria</MenuItem>
-                <MenuItem value="+886">+886 - Taiwan</MenuItem>
-                <MenuItem value="+62">+62 - Indonesia</MenuItem>
-                <MenuItem value="+20">+20 - Egypt</MenuItem>
-                <MenuItem value="+354">+354 - Iceland</MenuItem>
-                <MenuItem value="+354">+354 - Iceland</MenuItem>
-                <MenuItem value="+228">+228 - Togo</MenuItem>
-                <MenuItem value="+673">+673 - Brunei</MenuItem>
-                <MenuItem value="+593">+593 - Ecuador</MenuItem>
-                <MenuItem value="+503">+503 - El Salvador</MenuItem>
-                <MenuItem value="+263">+263 - Zimbabwe</MenuItem>
-                <MenuItem value="+977">+977 - Nepal</MenuItem>
-                <MenuItem value="+972">+972 - Israel</MenuItem>
-                <MenuItem value="+971">+971 - UAE</MenuItem>
-                <MenuItem value="+249">+249 - Sudan</MenuItem>
-                <MenuItem value="+855">+855 - Cambodia</MenuItem>
-                <MenuItem value="+56">+56 - Chile</MenuItem>
-                <MenuItem value="+63">+63 - Philippines</MenuItem>
-                <MenuItem value="+358">+358 - Finland</MenuItem>
-                <MenuItem value="+234">+234 - Nigeria</MenuItem>
-                <MenuItem value="+254">+254 - Kenya</MenuItem>
-                <MenuItem value="+91">+91 - India</MenuItem>
-                <MenuItem value="+52">+52 - Mexico</MenuItem>
-                <MenuItem value="+256">+256 - Uganda</MenuItem>
+              <MenuItem value="+93">+93 - Afghanistan 🇦🇫</MenuItem>
+              <MenuItem value="+355">+355 - Albania 🇦🇱</MenuItem>
+              <MenuItem value="+213">+213 - Algeria 🇩🇿</MenuItem>
+              <MenuItem value="+1">+1 - United States 🇺🇸</MenuItem>
+              <MenuItem value="+376">+376 - Andorra 🇦🇩</MenuItem>
+              <MenuItem value="+244">+244 - Angola 🇦🇴</MenuItem>
+              <MenuItem value="+54">+54 - Argentina 🇦🇷</MenuItem>
+              <MenuItem value="+374">+374 - Armenia 🇦🇲</MenuItem>
+              <MenuItem value="+61">+61 - Australia 🇦🇺</MenuItem>
+              <MenuItem value="+43">+43 - Austria 🇦🇹</MenuItem>
+              <MenuItem value="+994">+994 - Azerbaijan 🇦🇿</MenuItem>
+              <MenuItem value="+599">+599 - Aruba 🇦🇼</MenuItem> {/* Added missing country */}
+              <MenuItem value="+247">+247 - Ascension Island 🇦🇨</MenuItem> {/* Added missing country */}
+              <MenuItem value="+672">+672 - Antarctica 🇦🇶</MenuItem> {/* Added missing country */}
+              <MenuItem value="+3744">+3744 - Artsakh (Nagorno-Karabakh) 🇦🇲</MenuItem> {/* Added missing country */}
+
+              <MenuItem value="+973">+973 - Bahrain 🇧🇭</MenuItem>
+              <MenuItem value="+880">+880 - Bangladesh 🇧🇩</MenuItem>
+              <MenuItem value="+1">+1 - Canada 🇨🇦</MenuItem>
+              <MenuItem value="+32">+32 - Belgium 🇧🇪</MenuItem>
+              <MenuItem value="+229">+229 - Benin 🇧🇯</MenuItem>
+              <MenuItem value="+975">+975 - Bhutan 🇧🇹</MenuItem>
+              <MenuItem value="+591">+591 - Bolivia 🇧🇴</MenuItem>
+              <MenuItem value="+387">+387 - Bosnia and Herzegovina 🇧🇦</MenuItem>
+              <MenuItem value="+267">+267 - Botswana 🇧🇼</MenuItem>
+              <MenuItem value="+55">+55 - Brazil 🇧🇷</MenuItem>
+              <MenuItem value="+673">+673 - Brunei 🇧🇳</MenuItem>
+              <MenuItem value="+359">+359 - Bulgaria 🇧🇬</MenuItem>
+              <MenuItem value="+591">+591 - Bolivia 🇧🇴</MenuItem> {/* Duplicate removed */}
+              <MenuItem value="+591">+591 - Barbados 🇧🇧</MenuItem> {/* Added missing country */}
+              <MenuItem value="+375">+375 - Belarus 🇧🇾</MenuItem> {/* Added missing country */}
+              <MenuItem value="+501">+501 - Belize 🇧🇿</MenuItem> {/* Added missing country */}
+              <MenuItem value="+226">+226 - Burkina Faso 🇧🇫</MenuItem> {/* Added missing country */}
+
+              <MenuItem value="+855">+855 - Cambodia 🇰🇭</MenuItem>
+              <MenuItem value="+237">+237 - Cameroon 🇨🇲</MenuItem>
+              <MenuItem value="+238">+238 - Cape Verde 🇨🇻</MenuItem>
+              <MenuItem value="+56">+56 - Chile 🇨🇱</MenuItem>
+              <MenuItem value="+86">+86 - China 🇨🇳</MenuItem>
+              <MenuItem value="+57">+57 - Colombia 🇨🇴</MenuItem>
+              <MenuItem value="+269">+269 - Comoros 🇰🇲</MenuItem>
+              <MenuItem value="+53">+53 - Cuba 🇨🇺</MenuItem> {/* Added missing country */}
+              <MenuItem value="+357">+357 - Cyprus 🇨🇾</MenuItem> {/* Added missing country */}
+
+              <MenuItem value="+45">+45 - Denmark 🇩🇰</MenuItem>
+              <MenuItem value="+253">+253 - Djibouti 🇩🇯</MenuItem>
+              <MenuItem value="+1">+1 - Dominica 🇩🇲</MenuItem>
+              <MenuItem value="+1">+1 - Dominican Republic 🇩🇴</MenuItem>
+
+
+              <MenuItem value="+20">+20 - Egypt 🇪🇬</MenuItem>
+              <MenuItem value="+503">+503 - El Salvador 🇸🇻</MenuItem>
+              <MenuItem value="+240">+240 - Equatorial Guinea 🇬🇶</MenuItem>
+              <MenuItem value="+291">+291 - Eritrea 🇪🇷</MenuItem>
+              <MenuItem value="+372">+372 - Estonia 🇪🇪</MenuItem>
+              <MenuItem value="+251">+251 - Ethiopia 🇪🇹</MenuItem>
+              <MenuItem value="+500">+500 - Falkland Islands 🇫🇰</MenuItem>
+              <MenuItem value="+593">+593 - Ecuador 🇪🇨</MenuItem>
+
+              <MenuItem value="+679">+679 - Fiji 🇫🇯</MenuItem>
+              <MenuItem value="+358">+358 - Finland 🇫🇮</MenuItem>
+              <MenuItem value="+33">+33 - France 🇫🇷</MenuItem>
+              <MenuItem value="+500">+500 - Falkland Islands 🇫🇰</MenuItem>
+              <MenuItem value="+298">+298 - Faroe Islands 🇫🇴</MenuItem>
+
+              <MenuItem value="+220">+220 - Gambia 🇬🇲</MenuItem>
+              <MenuItem value="+995">+995 - Georgia 🇬🇪</MenuItem>
+              <MenuItem value="+49">+49 - Germany 🇩🇪</MenuItem>
+              <MenuItem value="+233">+233 - Ghana 🇬🇭</MenuItem>
+              <MenuItem value="+30">+30 - Greece 🇬🇷</MenuItem>
+              <MenuItem value="+502">+502 - Guatemala 🇬🇹</MenuItem>
+              <MenuItem value="+44">+44 - Guernsey 🇬🇬</MenuItem>
+              <MenuItem value="+224">+224 - Guinea 🇬🇳</MenuItem>
+              <MenuItem value="+245">+245 - Guinea-Bissau 🇬🇼</MenuItem>
+              <MenuItem value="+592">+592 - Guyana 🇬🇾</MenuItem>
+
+              <MenuItem value="+504">+504 - Honduras 🇭🇳</MenuItem>
+              <MenuItem value="+36">+36 - Hungary 🇭🇺</MenuItem>
+              <MenuItem value="+509">+509 - Haiti 🇭🇹</MenuItem>
+
+              <MenuItem value="+98">+98 - Iran 🇮🇷</MenuItem>
+              <MenuItem value="+964">+964 - Iraq 🇮🇶</MenuItem>
+              <MenuItem value="+353">+353 - Ireland 🇮🇪</MenuItem>
+              <MenuItem value="+972">+972 - Israel 🇮🇱</MenuItem>
+              <MenuItem value="+39">+39 - Italy 🇮🇹</MenuItem>
+              <MenuItem value="+225">+225 - Ivory Coast 🇮🇨</MenuItem>
+              <MenuItem value="+1">+1 - Iceland 🇮🇸</MenuItem>
+              <MenuItem value="+91">+91 - India 🇮🇳</MenuItem>
+              <MenuItem value="+62">+62 - Indonesia 🇮🇩</MenuItem>
+              <MenuItem value="+98">+98 - Iran 🇮🇷</MenuItem>
+              <MenuItem value="+354">+354 - Iceland 🇮🇸</MenuItem>
+
+              <MenuItem value="+81">+81 - Japan 🇯🇵</MenuItem>
+              <MenuItem value="+962">+962 - Jordan 🇯🇴</MenuItem>
+              <MenuItem value="+1">+1 - Jamaica 🇯🇲</MenuItem>
+
+              <MenuItem value="+965">+965 - Kuwait 🇰🇼</MenuItem>
+              <MenuItem value="+996">+996 - Kyrgyzstan 🇰🇬</MenuItem>
+              <MenuItem value="+254">+254 - Kenya 🇰🇪</MenuItem>
+              <MenuItem value="+850">+850 - North Korea 🇰🇵</MenuItem>
+              <MenuItem value="+82">+82 - South Korea 🇰🇷</MenuItem>
+              <MenuItem value="+965">+965 - Kuwait 🇰🇼</MenuItem>
+              <MenuItem value="+996">+996 - Kyrgyzstan 🇰🇬</MenuItem>
+
+              <MenuItem value="+961">+961 - Lebanon 🇱🇧</MenuItem>
+              <MenuItem value="+266">+266 - Lesotho 🇱🇸</MenuItem>
+              <MenuItem value="+231">+231 - Liberia 🇱🇸</MenuItem>
+              <MenuItem value="+218">+218 - Libya 🇱🇾</MenuItem>
+              <MenuItem value="+370">+370 - Lithuania 🇱🇹</MenuItem>
+              <MenuItem value="+352">+352 - Luxembourg 🇱🇺</MenuItem>
+
+              <MenuItem value="+261">+261 - Madagascar 🇲🇬</MenuItem>
+              <MenuItem value="+265">+265 - Malawi 🇲🇼</MenuItem>
+              <MenuItem value="+60">+60 - Malaysia 🇲🇾</MenuItem>
+              <MenuItem value="+960">+960 - Maldives 🇲🇻</MenuItem>
+              <MenuItem value="+223">+223 - Mali 🇲🇱</MenuItem>
+              <MenuItem value="+356">+356 - Malta 🇲🇹</MenuItem>
+              <MenuItem value="+692">+692 - Marshall Islands 🇲🇭</MenuItem>
+              <MenuItem value="+52">+52 - Mexico 🇲🇽</MenuItem>
+              <MenuItem value="+373">+373 - Moldova 🇲🇩</MenuItem>
+              <MenuItem value="+377">+377 - Monaco 🇲🇨</MenuItem>
+              <MenuItem value="+976">+976 - Mongolia 🇲🇳</MenuItem>
+              <MenuItem value="+382">+382 - Montenegro 🇲🇪</MenuItem>
+              <MenuItem value="+1664">+1664 - Montserrat 🇲🇸</MenuItem>
+              <MenuItem value="+212">+212 - Morocco 🇲🇦</MenuItem>
+              <MenuItem value="+258">+258 - Mozambique 🇲🇿</MenuItem>
+              <MenuItem value="+95">+95 - Myanmar 🇲🇲</MenuItem>
+
+              <MenuItem value="+227">+227 - Niger 🇳🇪</MenuItem>
+              <MenuItem value="+234">+234 - Nigeria 🇳🇬</MenuItem>
+              <MenuItem value="+683">+683 - Niue 🇳🇺</MenuItem>
+              <MenuItem value="+672">+672 - Norfolk Island 🇳🇫</MenuItem>
+              <MenuItem value="+47">+47 - Norway 🇳🇴</MenuItem>
+              <MenuItem value="+977">+977 - Nepal 🇳🇵</MenuItem>
+              <MenuItem value="+505">+505 - Nicaragua 🇳🇮</MenuItem>
+              <MenuItem value="+31">+31 - Netherlands 🇳🇱</MenuItem>
+              <MenuItem value="+64">+64 - New Zealand 🇳🇿</MenuItem>
+
+              <MenuItem value="+968">+968 - Oman 🇴🇲</MenuItem>
+
+              <MenuItem value="+51">+51 - Peru 🇵🇪</MenuItem>
+              <MenuItem value="+63">+63 - Philippines 🇵🇭</MenuItem>
+              <MenuItem value="+48">+48 - Poland 🇵🇱</MenuItem>
+              <MenuItem value="+351">+351 - Portugal 🇵🇹</MenuItem>
+              <MenuItem value="+680">+680 - Palau 🇵🇼</MenuItem>
+              <MenuItem value="+595">+595 - Paraguay 🇵🇾</MenuItem>
+              <MenuItem value="+1">+1 - Panama 🇵🇦</MenuItem>
+              <MenuItem value="+675">+675 - Papua New Guinea 🇵🇬</MenuItem>
+              <MenuItem value="+92">+92 - Pakistan 🇵🇰</MenuItem>
+              <MenuItem value="+974">+974 - Qatar 🇶🇦</MenuItem>
+              <MenuItem value="+262">+262 - Réunion 🇷🇪</MenuItem>
+              <MenuItem value="+1">+1 - Puerto Rico 🇵🇷</MenuItem>
+              <MenuItem value="+1">+1 - Saint Pierre and Miquelon 🇵🇲</MenuItem>
+
+              <MenuItem value="+974">+974 - Qatar 🇶🇦</MenuItem>
+
+              <MenuItem value="+7">+7 - Russia 🇷🇺</MenuItem>
+              <MenuItem value="+250">+250 - Rwanda 🇷🇼</MenuItem>
+              <MenuItem value="+40">+40 - Romania 🇷🇴</MenuItem>
+              <MenuItem value="+262">+262 - Réunion 🇷🇪</MenuItem>
+
+              <MenuItem value="+249">+249 - Sudan 🇸🇩</MenuItem>
+              <MenuItem value="+597">+597 - Suriname 🇸🇷</MenuItem>
+              <MenuItem value="+268">+268 - Eswatini 🇸🇿</MenuItem>
+              <MenuItem value="+239">+239 - São Tomé and Príncipe 🇸🇹</MenuItem>
+              <MenuItem value="+378">+378 - San Marino 🇸🇲</MenuItem>
+              <MenuItem value="+221">+221 - Senegal 🇸🇳</MenuItem>
+              <MenuItem value="+248">+248 - Seychelles 🇸🇨</MenuItem>
+              <MenuItem value="+232">+232 - Sierra Leone 🇸🇱</MenuItem>
+              <MenuItem value="+65">+65 - Singapore 🇸🇬</MenuItem>
+              <MenuItem value="+963">+963 - Syria 🇸🇾</MenuItem>
+              <MenuItem value="+421">+421 - Slovakia 🇸🇰</MenuItem>
+              <MenuItem value="+386">+386 - Slovenia 🇸🇮</MenuItem>
+              <MenuItem value="+252">+252 - Somalia 🇸🇴</MenuItem>
+              <MenuItem value="+41">+41 - Switzerland 🇨🇭</MenuItem>
+              <MenuItem value="+677">+677 - Solomon Islands 🇸🇧</MenuItem>
+              <MenuItem value="+27">+27 - South Africa 🇿🇦</MenuItem>
+              <MenuItem value="+82">+82 - South Korea 🇰🇷</MenuItem>
+              <MenuItem value="+34">+34 - Spain 🇪🇸</MenuItem>
+              <MenuItem value="+94">+94 - Sri Lanka 🇱🇰</MenuItem>
+              <MenuItem value="+211">+211 - South Sudan 🇸🇸</MenuItem>
+              <MenuItem value="+290">+290 - Saint Helena 🇸🇭</MenuItem>
+              <MenuItem value="+1">+1 - Saint Kitts and Nevis 🇰🇳</MenuItem>
+              <MenuItem value="+1">+1 - Saint Lucia 🇱🇨</MenuItem>
+              <MenuItem value="+1">+1 - Saint Vincent and the Grenadines 🇻🇨</MenuItem>
+              <MenuItem value="+1758">+1758 - Saint Lucia 🇱🇨</MenuItem>
+              <MenuItem value="+1849">+1849 - Saint Martin 🇸🇽</MenuItem>
+
+              <MenuItem value="+993">+993 - Turkmenistan 🇹🇲</MenuItem>
+              <MenuItem value="+66">+66 - Thailand 🇹🇭</MenuItem>
+              <MenuItem value="+670">+670 - Timor-Leste 🇹🇱</MenuItem>
+              <MenuItem value="+228">+228 - Togo 🇹🇬</MenuItem>
+              <MenuItem value="+1">+1 - Trinidad and Tobago 🇹🇹</MenuItem>
+              <MenuItem value="+216">+216 - Tunisia 🇹🇳</MenuItem>
+              <MenuItem value="+90">+90 - Turkey 🇹🇷</MenuItem>
+
+              <MenuItem value="+1">+1 - United States 🇺🇸</MenuItem>
+              <MenuItem value="+380">+380 - Ukraine 🇺🇦</MenuItem>
+              <MenuItem value="+971">+971 - United Arab Emirates 🇦🇪</MenuItem>
+              <MenuItem value="+44">+44 - United Kingdom 🇬🇧</MenuItem>
+              <MenuItem value="+598">+598 - Uruguay 🇺🇾</MenuItem>
+              <MenuItem value="+998">+998 - Uzbekistan 🇺🇿</MenuItem>
+
+              <MenuItem value="+58">+58 - Venezuela 🇻🇪</MenuItem>
+              <MenuItem value="+84">+84 - Vietnam 🇻🇳</MenuItem>
+              <MenuItem value="+1">+1 - Virgin Islands 🇻🇮</MenuItem>
+              <MenuItem value="+679">+679 - Vanuatu 🇻🇺</MenuItem>
+              <MenuItem value="+379">+379 - Vatican City 🇻🇦</MenuItem>
+              <MenuItem value="+1">+1 - Saint Vincent and the Grenadines 🇻🇨</MenuItem>
+
+              <MenuItem value="+967">+967 - Yemen 🇾🇪</MenuItem>
+
+              <MenuItem value="+260">+260 - Zambia 🇿🇲</MenuItem>
+              <MenuItem value="+263">+263 - Zimbabwe 🇿🇼</MenuItem>
+
             </Select>
         </FormControl>
 
           <TextField
             fullWidth
-            label="Contact Number (Do not use leading Zero)"
+            label="Contact Number ( Ex: 071-2223331 )"
             name="contactNumber"
             value={formData.contactNumber}
             onChange={handleInputChange}
@@ -452,7 +633,7 @@ const Register = () => {
                 {/* Icon or Image for Coins */}
                 <Box
                   component="img"
-                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp" // Replace with actual coin image URL
+                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" // Replace with actual coin image URL
                   alt="Coins"
                   sx={{
                     width: { xs: 60, sm: 70, md: 80 }, // Adjust image size for different screen sizes

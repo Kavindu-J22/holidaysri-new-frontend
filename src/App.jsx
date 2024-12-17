@@ -57,19 +57,22 @@ import { AiFillPropertySafety } from "react-icons/ai";
 import { FaSitemap } from "react-icons/fa6";
 import { GiCampingTent } from "react-icons/gi";
 import { GiClothes } from "react-icons/gi";
+import { GrTechnology } from "react-icons/gr";
+import { BiSolidDonateHeart } from "react-icons/bi";
+import { MdDeliveryDining } from "react-icons/md";
 
                   // Pages
 
 //New Imports
 import Navbar from "./components/new-Change/navbar"; // Import your implemented Navbar component
 import NewHome from "./components/new-Change/newHome"
-import Coins from "./components/new-Change/coin"
-import NewRegister from "./components/new-Change/newRegister"
+import Coins from "./components/new-Change/coin";
+import NewRegister from "./components/new-Change/newRegister";
+import PromocodesPage from "./components/new-Change/PromoCodes";
 
 
 // Old Imports
 import LoginMobile from "./components/hotel/Login/LoginMobile";
-import Register from "./components/hotel/Register/Register";
 import AllLocation from "./pages/alllocations/Locations";
 import Loader from "./components/loader/Loader";
 import PrisingNew from "./components/prising"
@@ -84,7 +87,7 @@ const navItems = [
   { name: "Hotels & Accommodations", path: "/hotels", icon: <HotelIcon /> },
   { name: "Foods & Beverages", path: "/hotels", icon: <Fastfood /> },
   { name: "Live Rides Updates", path: "/vehicles", icon: <DepartureBoardIcon /> },
-  { name: "Travel Agents & Promo codes", path: "/promo-agents", icon: <LocalOfferIcon /> },
+  { name: "Promo codes & Travel Agents", path: "/Promocodes", icon: <LocalOfferIcon /> },
   {
     name: "Other Categories",
     icon: <BsFillMotherboardFill />,
@@ -97,7 +100,8 @@ const navItems = [
       { name: "Creative Photographers", path: "/other-categories/consultants", icon: <CameraAltIcon  /> },
       { name: "Exclusive Gift Packs", path: "/other-categories/gift-packs", icon: <RedeemIcon /> },
       { name: "Souvenirs & Collectibles", path: "/other-categories/collectibles", icon: <CategoryIcon /> },
-      { name: "Other Items & Ect:", path: "/other-categories/collectibles", icon: <FaSitemap /> },
+      { name: "Other Items, Services & Ect:", path: "/other-categories/collectibles", icon: <FaSitemap /> },
+      { name: "Technology Related Services", path: "/other-categories/collectibles", icon: <GrTechnology /> },
       { name: "Daily Grocery Essentials", path: "/other-categories/collectibles", icon: <ShoppingCartIcon /> },
       { name: "Organic Herbal Products", path: "/other-categories/collectibles", icon: <SpaIcon  /> },
       { name: "Rent a Land for Camping or Parking purpose's ", path: "/other-categories/collectibles", icon: <GiCampingTent /> },
@@ -113,12 +117,14 @@ const navItems = [
   { name: "Vehicle Rentals & Hire Services", path: "/vehicles", icon: <DirectionsCarIcon /> },
   { name: "Find Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
   { name: "Expert Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
+  { name: "Delivery Partners", path: "/tour-guide", icon: <MdDeliveryDining /> },
   { name: "Travelers Gallery & Share Travel Memories With Others", path: "/photos", icon: <PhotoLibraryIcon /> },
+  { name: "Donations / Raise Your Fund", path: "/photos", icon: <BiSolidDonateHeart /> },
   { name: "Exclusive Offers & Promotions", path: "/prising", icon: <FlashOnIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
   { name: "Holidaysri Coins", path: "/coins", icon: <CurrencyExchangeIcon /> },
   { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
-  { name: "Customer Support", path: "/partners", icon: <SupportAgentIcon /> },
+  { name: "Customer Support & Feedback", path: "/partners", icon: <SupportAgentIcon /> },
 ];
 
 // Component for rendering pages
@@ -155,11 +161,55 @@ const SidebarWithNavbar = () => {
         const adTimer = setTimeout(() => {
           setShowAd(true);
           localStorage.setItem("adShown", "true"); // Mark ad as shown
-        }, 10000); // Display ad after 10 seconds
+        }, 15000); // Display ad after 10 seconds
         return () => clearTimeout(adTimer);
       }
     }
   }, [userEmail]);
+
+  useEffect(() => {
+    if (userEmail) {
+      // Fetch user details by email and set to local storage
+      axios
+        .get(`http://localhost:8000/api/user/findByEmail/${userEmail}`)
+        .then((response) => {
+          if (response.data.success && response.data.user) {
+            const {
+              role,
+              email,
+              _id,
+              name,
+              countryCode,
+              isAdvertiser,
+              isAgent,
+              isGuider,
+              isPartner,
+              subscription,
+              RegisterType,
+            } = response.data.user;
+  
+            // Set user details in local storage
+            localStorage.setItem("userRole", role);
+            localStorage.setItem("userEmail", email);
+            localStorage.setItem("userId", _id);
+            localStorage.setItem("userName", name);
+            localStorage.setItem("countryCode", countryCode);
+            localStorage.setItem("isAdvertiser", isAdvertiser);
+            localStorage.setItem("isAgent", isAgent);
+            localStorage.setItem("isGuider", isGuider);
+            localStorage.setItem("isPartner", isPartner);
+            localStorage.setItem("subscription", subscription);
+            localStorage.setItem("RegisterType", RegisterType);
+          } else {
+            console.error("Failed to fetch user details");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user details:", error);
+        });
+    }
+  }, [userEmail]);
+  
 
   useEffect(() => {
     if (userEmail) {
@@ -238,7 +288,7 @@ const SidebarWithNavbar = () => {
               }}
             >
               <img
-                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp"
+                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp"
                 alt="HSC Coins"
                 style={{ width: "80px", height: "80px" }}
               />
@@ -371,7 +421,7 @@ const SidebarWithNavbar = () => {
           <>
             <ChevronRight style={{ color: "#fff", marginRight: "8px" }} />
             <img
-              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp" // Replace with your coin image URL
+              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" // Replace with your coin image URL
               alt="Coin"
               style={{ width: "25px", height: "25px", marginRight: "8px" }}
             />
@@ -408,7 +458,7 @@ const SidebarWithNavbar = () => {
           <>
             <ChevronLeft style={{ color: "#fff" }} />
             <img
-              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734136783/hsc_resll6.webp" // Replace with your coin image URL
+              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" // Replace with your coin image URL
               alt="Coin"
               style={{ width: "25px", height: "25px" }}
             />
@@ -455,6 +505,7 @@ const SidebarWithNavbar = () => {
 
     <Route path="/prising" element={<PrisingNew title="Prising page" />} />
     <Route path="/coins" element={<Coins title="Coins page" />} />
+    <Route path="/Promocodes" element={<PromocodesPage title="Promocodes page" />} />
 
     {/* No-side bar pages */}
     <Route path="/register" element={<NewRegister />} />
