@@ -195,9 +195,8 @@ const LoginForm = () => {
     };
 
     const handleBackClick = () => {
-        navigate(-1); // This will navigate back to the previous page
-      };
-    
+        navigate('/'); // This will navigate to the homepage
+      };         
 
     return (
         <Box className="loginform" sx={{ width: { lg: '500px', xs: '330px', sm: "540px", md: "520px" }, marginLeft: { lg: '0px', xs: '0px', sm: '40px', md: "50px" }, marginTop: { xs: '30px', lg: '32px' } }}>
