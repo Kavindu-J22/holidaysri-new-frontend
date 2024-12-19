@@ -325,7 +325,7 @@ const SidebarWithNavbar = () => {
                   }}
                 >
                   <img
-                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734596034/diamond_no_bg-removebg-preview_g4kmq8-removebg-preview_mmpdds.png" // Replace with diamond image URL
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734609205/file_g75vh2.png" // Replace with diamond image URL
                     alt="Diamond"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
