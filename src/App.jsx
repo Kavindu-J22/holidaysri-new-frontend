@@ -60,6 +60,11 @@ import { GiClothes } from "react-icons/gi";
 import { GrTechnology } from "react-icons/gr";
 import { BiSolidDonateHeart } from "react-icons/bi";
 import { MdDeliveryDining } from "react-icons/md";
+import { FaPersonBurst } from "react-icons/fa6";
+import { FaPersonBreastfeeding } from "react-icons/fa6";
+import { FaPersonHalfDress } from "react-icons/fa6";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+
 
                   // Pages
 
@@ -77,6 +82,7 @@ import LoginMobile from "./components/hotel/Login/LoginMobile";
 import AllLocation from "./pages/alllocations/Locations";
 import Loader from "./components/loader/Loader";
 import PrisingNew from "./components/prising"
+import { transform } from "framer-motion";
 
 
 // Sidebar items with icons
@@ -88,7 +94,10 @@ const navItems = [
   { name: "Hotels & Accommodations", path: "/hotels", icon: <HotelIcon /> },
   { name: "Foods & Beverages", path: "/hotels", icon: <Fastfood /> },
   { name: "Live Rides Updates", path: "/vehicles", icon: <DepartureBoardIcon /> },
+  { name: "Vehicle Rentals & Hire Services", path: "/vehicles", icon: <DirectionsCarIcon /> },
   { name: "Promo codes & Travel Agents", path: "/Promocodes", icon: <LocalOfferIcon /> },
+  { name: "Find Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
+  { name: "Expert Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
   {
     name: "Other Categories",
     icon: <BsFillMotherboardFill />,
@@ -98,7 +107,10 @@ const navItems = [
       { name: "Professional Lawyers", path: "/other-categories/lawyers", icon: <GavelIcon /> },
       { name: "Expert Consultants", path: "/other-categories/consultants", icon: <PersonSearchIcon /> },
       { name: "Talented Entertainers", path: "/other-categories/consultants", icon: <MusicNoteIcon  /> },
+      { name: "Expert Event Planners", path: "/other-categories/consultants", icon: <FaPersonBurst  /> },
+      { name: "Compassionate Caregivers", path: "/other-categories/consultants", icon: <FaPersonBreastfeeding  /> },
       { name: "Creative Photographers", path: "/other-categories/consultants", icon: <CameraAltIcon  /> },
+      { name: "Other Professionals", path: "/other-categories/consultants", icon: <FaPersonHalfDress  /> },
       { name: "Exclusive Gift Packs", path: "/other-categories/gift-packs", icon: <RedeemIcon /> },
       { name: "Souvenirs & Collectibles", path: "/other-categories/collectibles", icon: <CategoryIcon /> },
       { name: "Other Items, Services & Ect:", path: "/other-categories/collectibles", icon: <FaSitemap /> },
@@ -114,16 +126,13 @@ const navItems = [
   { name: "Foreign Tour Packages ", path: "/tour-packages", icon: <TourIcon /> },
   { name: "Local Tour Packages", path: "/tour-packages", icon: <HikingIcon /> },
   { name: "Customize Tour Package", path: "/tour-packages", icon: <CardTravelIcon /> },
-  { name: "Events & Manage Your Event", path: "/events-manage", icon: <EventIcon /> },
-  { name: "Vehicle Rentals & Hire Services", path: "/vehicles", icon: <DirectionsCarIcon /> },
-  { name: "Find Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
-  { name: "Expert Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
+  { name: "Events Updates & Manage, Customize Your Event", path: "/events-manage", icon: <EventIcon /> },
   { name: "Delivery Partners", path: "/tour-guide", icon: <MdDeliveryDining /> },
   { name: "Travelers Gallery & Share Travel Memories With Others", path: "/photos", icon: <PhotoLibraryIcon /> },
   { name: "Donations / Raise Your Fund", path: "/photos", icon: <BiSolidDonateHeart /> },
   { name: "Exclusive Offers & Promotions", path: "/prising", icon: <FlashOnIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
-  { name: "Holidaysri Coins", path: "/coins", icon: <CurrencyExchangeIcon /> },
+  { name: "Unlock Your Holidaysri Coins and Treasure", path: "/coins", icon: <CurrencyExchangeIcon /> },
   { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
   { name: "Customer Support & Feedback", path: "/partners", icon: <SupportAgentIcon /> },
 ];
@@ -230,7 +239,7 @@ const SidebarWithNavbar = () => {
         onClick={() => setButtonState(!buttonState)}
         sx={{
           position: "fixed",
-          top: "150px",
+          top: "180px",
           right: "0",
           zIndex: 1000,
           backgroundColor: "rgba(0,0,0,0.6)", // Default background color
@@ -297,6 +306,65 @@ const SidebarWithNavbar = () => {
         )}
       </Button>
 
+
+      {/* cart */}
+      <a href="/cart" style={{ textDecoration: 'none' }}>
+        <div
+          style={{
+            position: "fixed",
+            top: "130px",
+            right: "10px", // Small gap on the right side
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "38px", // Set width for circular button
+            height: "38px", // Set height for circular button
+            borderRadius: "50%", // Circle shape
+            backgroundColor: "rgba(0,0,0,0.6)", // Background color of the button
+            boxShadow: "0 6px 10px rgba(54, 53, 53, 0.9)",
+            transition: "width 0.3s ease-in-out, background-color 0.3s ease", // Smooth transitions
+            overflow: "hidden", // Ensure content stays within the button
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.5)", // Hover background color
+              boxShadow: "0 6px 12px rgba(64, 64, 64, 0.9)", // Darker shadow on hover
+            },
+          }}
+        >
+          {/* Customer Support Icon with ? */}
+          <ShoppingCartIcon sx={{ color: "#fff", fontSize: "19px" }} />
+        </div>
+      </a>
+
+
+      {/* Customer Support Button */}
+      <a href="/dfgdg" style={{ textDecoration: 'none' }}>
+        <div
+          style={{
+            position: "fixed",
+            bottom: "15px",
+            right: "10px", // Small gap on the right side
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "35px", // Set width for circular button
+            height: "35px", // Set height for circular button
+            borderRadius: "50%", // Circle shape
+            backgroundColor: "rgba(0,0,0,0.6)", // Background color of the button
+            boxShadow: "0 6px 10px rgba(54, 53, 53, 0.9)",
+            transition: "width 0.3s ease-in-out, background-color 0.3s ease", // Smooth transitions
+            overflow: "hidden", // Ensure content stays within the button
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.6)", // Hover background color
+              boxShadow: "0 6px 12px rgba(64, 64, 64, 0.9)", // Darker shadow on hover
+            },
+          }}
+        >
+          {/* Customer Support Icon with ? */}
+          <HelpOutlineIcon sx={{ color: "#fff", fontSize: "18px" }} />
+        </div>
+      </a>
 
       <Box sx={{ display: "flex" }}>
         {/* Conditionally render Sidebar */}
