@@ -258,16 +258,17 @@ const SidebarWithNavbar = () => {
           right: "0",
           zIndex: 1000,
           backgroundColor: "rgba(0,0,0,0.6)", // Default background color
+          backdropFilter: 'blur(5px)',
           boxShadow: "0 4px 8px rgba(64, 64, 64, 0.8)", // Dark gray shadow
           display: "flex",
           alignItems: "center",
           padding: "8px 12px",
           borderRadius: "20px 0 0 20px", // Top-left and bottom-left border-radius only
           transition: "width 0.3s ease-in-out, background-color 0.3s ease", // Smooth transitions
-          width: buttonState ? "210px" : "50px", // Dynamic width based on state
+          width: buttonState ? "200px" : "50px", // Adjusted dynamic width
           overflow: "hidden", // Ensure content stays within the button
           "&:hover": {
-            backgroundColor: "rgba(0,0,0,0.5)", // Hover background color
+            backgroundColor: "rgba(0,0,0,0.7)", // Hover background color
             boxShadow: "0 6px 12px rgba(64, 64, 64, 0.9)", // Darker shadow on hover
           },
         }}
@@ -275,51 +276,125 @@ const SidebarWithNavbar = () => {
         {buttonState ? (
           <>
             <ChevronRight style={{ color: "#fff", marginRight: "8px" }} />
-            <img
-              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" // Replace with your coin image URL
-              alt="Coin"
-              style={{ width: "25px", height: "25px", marginRight: "8px" }}
-            />
-              <a
-                href="/coins"
+            <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <a
+              href="/coins"
+              style={{
+                color: "rgb(97, 241, 174)",
+                fontWeight: "bold",
+                textDecoration: "none",
+                cursor: "pointer",
+                textAlign: "center",
+                marginTop: "5px",
+                marginBottom: "10px",
+                transition: "color 0.3s ease-in-out", // Smooth transition for hover effect
+              }}
+              onMouseEnter={(e) => (e.target.style.color = "rgb(103, 235, 103)")} // Lighter green on hover
+              onMouseLeave={(e) => (e.target.style.color = "rgb(97, 241, 174)")} // Original color on leave
+            >
+              Add More Assets 🤑 +
+            </a>
+
+
+              <div
                 style={{
-                  color: "gold", // Text color for "Total Coins"
-                  fontWeight: "bold", // Make the text bold
-                  textDecoration: "none", // Remove underline
-                  cursor: "pointer", // Show pointer on hover
-                  fontSize: "10px", // Optional: Adjust font size
-                  display: "flex", 
-                  flexDirection: "column", 
-                  alignItems: "center" // Center the content
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                  fontWeight: "600",
+                  color: "rgb(239, 241, 97)",
                 }}
               >
-                <span>
-                  Total Coins: {coins}
-                </span>
-                <span
+                <img
+                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp"
+                  alt="Coin"
+                  style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                />
+                <span>HSC : {coins}</span>
+              </div>
+
+              {/* Additional Sections */}
+              <div>
+                <div
                   style={{
-                    color: "rgb(241, 220, 97)", // Text color for "Add More HSC +"
-                    fontWeight: "bold", // Make the text bold
-                    cursor: "pointer", // Show pointer on hover
-                    marginTop: "5px", // Space between total coins and "Add +"
-                    fontSize: "10px", // Optional: Adjust font size
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "7px",
+                    fontWeight: "600",
+                    color: "rgb(201, 137, 253)",
                   }}
                 >
-                  ( Add More HSC + )
-                </span>
-              </a>
+                  <img
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734596034/diamond_no_bg-removebg-preview_g4kmq8-removebg-preview_mmpdds.png" // Replace with diamond image URL
+                    alt="Diamond"
+                    style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                  />
+                  <span>HSD : 0</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "7px",
+                    fontWeight: "600",
+                    color: "rgb(250, 129, 159)",
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734593799/download-removebg-preview_1-removebg-preview_u1ugnm.webp" // Replace with gem image URL
+                    alt="Gem"
+                    style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                  />
+                  <span>HSG : 0</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "7px",
+                    fontWeight: "600",
+                    color: "rgb(129, 167, 250)",
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734592935/Untitled-1_sa0ew5.webp" // Replace with token image URL
+                    alt="Token"
+                    style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                  />
+                  <span>HST : 0</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                    fontWeight: "600",
+                    color: "rgb(250, 183, 129)",
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734589579/realistic_Holidaysri_Voucher_icon-removebg-preview_oyduwr.webp" // Replace with voucher image URL
+                    alt="Voucher"
+                    style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                  />
+                  <span>HSV : 0</span>
+                </div>
+              </div>
+            </div>
           </>
         ) : (
           <>
             <ChevronLeft style={{ color: "#fff" }} />
             <img
-              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" // Replace with your coin image URL
+              src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734594960/Untitled-1_mzzz5s.webp" // Replace with your coin image URL
               alt="Coin"
               style={{ width: "25px", height: "25px" }}
             />
           </>
         )}
       </Button>
+
+
 
 
       {/* cart */}

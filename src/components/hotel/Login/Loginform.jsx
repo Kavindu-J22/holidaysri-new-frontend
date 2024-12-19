@@ -354,7 +354,7 @@ const LoginForm = () => {
                         {/* Coin Image */}
                         <div className="coin-image-container">
                             <img
-                                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp"
+                                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734579552/Untitled-1_k5okh1.webp"
                                 alt="Coin"
                                 className="coin-image"
                             />
@@ -362,7 +362,7 @@ const LoginForm = () => {
                         {/* Popup Content */}
                         <h2 className="popup-title">🎉 Congratulations {name}! 🎉</h2>
                         <p className="popup-text">
-                            You have joined us as a new user. Here's your <strong>100 LKR Gift</strong> 🎁.
+                            You have joined us as a new user. Here's your <strong>100 HSD (diamond) Gift</strong> 🎁.
                             <br />
                             To complete your registration, please provide the details below:
                         </p>
@@ -667,7 +667,7 @@ const LoginForm = () => {
 
     /* Submit Button */
     .popup-submit-btn {
-        background: linear-gradient(135deg, #1a7f5f, #28b463); /* Linear gradient from green shades */
+        background: linear-gradient(135deg,rgb(110, 26, 127),rgb(180, 131, 40)); /* Linear gradient from green shades */
         color: #fff;
         border: none;
         padding: 7px 20px;
@@ -681,7 +681,7 @@ const LoginForm = () => {
     }
 
     .popup-submit-btn:hover {
-        background: linear-gradient(135deg, #28b463, #1a7f5f); /* Reverse gradient on hover */
+        background: linear-gradient(135deg,rgb(180, 136, 40),rgb(103, 26, 127)); /* Reverse gradient on hover */
         transform: scale(1.05); /* Slightly enlarge the button on hover */
     }
 
