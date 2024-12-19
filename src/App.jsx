@@ -65,7 +65,7 @@ import { FaPersonBreastfeeding } from "react-icons/fa6";
 import { FaPersonHalfDress } from "react-icons/fa6";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
-
+import { IoRestaurantSharp } from "react-icons/io5";
 
                   // Pages
 
@@ -93,6 +93,7 @@ const navItems = [
   { name: "Plan Your Dream Tour with Us", path: "/destinations", icon: <AirplaneTicketIcon /> },
   { name: "Explore Destinations", path: "/destinations", icon: <TravelExploreIcon /> },
   { name: "Hotels & Accommodations", path: "/hotels", icon: <HotelIcon /> },
+  { name: "Cafes & restaurants", path: "/hotels", icon: <IoRestaurantSharp /> },
   { name: "Foods & Beverages", path: "/hotels", icon: <Fastfood /> },
   { name: "Live Rides Updates", path: "/vehicles", icon: <DepartureBoardIcon /> },
   { name: "Vehicle Rentals & Hire Services", path: "/vehicles", icon: <DirectionsCarIcon /> },
