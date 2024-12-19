@@ -64,6 +64,7 @@ import { FaPersonBurst } from "react-icons/fa6";
 import { FaPersonBreastfeeding } from "react-icons/fa6";
 import { FaPersonHalfDress } from "react-icons/fa6";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 
 
                   // Pages
@@ -153,6 +154,7 @@ const SidebarWithNavbar = () => {
   const [buttonState, setButtonState] = useState(false); // State to toggle button display
   const [coins, setCoins] = useState(0);
   const userEmail = localStorage.getItem("userEmail");
+  const cartItem = localStorage.getItem("cartItems") === "true"; // Check cartitem in localStorage
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -313,15 +315,15 @@ const SidebarWithNavbar = () => {
           style={{
             position: "fixed",
             top: "130px",
-            right: "10px", // Small gap on the right side
+            right: "12px", // Small gap on the right side
             zIndex: 1000,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "38px", // Set width for circular button
-            height: "38px", // Set height for circular button
+            width: "35px", // Set width for circular button
+            height: "35px", // Set height for circular button
             borderRadius: "50%", // Circle shape
-            backgroundColor: "rgba(0,0,0,0.6)", // Background color of the button
+            backgroundColor: cartItem ? "rgba(114, 81, 8, 0.84)" : "rgba(0,0,0,0.6)", // Light green if cartitem is true
             boxShadow: "0 6px 10px rgba(54, 53, 53, 0.9)",
             transition: "width 0.3s ease-in-out, background-color 0.3s ease", // Smooth transitions
             overflow: "hidden", // Ensure content stays within the button
@@ -331,7 +333,9 @@ const SidebarWithNavbar = () => {
             },
           }}
         >
-          {/* Customer Support Icon with ? */}
+          {cartItem && (
+            <NotificationImportantIcon sx={{ color: "#fff", fontSize: "9px" }} />
+          )}
           <ShoppingCartIcon sx={{ color: "#fff", fontSize: "19px" }} />
         </div>
       </a>
@@ -348,8 +352,8 @@ const SidebarWithNavbar = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "35px", // Set width for circular button
-            height: "35px", // Set height for circular button
+            width: "30px", // Set width for circular button
+            height: "30px", // Set height for circular button
             borderRadius: "50%", // Circle shape
             backgroundColor: "rgba(0,0,0,0.6)", // Background color of the button
             boxShadow: "0 6px 10px rgba(54, 53, 53, 0.9)",
@@ -362,9 +366,11 @@ const SidebarWithNavbar = () => {
           }}
         >
           {/* Customer Support Icon with ? */}
-          <HelpOutlineIcon sx={{ color: "#fff", fontSize: "18px" }} />
+          <HelpOutlineIcon sx={{ color: "#fff", fontSize: "17px" }} />
         </div>
       </a>
+
+      
 
       <Box sx={{ display: "flex" }}>
         {/* Conditionally render Sidebar */}
