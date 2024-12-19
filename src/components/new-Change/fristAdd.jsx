@@ -81,9 +81,9 @@ const FristAddShown = () => {
               }}
             >
               <img
-                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp"
+                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734579552/Untitled-1_k5okh1.webp"
                 alt="HSC Coins"
-                style={{ width: "80px", height: "80px" }}
+                style={{ width: "100px", height: "100px" }}
               />
             </Box>
 
@@ -100,11 +100,11 @@ const FristAddShown = () => {
               🚀 <strong>Register with Us</strong> and receive{" "}
               <span
                 style={{
-                  color: "rgba(168, 117, 7, 0.8)",
+                  color: "rgba(122, 7, 168, 0.8)",
                   fontWeight: "bold",
                 }}
               >
-                100 HSC Coins
+                100 HSD (diamonds)
               </span>{" "}
               as a New User Gift!
               <br />
@@ -115,7 +115,7 @@ const FristAddShown = () => {
             <Typography
               sx={{
                 fontSize: { xs: "0.9rem", sm: "1rem" },
-                color: "rgba(102, 93, 7, 0.8)",
+                color: "rgba(107, 57, 139, 0.8)",
                 textDecoration: "underline",
                 cursor: "pointer",
                 mb: 4,
@@ -125,7 +125,7 @@ const FristAddShown = () => {
                 window.location.href = "/coins";
               }}
             >
-              What is HSC and Why It's Important? Learn More!
+              What is HSD and Why It's Important? Learn More!
             </Typography>
 
             {/* Buttons Section */}
@@ -153,14 +153,14 @@ const FristAddShown = () => {
               <Button
                 variant="contained"
                 sx={{
-                  backgroundColor: "rgba(80, 92, 25, 0.8)",
+                  backgroundColor: "rgba(104, 82, 145, 0.8)",
                   color: "#fff",
                   fontWeight: "bold",
                   textTransform: "none",
                   width: "100%",
                   borderRadius: "8px",
                   "&:hover": {
-                    backgroundColor: "rgba(103, 119, 34, 0.8)",
+                    backgroundColor: "rgba(98, 39, 138, 0.8)",
                   },
                 }}
                 onClick={() => {

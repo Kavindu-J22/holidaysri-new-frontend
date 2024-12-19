@@ -630,10 +630,10 @@ const Register = () => {
                   color: "#fff", // White text color for contrast
                 }}
               >
-                {/* Icon or Image for Coins */}
+                {/* Icon or Image for gem */}
                 <Box
                   component="img"
-                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" // Replace with actual coin image URL
+                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734579552/Untitled-1_k5okh1.webp" // Replace with actual coin image URL
                   alt="Coins"
                   sx={{
                     width: { xs: 60, sm: 70, md: 80 }, // Adjust image size for different screen sizes
@@ -668,7 +668,7 @@ const Register = () => {
                 >
                   You are successfully registered! 🎉 <br />
                   As a welcome gift, you have earned{" "}
-                  <strong style={{ color: "#ffd700" }}>100 HSC</strong> for free. <br />
+                  <strong style={{ color: "rgb(208, 137, 250)" }}>100 HSD</strong> for free. <br />
                   Use it to earn money and enjoy your journey!
                 </Typography>
 
@@ -681,11 +681,11 @@ const Register = () => {
                     width: "100%",
                     padding: { xs: "10px", sm: "12px" }, // Adjust padding for mobile
                     fontWeight: "bold",
-                    backgroundImage: "linear-gradient(90deg, rgb(248, 196, 83), rgb(252, 121, 20))", // Gradient color
+                    backgroundImage: "linear-gradient(90deg, rgb(201, 83, 248), rgb(252, 113, 20))", // Gradient color
                     color: "#fff",
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)", // Text shadow
                     "&:hover": {
-                      backgroundImage: "linear-gradient(90deg, rgb(252, 121, 20), rgb(248, 196, 83))", // Reverse gradient on hover
+                      backgroundImage: "linear-gradient(90deg, rgb(167, 20, 252), rgb(248, 157, 83))", // Reverse gradient on hover
                     },
                     borderRadius: "8px",
                     boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.3)", // Button shadow
