@@ -71,6 +71,7 @@ import { MdOutlinePets } from "react-icons/md";
 import { IoFitness } from "react-icons/io5";
 import { FaHelmetSafety } from "react-icons/fa6";
 import { MdHealthAndSafety } from "react-icons/md";
+import { FaGifts } from "react-icons/fa";
 
                   // Pages
 
@@ -117,7 +118,7 @@ const navItems = [
       { name: "Expert Architects", path: "/other-categories/consultants", icon: <MdArchitecture /> },
       { name: "Talented Entertainers", path: "/other-categories/consultants", icon: <MusicNoteIcon  /> },
       { name: "Expert Event Planners", path: "/other-categories/consultants", icon: <FaPersonBurst  /> },
-      { name: "Compassionate Caregivers", path: "/other-categories/consultants", icon: <FaPersonBreastfeeding  /> },
+      { name: "Compassionate Caregivers & Earn Time Currency", path: "/other-categories/consultants", icon: <FaPersonBreastfeeding  /> },
       { name: "Creative Photographers", path: "/other-categories/consultants", icon: <CameraAltIcon  /> },
       { name: "Other Professionals & Services", path: "/other-categories/consultants", icon: <FaPersonHalfDress  /> },
       { name: "Technology Related Services", path: "/other-categories/collectibles", icon: <GrTechnology /> },
@@ -147,6 +148,7 @@ const navItems = [
   { name: "Exclusive Offers & Promotions", path: "/prising", icon: <FlashOnIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
   { name: "Unlock Your Holidaysri Coins and Treasure", path: "/coins", icon: <CurrencyExchangeIcon /> },
+  { name: "Gift, Rewards and Tasks for Earning : Mission Board", path: "/coins", icon: <FaGifts /> },
   { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
   { name: "Customer Support & Feedback", path: "/partners", icon: <SupportAgentIcon /> },
 ];
@@ -195,6 +197,8 @@ const SidebarWithNavbar = () => {
               isPartner,
               subscription,
               RegisterType,
+              NicOrPassport,
+              ProfileStatus,
             } = response.data.user;
 
             // Set user details in local storage
@@ -209,6 +213,8 @@ const SidebarWithNavbar = () => {
             localStorage.setItem("isPartner", isPartner);
             localStorage.setItem("subscription", subscription);
             localStorage.setItem("RegisterType", RegisterType);
+            localStorage.setItem("NicOrPassport", NicOrPassport);
+            localStorage.setItem("ProfileStatus", ProfileStatus);
           } else {
             console.error("Failed to fetch user details");
           }
@@ -378,6 +384,54 @@ const SidebarWithNavbar = () => {
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
                   <span>HSV : 0</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                    fontWeight: "600",
+                    color: "rgb(129, 250, 135)",
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734691466/DALL_E_2024-12-20_16.02.51_-_A_highly_detailed_and_visually_stunning_green_gemstone_icon._The_gem_is_cut_in_an_emerald_shape_with_intricate_facets_that_reflect_light_brilliantly.__1-removebg-preview_nhqyp5.webp" // Replace with voucher image URL
+                    alt="Voucher"
+                    style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                  />
+                  <span>HSR : 0</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                    fontWeight: "600",
+                    color: "rgb(231, 247, 142)",
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734691465/DALL_E_2024-12-20_16.01.14_-_A_creative_and_premium_icon_for_a_time-based_currency_for_a_travel_platform._The_design_features_a_golden_clock_face_combined_with_a_shimmering_coin___1-removebg-preview_me1rgg.webp" // Replace with voucher image URL
+                    alt="Voucher"
+                    style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                  />
+                  <span>HSTC : 0</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                    fontWeight: "600",
+                    color: "rgb(245, 204, 90)",
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734691465/DALL_E_2024-12-20_16.08.46_-_A_realistic_and_vibrant_icon_representing_a_gift_for__Holidaysri___featuring_a_beautifully_wrapped_gift_box_with_a_glossy_finish__adorned_with_a_ribbo-removebg-preview_nmajyb.webp" // Replace with voucher image URL
+                    alt="Voucher"
+                    style={{ width: "20px", height: "20px", marginRight: "8px" }}
+                  />
+                  <span>HSGIFTS : 0</span>
                 </div>
               </div>
             </div>

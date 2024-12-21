@@ -354,7 +354,7 @@ const LoginForm = () => {
                         {/* Coin Image */}
                         <div className="coin-image-container">
                             <img
-                                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734579552/Untitled-1_k5okh1.webp"
+                                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734593799/download-removebg-preview_1-removebg-preview_u1ugnm.webp"
                                 alt="Coin"
                                 className="coin-image"
                             />
@@ -362,7 +362,7 @@ const LoginForm = () => {
                         {/* Popup Content */}
                         <h2 className="popup-title">🎉 Congratulations {name}! 🎉</h2>
                         <p className="popup-text">
-                            You have joined us as a new user. Here's your <strong>100 HSD (diamond) Gift</strong> 🎁.
+                            You have joined us as a new user. Here's your <strong>100 HSG (Gems) Gift</strong> 🎁.
                             <br />
                             To complete your registration, please provide the details below:
                         </p>

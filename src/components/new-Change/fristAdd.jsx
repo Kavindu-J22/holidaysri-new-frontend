@@ -81,7 +81,7 @@ const FristAddShown = () => {
               }}
             >
               <img
-                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734579552/Untitled-1_k5okh1.webp"
+                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734593799/download-removebg-preview_1-removebg-preview_u1ugnm.webp"
                 alt="HSC Coins"
                 style={{ width: "100px", height: "100px" }}
               />
@@ -100,11 +100,11 @@ const FristAddShown = () => {
               🚀 <strong>Register with Us</strong> and receive{" "}
               <span
                 style={{
-                  color: "rgba(122, 7, 168, 0.8)",
+                  color: "rgba(184, 15, 65, 0.8)",
                   fontWeight: "bold",
                 }}
               >
-                100 HSD (diamonds)
+                100 HSG (Gems)
               </span>{" "}
               as a New User Gift!
               <br />
@@ -115,7 +115,7 @@ const FristAddShown = () => {
             <Typography
               sx={{
                 fontSize: { xs: "0.9rem", sm: "1rem" },
-                color: "rgba(107, 57, 139, 0.8)",
+                color: "rgba(148, 70, 109, 0.8)",
                 textDecoration: "underline",
                 cursor: "pointer",
                 mb: 4,
@@ -148,19 +148,19 @@ const FristAddShown = () => {
                   window.location.href = "/register";
                 }}
               >
-                Register Now 🍃
+                Sign In Now 🍃
               </Button>
               <Button
                 variant="contained"
                 sx={{
-                  backgroundColor: "rgba(104, 82, 145, 0.8)",
+                  backgroundColor: "rgba(156, 25, 64, 0.8)",
                   color: "#fff",
                   fontWeight: "bold",
                   textTransform: "none",
                   width: "100%",
                   borderRadius: "8px",
                   "&:hover": {
-                    backgroundColor: "rgba(98, 39, 138, 0.8)",
+                    backgroundColor: "rgba(138, 39, 88, 0.8)",
                   },
                 }}
                 onClick={() => {
@@ -168,7 +168,7 @@ const FristAddShown = () => {
                   window.location.href = "/login";
                 }}
               >
-                Login Now 🍂
+                Register Now 🍂
               </Button>
             </Box>
 

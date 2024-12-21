@@ -633,7 +633,7 @@ const Register = () => {
                 {/* Icon or Image for gem */}
                 <Box
                   component="img"
-                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734579552/Untitled-1_k5okh1.webp" // Replace with actual coin image URL
+                  src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734593799/download-removebg-preview_1-removebg-preview_u1ugnm.webp" // Replace with actual coin image URL
                   alt="Coins"
                   sx={{
                     width: { xs: 60, sm: 70, md: 80 }, // Adjust image size for different screen sizes
@@ -668,7 +668,7 @@ const Register = () => {
                 >
                   You are successfully registered! 🎉 <br />
                   As a welcome gift, you have earned{" "}
-                  <strong style={{ color: "rgb(208, 137, 250)" }}>100 HSD</strong> for free. <br />
+                  <strong style={{ color: "rgb(250, 109, 132)" }}>100 HSG</strong> for free. <br />
                   Use it to earn money and enjoy your journey!
                 </Typography>
 
