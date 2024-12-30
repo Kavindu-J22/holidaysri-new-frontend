@@ -168,6 +168,13 @@ const SidebarWithNavbar = () => {
   const [loading, setLoading] = useState(true);
   const [buttonState, setButtonState] = useState(false); // State to toggle button display
   const [coins, setCoins] = useState(0);
+  const [diamond, setDiamond] = useState(0);
+  const [gem, setGem] = useState(0);
+  const [tokens, setTokens] = useState(0);
+  const [voucher, setVoucher] = useState(0);
+  const [rewardPoint, setRewardPoint] = useState(0);
+  const [timeCurrency, setTimeCurrency] = useState({ hours: 0, minutes: 0 });
+  const [gift, setGift] = useState(0);
   const userEmail = localStorage.getItem("userEmail");
   const cartItem = localStorage.getItem("cartItems") === "true"; // Check cartitem in localStorage
 
@@ -227,6 +234,7 @@ const SidebarWithNavbar = () => {
 
   useEffect(() => {
     if (userEmail) {
+      // Fetch coins
       axios
         .get(`http://localhost:8000/coin/coins/${userEmail}`)
         .then((response) => {
@@ -237,10 +245,110 @@ const SidebarWithNavbar = () => {
           }
         })
         .catch(() => setCoins(0));
+  
+      // Fetch diamonds
+      axios
+        .get(`http://localhost:8000/diamond/diamonds/${userEmail}`)
+        .then((response) => {
+          if (response.data.success) {
+            setDiamond(response.data.diamonds);
+          } else {
+            setDiamond(0);
+          }
+        })
+        .catch(() => setDiamond(0));
+
+      // Fetch gems
+      axios
+      .get(`http://localhost:8000/gem/gems/${userEmail}`)
+      .then((response) => {
+        if (response.data.success) {
+          setGem(response.data.allGems);
+        } else {
+          setGem(0);
+        }
+      })
+      .catch(() => setGem(0));
+
+      // Fetch tokens
+      axios
+      .get(`http://localhost:8000/token/tokens/${userEmail}`)
+      .then((response) => {
+        if (response.data.success) {
+          setTokens(response.data.allTokens);
+        } else {
+          setTokens(0);
+        }
+      })
+      .catch(() => setTokens(0));
+
+      // Fetch vouchers
+      axios
+      .get(`http://localhost:8000/voucher/vouchers/${userEmail}`)
+      .then((response) => {
+        if (response.data.success) {
+          setVoucher(response.data.vouchers);
+        } else {
+          setVoucher(0);
+        }
+      })
+      .catch(() => setVoucher(0));
+
+      // Fetch RewardPoints
+      axios
+      .get(`http://localhost:8000/reward/rewards/${userEmail}`)
+      .then((response) => {
+        if (response.data.success) {
+          setRewardPoint(response.data.points);
+        } else {
+          setRewardPoint(0);
+        }
+      })
+      .catch(() => setRewardPoint(0));
+
+    // Fetch TimeCurrency
+    axios
+      .get(`http://localhost:8000/TimeCurrency/timeCurency/${userEmail}`)
+      .then((response) => {
+        if (response.data.success) {
+          setTimeCurrency({
+            hours: response.data.hours,
+            minutes: response.data.minutes,
+          });
+        } else {
+          setTimeCurrency({
+            hours: 0,
+            minutes: 0,
+          });
+        }
+      })
+      // Fix .catch to set both hours and minutes to 0
+      .catch(() => setTimeCurrency({ hours: 0, minutes: 0 }));
+
+    // Fetch Gifts
+      axios
+      .get(`http://localhost:8000/gift/gifts/${userEmail}`)
+      .then((response) => {
+        if (response.data.success) {
+          setGift(response.data.gifts);
+        } else {
+          setGift(0);
+        }
+      })
+      .catch(() => setGift(0));
+
     } else {
       setCoins(0);
+      setDiamond(0);
+      setGem(0);
+      setTokens(0);
+      setVoucher(0);
+      setRewardPoint(0);
+      setTimeCurrency({ hours: 0, minutes: 0 });
+      setGift(0);
     }
   }, [userEmail]);
+  
 
   if (loading) {
     return <Loader />;
@@ -335,7 +443,7 @@ const SidebarWithNavbar = () => {
                     alt="Diamond"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
-                  <span>HSD : 0</span>
+                  <span>HSD : {diamond}</span>
                 </div>
                 <div
                   style={{
@@ -351,7 +459,7 @@ const SidebarWithNavbar = () => {
                     alt="Gem"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
-                  <span>HSG : 0</span>
+                  <span>HSG : {gem}</span>
                 </div>
                 <div
                   style={{
@@ -367,7 +475,7 @@ const SidebarWithNavbar = () => {
                     alt="Token"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
-                  <span>HST : 0</span>
+                  <span>HST : {tokens}</span>
                 </div>
                 <div
                   style={{
@@ -383,7 +491,7 @@ const SidebarWithNavbar = () => {
                     alt="Voucher"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
-                  <span>HSV : 0</span>
+                  <span>HSV : {voucher}</span>
                 </div>
                 <div
                   style={{
@@ -399,7 +507,7 @@ const SidebarWithNavbar = () => {
                     alt="Voucher"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
-                  <span>HSR : 0</span>
+                  <span>HSR : {rewardPoint}</span>
                 </div>
                 <div
                   style={{
@@ -415,7 +523,7 @@ const SidebarWithNavbar = () => {
                     alt="Voucher"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
-                  <span>HSTC : 0</span>
+                  <span>HSTC : {timeCurrency.hours}h {timeCurrency.minutes}min</span>
                 </div>
                 <div
                   style={{
@@ -431,7 +539,7 @@ const SidebarWithNavbar = () => {
                     alt="Voucher"
                     style={{ width: "20px", height: "20px", marginRight: "8px" }}
                   />
-                  <span>HSGIFTS : 0</span>
+                  <span>HSGIFTS : {gift}</span>
                 </div>
               </div>
             </div>
