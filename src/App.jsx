@@ -830,7 +830,7 @@ const SideBarWithConditionalRender = () => {
                 sx={{
                   pl: 4,
                   backgroundColor:
-                    location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "#d9f0e65d", // Active link highlight for subcategories
+                    location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "rgba(114, 245, 232, 0.12)", // Active link highlight for subcategories
                     borderBottom: "1px solid #b2b3aafe",
                   borderRadius: "10px",
                   "&:hover": {
@@ -1001,7 +1001,7 @@ const SideBarWithConditionalRender = () => {
                 to={subItem.path}
                 sx={{
                   pl: 4,
-                  backgroundColor: location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "#d9f0e65d",
+                  backgroundColor: location.pathname === subItem.path ? "rgba(0, 0, 0, 0.3)" : "rgba(114, 245, 232, 0.12)",
                   borderBottom: "1px solid #b2b3aafe",
                   borderRadius: "10px",
                   "&:hover": {

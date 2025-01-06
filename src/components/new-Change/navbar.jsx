@@ -39,16 +39,8 @@ const Navbar = ({ isLoggedIn }) => {
     const role = localStorage.getItem("userRole");
     if (role === "admin") {
       window.location.href = "/admin";
-    } else if (role === "seller") {
-      window.location.href = "/foreign-dashboard";
-    } else if (role === "agent") {
-      window.location.href = "/local-dashboard";
-    } else if (role === "guide") {
-      window.location.href = "/Guider-Dashboard";
-    } else if (role === "partner") {
-      window.location.href = "/Partner-Dashboard";
     } else {
-      window.location.href = "/MainuserDashboard";
+      window.location.href = "/profile-Dashboard";
     }
   };
 
