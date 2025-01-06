@@ -7,12 +7,12 @@ import { useNavigate } from "react-router-dom";
 const TextPage = () => {
   const [data, setData] = useState({});
   const navigate = useNavigate();
-  const id = "65f58296f707aa390b10db8a";
+  const id = "677c3cf4d1f1323d5ca309a4";
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(`https://holidaysri-backend-9xm4.onrender.com/rate/get/${id}`);
+        const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
         setData(response.data.rate);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -31,7 +31,7 @@ const TextPage = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`https://holidaysri-backend-9xm4.onrender.com/rate/updateRate/${id}`, data);
+      await axios.put(`http://localhost:8000/rate/updateRate/${id}`, data);
       alert('Record updated successfully!');
     } catch (error) {
       console.error('Error updating record:', error);
@@ -44,21 +44,34 @@ const TextPage = () => {
 
   return (
     <div className='maintaxcont'>
-      <Paper elevation={3} style={{ padding: '50px', borderRadius: '15px', maxWidth: '70%', margin: '20px auto', backgroundColor: '#e5e6f8f9' }}>
-        <Button
-          variant="contained"
-          sx={{
-            color: "white",
-            backgroundColor: "#121f65",
-            borderRadius: "30px",
-            marginBottom: '20px'
-          }}
-          onClick={goBack}
-        >
-          Back
-        </Button>
+      <Paper
+        elevation={3}
+        style={{
+          padding: '50px',
+          borderRadius: '15px',
+          maxWidth: '100%',
+          marginTop: '60px',
+          backgroundColor: 'rgba(241, 233, 250, 0.44)',
+          backdropFilter: 'blur(10px)', // Add blur effect
+          WebkitBackdropFilter: 'blur(10px)', // For Safari support
+        }}
+      >
 
-        <Typography variant="h4" component="h2" gutterBottom align="center" style={{ color: '#222',fontSize:'28px', fontWeight: 800, marginBottom: '30px' }}>🪙 RATES & DISCOUNTS 🪙</Typography>
+    <Typography
+      variant="h4"
+      component="h2"
+      gutterBottom
+      align="center"
+      sx={{
+        color: '#222',
+    
+        fontWeight: 800,
+        marginBottom: '30px',
+      }}
+    >
+      🪙 RATES & DISCOUNTS 🪙
+    </Typography>
+
         
         <Box component="form" noValidate autoComplete="off">
           <Grid container spacing={3}>
@@ -73,7 +86,7 @@ const TextPage = () => {
 
 
             <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🏩 Hotel Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🏩 Hotel Category :</Typography>
             </Grid>
             {[
               { label: 'Hotel Rate ( Hottel Price : LKR )', name: 'hotelAdvertiseRate' },
@@ -101,7 +114,7 @@ const TextPage = () => {
 
 
         <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🏝️ Package Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🏝️ Package Category :</Typography>
             </Grid>
             {[
               { label: 'Package Rate (Pckage Price : LKR)', name: 'packageAdvertiseRate' },
@@ -128,7 +141,7 @@ const TextPage = () => {
   Products Discount */}
 
       <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">📦 Products Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">📦 Products Category :</Typography>
             </Grid>
             {[
               { label: 'Products Rate( Product Price : LKR )', name: 'productsAdvertiseRate' },
@@ -153,7 +166,7 @@ const TextPage = () => {
   Vehicle Discount */}
 
         <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🚘 Vehicle Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🚘 Vehicle Category :</Typography>
             </Grid>
             {[
               { label: 'Vehicle Rate (Vehicle Price : LKR )', name: 'vehicleAdvertiseRate' },
@@ -178,7 +191,7 @@ const TextPage = () => {
   Agent Discount */}
 
       <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🤵‍♂️ Agent Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🤵‍♂️ Agent Category :</Typography>
             </Grid>
             {[
               { label: 'Agent Rate (Agent Price : Not In Use )', name: 'agentAdvertiseRate' },
@@ -203,7 +216,7 @@ const TextPage = () => {
   Guide Discount */}
 
         <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🧑‍✈️ Guide Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🧑‍✈️ Guide Category :</Typography>
             </Grid>
             {[
              { label: 'Guide Rate ( Guider Registration Fee : LKR )', name: 'guideAdvertiseRate' },
@@ -228,7 +241,7 @@ const TextPage = () => {
   Event Discount */}
 
       <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🎊  Event Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🎊  Event Category :</Typography>
 
             </Grid>
             {[
@@ -258,11 +271,11 @@ const TextPage = () => {
   Partner Foreign Earn Rate */}
 
         <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">👥   Partner Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">👥   Partner Category :</Typography>
 
         </Grid>
         <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555">🏴 Local Partners :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333">🏴 Local Partners :</Typography>
         </Grid>
             {[
               { label: 'Local Partner Registration Rate ( Price : LKR )', name: 'partnerLocalRate' },
@@ -284,7 +297,7 @@ const TextPage = () => {
             ))}
 
         <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555">🏳️ Foreign Partners :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333">🏳️ Foreign Partners :</Typography>
 
         </Grid>
         {[
@@ -314,11 +327,11 @@ const TextPage = () => {
   Promo Code Foreign Earn Rate (Price :  USD  */}
 
       <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">💵  Promo Code Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">💵  Promo Code Category :</Typography>
 
       </Grid>
       <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555">🎟️ Local Promo Codes  :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333">🎟️ Local Promo Codes  :</Typography>
 
       </Grid>
             {[
@@ -341,7 +354,7 @@ const TextPage = () => {
             ))}
 
       <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555">🎫  Foreign Promo Codes  :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333">🎫  Foreign Promo Codes  :</Typography>
 
       </Grid>
       {[
@@ -371,7 +384,7 @@ const TextPage = () => {
   */}
 
       <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🛺 Live Ride Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🛺 Live Ride Category :</Typography>
             </Grid>
             {[
               { label: 'Live Ride Daily Rate  ( Price : LKR )', name: 'liveRideDailyRate' },
@@ -399,7 +412,7 @@ const TextPage = () => {
   */}
 
 <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🍱 Food Category :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🍱 Food Category :</Typography>
             </Grid>
             {[
               { label: 'Daily Food Rate (Price : LKR)', name: 'dailyFoodRate' },
@@ -430,7 +443,7 @@ const TextPage = () => {
   Monthly Payment Discount ( Live ride Motnthly Ect: ) */}
 
         <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">🗓️  Main Time Based Discount Rates :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🗓️  Main Time Based Discount Rates :</Typography>
 
             </Grid>
             {[
@@ -459,7 +472,7 @@ const TextPage = () => {
   */}
 
 <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">💰   Main Time Based Earn Rates :</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">💰   Main Time Based Earn Rates :</Typography>
 
             </Grid>
             {[
@@ -485,7 +498,7 @@ const TextPage = () => {
 Earning Rate (Price : LKR )            */}
 
 <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom color="#555" fontSize="14px" fontWeight="600">Main Earning Rate</Typography>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">Main Earning Rate</Typography>
             </Grid>
             {[
               { label: 'Earning Rate ( Hotels, Vehicles and Ect Main Earning Amount : LKR ', name: 'earningRate' }

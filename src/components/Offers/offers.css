@@ -1,5 +1,4 @@
 .maintaxcont{
-    background: url(https://wallpapers.com/images/hd/finance-gold-coins-and-graphs-7a9ktmlo09qgrhtc.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -9,11 +8,10 @@
     align-items: center;
     justify-content: center;
 }
-.maintaxcont h2{
+.maintaxcont h2 {
     margin-top: 10px;
-    color: #fff;
-    font-size: 2rem;
-    text-shadow: 10px 5px 40px #fff;
+    color: #333;
+    text-shadow: 0 0 20px #f5b1f5a1, 0 0 40px #e1a8f796, 0 0 70px #a202ff70;
 }
 .ratecontentcont{
     display: flex;
@@ -71,3 +69,35 @@
     background-color: #ffffffa1;
     border: none;
 }
+
+/* Base Typography Styles */
+h2 {
+    font-weight: 800;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  /* Responsive Typography */
+  @media (max-width: 370px) {
+    .maintaxcont h2 {
+      font-size: 18px;
+    }
+  }
+  
+  @media (min-width: 371px) and (max-width: 650px) {
+    .maintaxcont h2 {
+      font-size: 20px;
+    }
+  }
+  
+  @media (min-width: 651px) and (max-width: 899px) {
+    .maintaxcont h2 {
+      font-size: 20px;
+    }
+  }
+  
+  @media (min-width: 900px) {
+    .maintaxcont h2 {
+      font-size: 25px;
+    }
+  }

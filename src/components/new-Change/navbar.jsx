@@ -117,7 +117,7 @@ const Navbar = ({ isLoggedIn }) => {
 
         {/* Mobile Menu */}
         <Box sx={{ display: { xs: "flex", md: "none" }, flexDirection: "column", alignItems: "center" }}>
-        <Button
+          <Button
             variant="outlined"
             color="inherit"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -127,7 +127,7 @@ const Navbar = ({ isLoggedIn }) => {
               textTransform: "capitalize",
               display: "flex",
               alignItems: "center",
-              padding: { xs: "5px 7px", sm: "8px 16px" }, // Smaller button padding on mobile view
+              padding: { xs: "5px 7px", sm: "8px 16px" },
               gap: 1,
               '&:hover': {
                 borderColor: "white",
@@ -153,21 +153,50 @@ const Navbar = ({ isLoggedIn }) => {
                 borderRadius: 1,
               }}
             >
-              <Button color="inherit" sx={{ fontWeight: 500 }} onClick={() => navigate("/")}>
+              <Button 
+                color="inherit" 
+                sx={{ fontWeight: 500 }} 
+                onClick={() => {
+                  navigate("/");
+                  setMenuOpen(false);  // Close menu after navigating
+                }}
+              >
                 Home
               </Button>
-              <Button color="inherit" sx={{ fontWeight: 500 }} onClick={() => navigate("/service")}>
+              <Button 
+                color="inherit" 
+                sx={{ fontWeight: 500 }} 
+                onClick={() => {
+                  navigate("/service");
+                  setMenuOpen(false);  // Close menu after navigating
+                }}
+              >
                 Service
               </Button>
-              <Button color="inherit" sx={{ fontWeight: 500 }} onClick={() => navigate("/about")}>
+              <Button 
+                color="inherit" 
+                sx={{ fontWeight: 500 }} 
+                onClick={() => {
+                  navigate("/about");
+                  setMenuOpen(false);  // Close menu after navigating
+                }}
+              >
                 About
               </Button>
-              <Button color="inherit" sx={{ fontWeight: 500 }} onClick={() => navigate("/contact")}>
+              <Button 
+                color="inherit" 
+                sx={{ fontWeight: 500 }} 
+                onClick={() => {
+                  navigate("/contact");
+                  setMenuOpen(false);  // Close menu after navigating
+                }}
+              >
                 Contact
               </Button>
             </Box>
           )}
         </Box>
+
 
         {/* Right Side Icons/Buttons */}
         <Box

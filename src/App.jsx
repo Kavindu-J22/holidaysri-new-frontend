@@ -27,7 +27,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import GuideIcon from "@mui/icons-material/EmojiPeople";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import MenuIcon from "@mui/icons-material/Menu";
+import AppsIcon from '@mui/icons-material/Apps';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import HikingIcon from '@mui/icons-material/Hiking';
@@ -72,6 +72,8 @@ import { IoFitness } from "react-icons/io5";
 import { FaHelmetSafety } from "react-icons/fa6";
 import { MdHealthAndSafety } from "react-icons/md";
 import { FaGifts } from "react-icons/fa";
+import { FaStroopwafel } from "react-icons/fa";
+import { MdCastForEducation } from "react-icons/md";
 
                   // Pages
 
@@ -82,7 +84,8 @@ import Coins from "./components/new-Change/coin";
 import NewRegister from "./components/new-Change/newRegister";
 import PromocodesPage from "./components/new-Change/PromoCodes";
 import FristAdd from "./components/new-Change/fristAdd";
-import { MdCastForEducation } from "react-icons/md";
+import ProfileDashboard from "./components/new-Change/profile";
+
 
 
 // Old Imports
@@ -90,7 +93,7 @@ import LoginMobile from "./components/hotel/Login/LoginMobile";
 import AllLocation from "./pages/alllocations/Locations";
 import Loader from "./components/loader/Loader";
 import PrisingNew from "./components/prising"
-import { transform } from "framer-motion";
+import RatesPage from "./components/Offers/Offers";
 
 
 // Sidebar items with icons
@@ -118,8 +121,9 @@ const navItems = [
       { name: "Expert Architects", path: "/other-categories/consultants", icon: <MdArchitecture /> },
       { name: "Talented Entertainers", path: "/other-categories/consultants", icon: <MusicNoteIcon  /> },
       { name: "Expert Event Planners", path: "/other-categories/consultants", icon: <FaPersonBurst  /> },
-      { name: "Compassionate Caregivers & Earn Time Currency", path: "/other-categories/consultants", icon: <FaPersonBreastfeeding  /> },
       { name: "Creative Photographers", path: "/other-categories/consultants", icon: <CameraAltIcon  /> },
+      { name: "Compassionate Caregivers & Earn Time Currency", path: "/other-categories/consultants", icon: <FaPersonBreastfeeding  /> },
+      { name: "Trusted Astrologists", path: "/other-categories/consultants", icon: <FaStroopwafel  /> },
       { name: "Other Professionals & Services", path: "/other-categories/consultants", icon: <FaPersonHalfDress  /> },
       { name: "Technology Related Services", path: "/other-categories/collectibles", icon: <GrTechnology /> },
       { name: "Pet Care & Services", path: "/other-categories/consultants", icon: <MdOutlinePets /> },
@@ -632,8 +636,8 @@ const SidebarWithNavbar = () => {
   sx={{
     flexGrow: 1,
     bgcolor: "#f9f9f9",
-    pt: location.pathname === "/login" || location.pathname === "/register" ? 0 : 10,
-    p: location.pathname === "/login" || location.pathname === "/register" ? 0 : 0,
+    pt: location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/profile-Dashboard" ? 0 : 10,
+    p: location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/profile-Dashboard" ? 0 : 0,
     backgroundImage: `
       linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2)), 
       url("https://res.cloudinary.com/dqdcmluxj/image/upload/v1733860731/wallpaperflare.com_wallpaper_1_kdsccv.webp")
@@ -661,10 +665,12 @@ const SidebarWithNavbar = () => {
     <Route path="/prising" element={<PrisingNew title="Prising page" />} />
     <Route path="/coins" element={<Coins title="Coins page" />} />
     <Route path="/Promocodes" element={<PromocodesPage title="Promocodes page" />} />
+    <Route path="/ratesPage" element={<RatesPage />} />
 
     {/* No-side bar pages */}
     <Route path="/register" element={<NewRegister />} />
     <Route path="/login" element={<LoginMobile />} />
+    <Route path="/profile-Dashboard" element={<ProfileDashboard />} />
   </Routes>
 </Box>
 
@@ -699,7 +705,7 @@ const SideBarWithConditionalRender = () => {
   const toggleSidebar = () => setOpen(!open);
 
   // Define routes where sidebar should not be visible
-  const noSidebarRoutes = ["/login", "/register"];
+  const noSidebarRoutes = ["/login", "/register", "/profile-Dashboard"];
   const isNoSidebarPage = noSidebarRoutes.includes(location.pathname);
 
   return (
@@ -729,7 +735,7 @@ const SideBarWithConditionalRender = () => {
             
           }}
         >
-          <MenuIcon />
+          <AppsIcon />
         </IconButton>
 
 
