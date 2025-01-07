@@ -1,7 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaGem, FaCrown, FaStar, FaRecycle, FaGift } from 'react-icons/fa';
+import axios from 'axios';
 
 const PromoCodePage = () => {
+  const [data, setData] = useState({});
+  const navigate = useNavigate();
+  const id = "677c3cf4d1f1323d5ca309a4";
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
+        setData(response.data.rate);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchData();
+  }, [id]);
+
+  const handlePurchase = (priceLKR, priceUSD, title) => {
+    const userEmail = localStorage.getItem('userEmail');
+    const countryCode = localStorage.getItem('countryCode');
+
+    if (!userEmail) {
+        if (window.confirm("Sign In first to purchase. Click OK to go to the Sign In page.")) {
+            navigate('/login');
+        }
+        return;
+    }
+
+    if (!countryCode) {
+        if (window.confirm("Complete your profile first to purchase. Click OK to go to the profile dashboard.")) {
+            navigate('/profile-Dashboard');
+        }
+        return;
+    }
+
+    const price = countryCode === '+94' ? priceLKR : priceUSD;
+    const currency = countryCode === '+94' ? 'LKR' : 'USD';
+
+    navigate('/checkout', {
+        state: { Price: price, Currency: currency, Title: title, Subject: 'Promo code Purchase' },
+    });
+};
+
+
   const promoCodes = [
     {
       title: 'Diamond Promo Code',
@@ -10,23 +55,26 @@ const PromoCodePage = () => {
           As a HolidaySri agent, unlock your potential by using the Diamond Promo Code. Offer exclusive discounts to advertisers and earn a remarkable <span style={{ color: 'rgb(102, 248, 224)', fontWeight: '600' }}>450 LKR</span> per advertisement. An Extra benefit we give you <span style={{ color: 'rgb(233, 235, 116)' }}>Free 2000 HSC (HolidaySri Coins).</span> You can even sell this premium promo code at the highest price, ensuring you get the most value from your efforts. Start your journey to financial success today!
         </>
       ),
-      price: '20,000 LKR / 100 USD',
+      priceLKR: data.diamondPromocodeRate || 'Loading...',
+      priceUSD: data.diamondPromocodeRateForeign || 'Loading...',
       buttonText: 'Purchase Now',
       color: 'rgb(52, 250, 233)',
       icon: <FaGem size={40} color="rgb(52, 250, 233)" />,
+      onClick: () => handlePurchase(data.diamondPromocodeRate, data.diamondPromocodeRateForeign, 'Diamond Promo Code'),
     },
     {
       title: 'Gold Promo Code',
       description: (
         <>
-          Elevate your earning potential with the Gold Promo Code. Share it with advertisers to give them exclusive discounts and earn <span style={{ color: 'rgb(240, 214, 98)', fontWeight: '600' }}>300 LKR</span> per advertisement. 
-            An Extra benefit we give you <span style={{ color: 'rgb(233, 235, 116)' }}>Free 1700 HSC (HolidaySri Coins).</span> This code provides a golden opportunity to maximize your profits while delivering value to others.
+          Elevate your earning potential with the Gold Promo Code. Share it with advertisers to give them exclusive discounts and earn <span style={{ color: 'rgb(240, 214, 98)', fontWeight: '600' }}>300 LKR</span> per advertisement. An Extra benefit we give you <span style={{ color: 'rgb(233, 235, 116)' }}>Free 1700 HSC (HolidaySri Coins).</span> This code provides a golden opportunity to maximize your profits while delivering value to others.
         </>
       ),
-      price: '13,000 LKR / 80 USD',
+      priceLKR: data.goldPromocodeRate || 'Loading...',
+      priceUSD: data.goldPromocodeRateForeign || 'Loading...',
       buttonText: 'Purchase Now',
       color: 'rgb(240, 214, 98)',
       icon: <FaCrown size={40} color="rgb(240, 214, 98)" />,
+      onClick: () => handlePurchase(data.goldPromocodeRate, data.goldPromocodeRateForeign, 'Gold Promo Code'),
     },
     {
       title: 'Silver Promo Code',
@@ -35,10 +83,12 @@ const PromoCodePage = () => {
           Start earning with the Silver Promo Code. Help advertisers save money and receive <span style={{ color: '#BDC3C7', fontWeight: '600'}}>200 LKR</span> per advertisement. An Extra benefit we give you Free <span style={{ color: 'rgb(233, 235, 116)'}}>800 HSC (HolidaySri Coins).</span> Affordable and effective, this promo code is perfect for those starting their agent journey.
         </>
       ),
-      price: '8,000 LKR / 60 USD',
+      priceLKR: data.silverPromocodeRate || 'Loading...',
+      priceUSD: data.silverPromocodeRateForeign || 'Loading...',
       buttonText: 'Purchase Now',
       color: '#BDC3C7',
       icon: <FaStar size={40} color="#BDC3C7" />,
+      onClick: () => handlePurchase(data.silverPromocodeRate, data.silverPromocodeRateForeign, 'Silver Promo Code'),
     },
     {
       title: 'Pre-Used Promo Code',
@@ -47,10 +97,11 @@ const PromoCodePage = () => {
         Get a head start with a Pre-Used Promo Code. These codes have <span style={{ color: 'rgb(233, 235, 116)' }}>already been promoted by other agents</span> and come with an established track record. Purchase now to begin earning immediately and watch your profits grow.
         </>
       ),
-        price: 'View and Purchase',
+      price: 'View and Purchase',
       buttonText: 'View and Purchase Now',
       color: '#2ECC71',
       icon: <FaRecycle size={40} color="#2ECC71" />,
+      onClick: () => navigate('/preeUseedPromocodes'),
     },
     {
       title: 'Get Free Promo Code',
@@ -59,10 +110,11 @@ const PromoCodePage = () => {
         Kickstart your earnings for free! Get a Free Promo Code and earn <span style={{ color: '#E74C3C', fontWeight: '600' }}>100 LKR</span> per advertisement. Once you reach a total earning of <span style={{ color: 'rgb(233, 235, 116)' }}>15,000 LKR, you can sell</span> your code and <span style={{ color: '#E74C3C', fontWeight: '600' }}>Earn Rate Increase to 200 LKR</span>. continue your journey to financial independence.
         </>
       ),
-        price: 'Free for All',
+      price: 'Free for All',
       buttonText: 'Get Now',
       color: '#E74C3C',
       icon: <FaGift size={40} color="#E74C3C" />,
+      onClick: () => navigate('/freePromoCodeGen'),
     },
   ];
 
@@ -76,7 +128,7 @@ const PromoCodePage = () => {
         minHeight: '100vh',
       }}
     >
-      <h1 style={{ textAlign: 'center', color: '#FFF', margin: '20px', fontSize: '30px' }}>🎫 Who is the HolidaySri Agent ? </h1>
+      <h1 style={{ textAlign: 'center', color: '#FFF', margin: '20px', fontSize: '30px' }}>🎫 Who is the HolidaySri Agent?</h1>
       <p
         style={{
           textAlign: 'center',
@@ -92,38 +144,37 @@ const PromoCodePage = () => {
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '30px' }}>
         {promoCodes.map((promo, index) => (
-            <div
+          <div
             key={index}
             style={{
-                position: 'relative',
-                border: `3px solid ${promo.color}`,
-                borderRadius: '15px',
-                padding: '20px',
-                width: '300px',
-                textAlign: 'center',
-                backgroundColor: 'rgb(20, 20, 20)', // Base color for glass effect
-                backdropFilter: 'blur(10px)', // Glass blur effect
-                boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.3)', // Shadow for depth
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                overflow: 'hidden', // Prevent pseudo-elements from overflowing
-                transition: 'transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease', // Smooth animation
+              position: 'relative',
+              border: `3px solid ${promo.color}`,
+              borderRadius: '15px',
+              padding: '20px',
+              width: '300px',
+              textAlign: 'center',
+              backgroundColor: 'rgb(20, 20, 20)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.3)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              overflow: 'hidden',
+              transition: 'transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease',
             }}
             onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'scale(1.05)'; // Slightly grow on hover
-                e.currentTarget.style.backgroundColor = 'rgba(37, 37, 34, 0.62)'; // Change background color
-                e.currentTarget.style.boxShadow = '0px 10px 20px rgba(0, 0, 0, 0.5)'; // Enhance shadow
+              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.backgroundColor = 'rgba(37, 37, 34, 0.62)';
+              e.currentTarget.style.boxShadow = '0px 10px 20px rgba(0, 0, 0, 0.5)';
             }}
             onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'scale(1)'; // Reset size on hover out
-                e.currentTarget.style.backgroundColor = 'rgb(20, 20, 20)'; // Reset background color
-                e.currentTarget.style.boxShadow = '0px 6px 12px rgba(0, 0, 0, 0.3)'; // Reset shadow
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.backgroundColor = 'rgb(20, 20, 20)';
+              e.currentTarget.style.boxShadow = '0px 6px 12px rgba(0, 0, 0, 0.3)';
             }}
-            >
-            {/* Pseudo-elements for gradient glow */}
+          >
             <div
-                style={{
+              style={{
                 content: '""',
                 position: 'absolute',
                 top: '0',
@@ -134,9 +185,9 @@ const PromoCodePage = () => {
                 background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0.5))',
                 opacity: '0.6',
                 borderRadius: 'inherit',
-                pointerEvents: 'none', // Prevent interaction
-                transition: 'opacity 0.3s ease', // Transition for smooth effect
-                }}
+                pointerEvents: 'none',
+                transition: 'opacity 0.3s ease',
+              }}
             />
             <div>
               <div style={{ marginBottom: '15px' }}>{promo.icon}</div>
@@ -151,21 +202,37 @@ const PromoCodePage = () => {
               >
                 {promo.description}
               </p>
-              <h3 style={{ color: 'rgb(248, 180, 102)', marginBottom: '15px', fontSize: '17px' }}>{promo.price}</h3>
+              <h3 style={{ color: 'rgb(248, 180, 102)', marginBottom: '15px', fontSize: '17px' }}>
+                {(promo.title === 'Pre-Used Promo Code' || promo.title === 'Get Free Promo Code') ? (
+                  promo.price
+                ) : (
+                  promo.priceLKR !== undefined && promo.priceUSD !== undefined ? (
+                    <>
+                      {localStorage.getItem('countryCode') ? (
+                        <>{localStorage.getItem('countryCode') === '+94' ? promo.priceLKR : promo.priceUSD} {localStorage.getItem('countryCode') === '+94' ? 'LKR' : 'USD'}</>
+                      ) : (
+                        `${promo.priceLKR} LKR / ${promo.priceUSD} USD`
+                      )}
+                    </>
+                  ) : (
+                    'Loading...'
+                  )
+                )}
+              </h3>
             </div>
             <button
               style={{
-                padding: '12px 25px',
+                padding: '10px 20px',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                color: '#444',
                 backgroundColor: promo.color,
-                color: 'rgba(92, 87, 87, 0.99)',
                 border: 'none',
-                borderRadius: '25px',
+                borderRadius: '5px',
                 cursor: 'pointer',
-                fontSize: '15px',
-                fontWeight: '600',
-                alignSelf: 'center',
                 marginTop: '20px',
               }}
+              onClick={promo.onClick}
             >
               {promo.buttonText}
             </button>
