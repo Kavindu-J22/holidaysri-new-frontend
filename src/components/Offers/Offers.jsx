@@ -38,9 +38,6 @@ const TextPage = () => {
     }
   };
 
-  const goBack = () => {
-    navigate(-1);
-  };
 
   return (
     <div className='maintaxcont'>
@@ -361,6 +358,111 @@ const TextPage = () => {
              { label: 'Promo Code  Foreign Agent Rate ( Price : USD )', name: 'promoCodeForeignRate' },
              { label: 'Promo Code Foreign  Agent Discount : USD', name: 'discountPromoCodeForeignPercentage' },
              { label: 'Promo Code Foreign  Agent Earn Rate : USD', name: 'promoCodeForeignEarnRate' }
+
+            ].map((field) => (
+              <Grid item xs={12} sm={6} key={field.name}>
+                <TextField
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={data[field.name] || ''}
+                  onChange={handleInputChange}
+                  sx={{ backgroundColor: '#fff', borderRadius: '10px' }}
+                  InputProps={{ style: { color: '#333' } }}
+                />
+              </Grid>
+            ))}
+
+
+
+  {/* new Promo code Categories  */}
+
+
+  <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">💵  New Promo Code Category :</Typography>
+
+      </Grid>
+      <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom color="#333">🎟️ Diamond Promo Code  :</Typography>
+
+      </Grid>
+            {[
+             { label: 'Diamond Promo Price ( LKR )', name: 'diamondPromocodeRate' },
+             { label: 'Diamond Promo Price ( USD )', name: 'diamondPromocodeRateForeign' },
+             
+            ].map((field) => (
+              <Grid item xs={12} sm={6} key={field.name}>
+                <TextField
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={data[field.name] || ''}
+                  onChange={handleInputChange}
+                  sx={{ backgroundColor: '#fff', borderRadius: '10px' }}
+                  InputProps={{ style: { color: '#333' } }}
+                />
+              </Grid>
+            ))}
+
+      <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom color="#333">🎫  Gold Promo Code  :</Typography>
+
+      </Grid>
+      {[
+             { label: 'Gold Promo Price ( LKR )', name: 'goldPromocodeRate' },
+             { label: 'Gold Promo Price ( USD )', name: 'goldPromocodeRateForeign' },
+             
+
+            ].map((field) => (
+              <Grid item xs={12} sm={6} key={field.name}>
+                <TextField
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={data[field.name] || ''}
+                  onChange={handleInputChange}
+                  sx={{ backgroundColor: '#fff', borderRadius: '10px' }}
+                  InputProps={{ style: { color: '#333' } }}
+                />
+              </Grid>
+            ))}
+
+
+    <Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom color="#333">🎫  Silver Promo Code  :</Typography>
+
+      </Grid>
+      {[
+             { label: 'Silver Promo Price ( LKR )', name: 'silverPromocodeRate' },
+             { label: 'Silver Promo Price ( USD )', name: 'silverPromocodeRateForeign' },
+             
+
+            ].map((field) => (
+              <Grid item xs={12} sm={6} key={field.name}>
+                <TextField
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={data[field.name] || ''}
+                  onChange={handleInputChange}
+                  sx={{ backgroundColor: '#fff', borderRadius: '10px' }}
+                  InputProps={{ style: { color: '#333' } }}
+                />
+              </Grid>
+            ))}
+
+
+<Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom color="#333">🎫  Discount Rate for All Promo Codes  :</Typography>
+
+      </Grid>
+      {[
+             { label: 'All Promocodes Discount Rate ', name: 'allPromocodeDiscountRate' },
+             
 
             ].map((field) => (
               <Grid item xs={12} sm={6} key={field.name}>

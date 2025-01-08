@@ -2,23 +2,133 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGem, FaCrown, FaStar, FaRecycle, FaGift } from 'react-icons/fa';
 import axios from 'axios';
+import { Box, Typography, Avatar, IconButton } from '@mui/material';
+import { FaUserCheck, FaUserPlus, FaStarHalfAlt, FaUserTimes, FaRegStar } from 'react-icons/fa';
+
 
 const PromoCodePage = () => {
   const [data, setData] = useState({});
+  const [promoAgents, setPromoAgents] = useState([]);
   const navigate = useNavigate();
   const id = "677c3cf4d1f1323d5ca309a4";
+  const userEmail = localStorage.getItem('userEmail');
+  const [userFriends, setUserFriends] = useState([]);
+  const [userFavorites, setUserFavorites] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        // Fetch rate data based on the id
         const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
         setData(response.data.rate);
+
+        // Fetch promocodes that are on and not expired
+        const promoResponse = await axios.get('http://localhost:8000/newPromocodes/all');
+        const filteredPromos = promoResponse.data.filter(promo => promo.advertise === "on" && new Date(promo.expirationDate) > new Date());
+
+        // Fetch user data for each promo and include profile pictures
+        const agentsWithPictures = await Promise.all(filteredPromos.map(async (promo) => {
+          const { data } = await axios.get(`http://localhost:8000/api/user/findByEmail/${promo.userEmail}`);
+          const { ProfilePicture } = data.user || {};
+          return { ...promo, profilePicture: ProfilePicture };
+        }));
+
+        // Sort agents based on boostPoints
+        setPromoAgents(agentsWithPictures.sort((a, b) => b.boostPoints - a.boostPoints));
+
+        // Fetch user friends data
+        const friendsResponse = await axios.get('http://localhost:8000/friends/getAllFriends', {
+          params: { email: userEmail }
+        });
+        console.log('Friends Response:', friendsResponse.data); // Log to verify response
+        setUserFriends(friendsResponse.data
+          .filter(friend => friend.email) // Filter out undefined emails
+          .map(friend => friend.email.toLowerCase())); // Convert to lowercase
+
+        // Fetch user favorites data
+        const favoritesResponse = await axios.get('http://localhost:8000/favorites/getFavorites', {
+          params: { email: userEmail }
+        });
+        console.log('Favorites Response:', favoritesResponse.data); // Log to verify response
+        setUserFavorites(favoritesResponse.data
+          .filter(favorite => favorite.promocode) // Filter out undefined promo codes
+          .map(favorite => favorite.promocode.toLowerCase())); // Convert to lowercase
+
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     }
+
     fetchData();
-  }, [id]);
+  }, [id, userEmail]); // Dependency array includes id and userEmail
+  
+  
+  
+  
+
+  const handleAddFriend = async (friendEmail) => {
+    const userEmail = localStorage.getItem('userEmail');
+    
+    // Check if userEmail exists in localStorage
+    if (!userEmail) {
+      // Show confirmation dialog
+      const isConfirmed = window.confirm("You need to sign in first. Do you want to go to the login page?");
+      if (isConfirmed) {
+        // Redirect to login page if user clicks "OK"
+        navigate('/login');
+      }
+      return; // Stop execution if user is not signed in
+    }
+
+    try {
+      // Check if the friend is already in the user's friend list
+      const checkFriendResponse = await axios.post('http://localhost:8000/friends/check-friend', { email: userEmail, friendEmail });
+      console.log("Check Friend Response:", checkFriendResponse.data); // Log the response for debugging
+
+      if (!checkFriendResponse.data.isFriend) {
+        // Add the friend if they are not already in the list
+        const addFriendResponse = await axios.post('http://localhost:8000/friends/add-friend', { email: userEmail, friendEmail });
+        console.log("Add Friend Response:", addFriendResponse.data); // Log the response for debugging
+      }
+    } catch (error) {
+      console.error("Error adding friend:", error.response ? error.response.data : error.message);
+    }
+  };
+
+  
+  const handleAddFavorite = async (promoCode) => {
+    const userEmail = localStorage.getItem('userEmail');
+    
+    // Check if userEmail exists in localStorage
+    if (!userEmail) {
+      // Show confirmation dialog
+      const isConfirmed = window.confirm("You need to sign in first. Do you want to go to the login page?");
+      if (isConfirmed) {
+        // Redirect to login page if user clicks "OK"
+        navigate('/login');
+      }
+      return; // Stop execution if user is not signed in
+    }
+  
+    console.log("Checking if the promoCode is in favorites:", promoCode); // Log the promoCode
+  
+    try {
+      const checkFavoriteResponse = await axios.post('http://localhost:8000/favorites/check-favorite', { email: userEmail, item: promoCode });
+      console.log("Check favorite response:", checkFavoriteResponse.data); // Log the response from check-favorite
+  
+      if (!checkFavoriteResponse.data.isFavorite) {
+        console.log("Item not in favorites. Adding it now...");
+        const addFavoriteResponse = await axios.post('http://localhost:8000/favorites/add-favorite', { email: userEmail, item: promoCode });
+        console.log("Add favorite response:", addFavoriteResponse.data); // Log the response from add-favorite
+      } else {
+        console.log("Item already in favorites.");
+      }
+    } catch (error) {
+      console.error("Error adding favorite:", error);
+    }
+  };
+  
+  
 
   const handlePurchase = (priceLKR, priceUSD, title) => {
     const userEmail = localStorage.getItem('userEmail');
@@ -41,7 +151,7 @@ const PromoCodePage = () => {
     const price = countryCode === '+94' ? priceLKR : priceUSD;
     const currency = countryCode === '+94' ? 'LKR' : 'USD';
 
-    navigate('/checkout', {
+    navigate('/genaratePromoCode', {
         state: { Price: price, Currency: currency, Title: title, Subject: 'Promo code Purchase' },
     });
 };
@@ -239,6 +349,82 @@ const PromoCodePage = () => {
           </div>
         ))}
       </div>
+
+      {/* New Promocode Agents Section */}
+{/* New Promocode Agents Section */}
+<Box sx={{ padding: 4, backgroundColor: '#f9f9f9' }}>
+  <Typography variant="h4" component="h2" sx={{ marginBottom: 4 }}>
+    Agents
+  </Typography>
+  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 4 }}>
+    {promoAgents.map((agent, index) => (
+      <Box
+        key={index}
+        sx={{
+          backgroundColor: '#fff',
+          borderRadius: 2,
+          boxShadow: 2,
+          padding: 3,
+          textAlign: 'center',
+          transition: 'transform 0.2s',
+          '&:hover': {
+            transform: 'translateY(-5px)',
+          },
+        }}
+      >
+        <Avatar
+          src={agent.profilePicture}
+          alt={`${agent.firstName} Profile`}
+          sx={{ width: 100, height: 100, margin: '0 auto 16px' }}
+        />
+        <Typography variant="h6" component="h3" sx={{ marginBottom: 1 }}>
+          {agent.userEmail}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>
+          {agent.promocode}
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          {/* Friend Icons */}
+          {userFriends.find(friend => friend === agent.userEmail) ? (
+            <IconButton
+              onClick={() => null}
+              title="Already a Friend"
+            >
+              <FaUserCheck size={24} />
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={() => handleAddFriend(agent.userEmail)}
+              title="Add as Friend"
+            >
+              <FaUserPlus size={24} />
+            </IconButton>
+          )}
+
+          {/* Favorite Icons */}
+          {userFavorites.find(favorite => favorite === agent.promocode) ? (
+            <IconButton
+              onClick={() => null}
+              title="Already a Favorite"
+            >
+              <FaStar size={24} style={{ color: 'yellow' }} />
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={() => handleAddFavorite(agent.promocode)}
+              title="Add to Favorites"
+            >
+              <FaStarHalfAlt size={24} />
+            </IconButton>
+          )}
+        </Box>
+      </Box>
+    ))}
+  </Box>
+</Box>
+
+
+
     </div>
   );
 };
