@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaGem, FaCrown, FaStar, FaRecycle, FaGift } from 'react-icons/fa';
 import axios from 'axios';
 import { Box, Typography, Avatar, IconButton } from '@mui/material';
-import { FaUserCheck, FaUserPlus, FaStarHalfAlt, FaUserTimes, FaRegStar } from 'react-icons/fa';
-
+import { FaUserCheck, FaUserPlus, FaStarHalfAlt } from 'react-icons/fa';
+import { FaCopy, FaCheck } from 'react-icons/fa';
 
 const PromoCodePage = () => {
   const [data, setData] = useState({});
@@ -79,21 +79,31 @@ const PromoCodePage = () => {
       }
       return; // Stop execution if user is not signed in
     }
-
+  
     try {
       // Check if the friend is already in the user's friend list
       const checkFriendResponse = await axios.post('http://localhost:8000/friends/check-friend', { email: userEmail, friendEmail });
       console.log("Check Friend Response:", checkFriendResponse.data); // Log the response for debugging
-
-      if (!checkFriendResponse.data.isFriend) {
+  
+      if (checkFriendResponse.data.isFriend) {
+        // Alert the user that the friend is already in the list
+        alert("This user is already in your friend list.");
+      } else {
         // Add the friend if they are not already in the list
         const addFriendResponse = await axios.post('http://localhost:8000/friends/add-friend', { email: userEmail, friendEmail });
         console.log("Add Friend Response:", addFriendResponse.data); // Log the response for debugging
+  
+        // Alert the user that the friend has been added successfully
+        alert("Friend added successfully!");
       }
     } catch (error) {
       console.error("Error adding friend:", error.response ? error.response.data : error.message);
+  
+      // Show a generic error alert if the API call fails
+      alert("There was an error adding the friend. Please try again later.");
     }
   };
+  
 
   
   const handleAddFavorite = async (promoCode) => {
@@ -120,14 +130,17 @@ const PromoCodePage = () => {
         console.log("Item not in favorites. Adding it now...");
         const addFavoriteResponse = await axios.post('http://localhost:8000/favorites/add-favorite', { email: userEmail, item: promoCode });
         console.log("Add favorite response:", addFavoriteResponse.data); // Log the response from add-favorite
+        alert("Promo code added to your favorites!");
       } else {
+        alert("This promo code is already in your favorites.");
         console.log("Item already in favorites.");
       }
     } catch (error) {
       console.error("Error adding favorite:", error);
+      alert("An error occurred while adding the promo code to your favorites. Please try again.");
     }
   };
-  
+
   
 
   const handlePurchase = (priceLKR, priceUSD, title) => {
@@ -155,6 +168,16 @@ const PromoCodePage = () => {
         state: { Price: price, Currency: currency, Title: title, Subject: 'Promo code Purchase' },
     });
 };
+
+ // State to track which promo code has been copied
+ const [copiedPromocodeIndex, setCopiedPromocodeIndex] = useState(null);
+
+ // Function to handle copying the promo code
+ const handleCopyPromocode = (promocode, index) => {
+   navigator.clipboard.writeText(promocode);
+   setCopiedPromocodeIndex(index);
+   setTimeout(() => setCopiedPromocodeIndex(null), 1000); // Reset after 3 seconds
+ };
 
 
   const promoCodes = [
@@ -350,18 +373,43 @@ const PromoCodePage = () => {
         ))}
       </div>
 
-      {/* New Promocode Agents Section */}
+
 {/* New Promocode Agents Section */}
-<Box sx={{ padding: 4, backgroundColor: '#f9f9f9' }}>
-  <Typography variant="h4" component="h2" sx={{ marginBottom: 4 }}>
-    Agents
-  </Typography>
-  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 4 }}>
+<Box
+  sx={{
+    padding: 4,
+    backgroundColor: 'rgba(80, 98, 94, 0.208)',
+    marginTop: '40px',
+    backdropFilter: 'blur(3px)',
+  }}
+>
+<Typography
+  variant="h4"
+  component="h2"
+  sx={{
+    marginBottom: 6,
+    color: 'rgba(227, 235, 235, 0.75)', // Darker, professional color
+    fontWeight: '700', // Slightly bolder
+    fontSize: '1.8rem', // Larger for more emphasis
+    textAlign: 'center',
+    letterSpacing: '0.5px', // Subtle spacing for clarity
+  }}
+>
+💶 Travel Agents - Promo Code Promotions
+</Typography>
+
+  <Box
+    sx={{
+      display: 'grid',
+      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+      gap: 4,
+    }}
+  >
     {promoAgents.map((agent, index) => (
       <Box
         key={index}
         sx={{
-          backgroundColor: '#fff',
+          background: 'linear-gradient(135deg, rgba(254, 255, 255, 0.78), rgba(255, 255, 255, 0.34))',
           borderRadius: 2,
           boxShadow: 2,
           padding: 3,
@@ -370,59 +418,67 @@ const PromoCodePage = () => {
           '&:hover': {
             transform: 'translateY(-5px)',
           },
+          backdropFilter: 'blur(10px)',
         }}
       >
         <Avatar
           src={agent.profilePicture}
           alt={`${agent.firstName} Profile`}
-          sx={{ width: 100, height: 100, margin: '0 auto 16px' }}
+          sx={{
+            width: 100,
+            height: 100,
+            border: '2px solid rgba(119, 122, 122, 0.9)',
+            margin: '0 auto 16px',
+            '@media (max-width:600px)': {
+              width: 80,
+              height: 80,
+            },
+          }}
         />
-        <Typography variant="h6" component="h3" sx={{ marginBottom: 1 }}>
-          {agent.userEmail}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>
+
+        <Typography variant="h6" component="h3" sx={{ marginBottom: 1, fontWeight: '600', color: '#333'}}>
           {agent.promocode}
         </Typography>
+
+        <Typography variant="body2" color="textSecondary" sx={{ marginBottom: 2 }}>
+          {agent.userEmail}
+        </Typography>
+
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
           {/* Friend Icons */}
           {userFriends.find(friend => friend === agent.userEmail) ? (
-            <IconButton
-              onClick={() => null}
-              title="Already a Friend"
-            >
+            <IconButton onClick={() => null} title="Already a Friend">
               <FaUserCheck size={24} />
             </IconButton>
           ) : (
-            <IconButton
-              onClick={() => handleAddFriend(agent.userEmail)}
-              title="Add as Friend"
-            >
+            <IconButton onClick={() => handleAddFriend(agent.userEmail)} title="Add as Friend">
               <FaUserPlus size={24} />
             </IconButton>
           )}
 
           {/* Favorite Icons */}
           {userFavorites.find(favorite => favorite === agent.promocode) ? (
-            <IconButton
-              onClick={() => null}
-              title="Already a Favorite"
-            >
+            <IconButton onClick={() => null} title="Already a Favorite">
               <FaStar size={24} style={{ color: 'yellow' }} />
             </IconButton>
           ) : (
-            <IconButton
-              onClick={() => handleAddFavorite(agent.promocode)}
-              title="Add to Favorites"
-            >
+            <IconButton onClick={() => handleAddFavorite(agent.promocode)} title="Add to Favorites">
               <FaStarHalfAlt size={24} />
             </IconButton>
           )}
+
+          {/* Copy Promo Code Icon */}
+          <IconButton
+            onClick={() => handleCopyPromocode(agent.promocode, index)}
+            title="Copy Promo Code"
+          >
+            {copiedPromocodeIndex === index ? <FaCheck size={24} style={{ color: 'green' }} /> : <FaCopy size={24} />}
+          </IconButton>
         </Box>
       </Box>
     ))}
   </Box>
 </Box>
-
 
 
     </div>

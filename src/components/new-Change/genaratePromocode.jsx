@@ -19,6 +19,7 @@ const PromoCodePage = () => {
   const [promoCode, setPromoCode] = useState('');
   const [customPromo, setCustomPromo] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [existingPromoCode, setExistingPromoCode] = useState('');
   const [selectedPromoType, setSelectedPromoType] = useState('');
   const [userPromoSet, setUserPromoSet] = useState(false);
@@ -56,6 +57,8 @@ const PromoCodePage = () => {
     setPromoCode(generatedCode);
     setSelectedPromoType('generated');
     setUserPromoSet(true);
+
+    setSuccess(`Promo Code Generated: ${generatedCode}`);
   };
 
   const handleCustomPromoChange = (e) => {
@@ -73,28 +76,46 @@ const PromoCodePage = () => {
     setError('');
     setSelectedPromoType('custom');
     setUserPromoSet(true);
-    alert('All set! You can now proceed to checkout.');
+    setSuccess('Validation successful! This promo code is in the correct format.');
     return true;
   };
 
-  const handleCheckout = () => {
-    if (existingPromoCode) {
-      alert(`You already have a Promo Code: ${existingPromoCode}`);
-      return;
-    }
+  const handleCheckout = async () => {
     if (!userPromoSet) {
-      alert('Please choose your Promo Code before proceeding to checkout.');
+      setError('Please choose your Promo Code before proceeding to checkout.');
       return;
     }
-
+  
     const finalPromoCode = selectedPromoType === 'custom'
       ? `HS${customPromo}${getPromoSuffix(Title)}`
       : promoCode;
-
-    navigate('/checkout', {
-      state: { Price, Currency, Title, PromoCode: finalPromoCode },
-    });
+  
+    try {
+      const response = await axios.get('http://localhost:8000/newPromocodes/all');
+      
+      if (Array.isArray(response.data)) {
+        const promoExists = response.data.some(promo => promo.promocode === finalPromoCode);
+  
+        if (promoExists) {
+          setError('The promo code already purchased. Please choose a different promo code.');
+          return;
+        }
+  
+        // If promo code does not exist, proceed to checkout
+        setError(''); // Clear any existing error
+        navigate('/promoCheckouts', {
+          state: { Price, Currency, Title, PromoCode: finalPromoCode },
+        });
+      } else {
+        setError('Unexpected response format from the server.');
+      }
+    } catch (error) {
+      console.error('Error checking promo codes:', error);
+      setError('An error occurred while checking the promo code. Please try again later.');
+    }
   };
+  
+  
 
   const getPromoSuffix = (title) => {
     switch (title) {
@@ -151,7 +172,7 @@ const PromoCodePage = () => {
                   placeholder="Enter Custom Promo (max 7 chars)"
                   fullWidth
                 />
-                {error && <Alert severity="error" style={{ marginTop: '10px' }}>{error}</Alert>}
+                
                 <Typography variant="body1">HS{customPromo}{getPromoSuffix(Title)}</Typography>
                 <Button variant="contained" color="secondary" fullWidth onClick={validateCustomPromo}>
                   Validate Custom Promo
@@ -163,6 +184,11 @@ const PromoCodePage = () => {
 
 
         <Grid item xs={12}>
+
+        {success && <Alert severity="success" style={{ marginBottom: '10px' }}>{success}</Alert>}
+
+
+        {error && <Alert severity="error" style={{ marginBottom: '10px' }}>{error}</Alert>}
 
         {existingPromoCode && (
         <Alert severity="info">

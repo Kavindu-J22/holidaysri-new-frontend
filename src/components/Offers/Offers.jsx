@@ -376,7 +376,13 @@ const TextPage = () => {
 
 
 
+
+
+
   {/* new Promo code Categories  */}
+
+
+
 
 
   <Grid item xs={12}>
@@ -461,8 +467,8 @@ const TextPage = () => {
 
       </Grid>
       {[
-             { label: 'All Promocodes Discount Rate ', name: 'allPromocodeDiscountRate' },
-             
+             { label: 'All Promocodes Discount Rate (LKR)', name: 'allPromocodeDiscountRate' },
+             { label: 'All Promocodes Discount Rate for Foreign (USD) ', name: 'allPromocodeDiscountRateForeign' },
 
             ].map((field) => (
               <Grid item xs={12} sm={6} key={field.name}>

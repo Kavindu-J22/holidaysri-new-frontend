@@ -86,6 +86,7 @@ import PromocodesPage from "./components/new-Change/PromoCodes";
 import FristAdd from "./components/new-Change/fristAdd";
 import ProfileDashboard from "./components/new-Change/profile";
 import GenaratePromocode from "./components/new-Change/genaratePromocode";
+import PromocodeCheckout from "./components/new-Change/paymentAndCheckoutPages/promocodeCheckout";
 
 
 
@@ -668,6 +669,7 @@ const SidebarWithNavbar = () => {
     <Route path="/Promocodes" element={<PromocodesPage title="Promocodes page" />} />
     <Route path="/ratesPage" element={<RatesPage />} />
     <Route path="/genaratePromoCode" element={<GenaratePromocode />} />
+    <Route path="/promoCheckouts" element={<PromocodeCheckout />} />
 
     {/* No-side bar pages */}
     <Route path="/register" element={<NewRegister />} />
