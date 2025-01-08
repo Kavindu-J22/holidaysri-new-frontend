@@ -20,6 +20,7 @@ const PromoCodePage = () => {
   const [customPromo, setCustomPromo] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [fade, setFade] = useState(false);
   const [existingPromoCode, setExistingPromoCode] = useState('');
   const [selectedPromoType, setSelectedPromoType] = useState('');
   const [userPromoSet, setUserPromoSet] = useState(false);
@@ -46,7 +47,25 @@ const PromoCodePage = () => {
       .catch(error => console.error('Error fetching promo codes:', error));
   }, [userEmail]);
   
+  useEffect(() => {
+    if (success || error) {
+      setFade(false); // Reset fade-in
+      const fadeTimer = setTimeout(() => {
+        setFade(true);  // Start fading
+      }, 2000); // Start fade after 200ms
 
+      const removeTimer = setTimeout(() => {
+        setSuccess('');
+        setError('');
+      }, 2500); // Remove after fade out (0.5s)
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(removeTimer);
+      };
+    }
+  }, [success, error]);
+  
   const generatePromoCode = () => {
     const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let generatedCode = 'HS';
@@ -92,8 +111,16 @@ const PromoCodePage = () => {
   
     try {
       const response = await axios.get('http://localhost:8000/newPromocodes/all');
+      const userEmail = localStorage.getItem('userEmail');
       
       if (Array.isArray(response.data)) {
+        const userHasPromo = response.data.some(promo => promo.userEmail === userEmail);
+        
+        if (userHasPromo) {
+          setError('You already have a Promocode. So you can\'t make another one. Use it or upgrade it with your Dashboard.');
+          return;
+        }
+  
         const promoExists = response.data.some(promo => promo.promocode === finalPromoCode);
   
         if (promoExists) {
@@ -114,6 +141,7 @@ const PromoCodePage = () => {
       setError('An error occurred while checking the promo code. Please try again later.');
     }
   };
+
   
   
 
@@ -185,10 +213,34 @@ const PromoCodePage = () => {
 
         <Grid item xs={12}>
 
-        {success && <Alert severity="success" style={{ marginBottom: '10px' }}>{success}</Alert>}
+        <>
+      {success && (
+        <Alert
+          severity="success"
+          style={{
+            marginBottom: '10px',
+            opacity: fade ? 0 : 1,
+            transition: 'opacity 0.3s ease-out',
+          }}
+        >
+          {success}
+        </Alert>
+      )}
 
+      {error && (
+        <Alert
+          severity="error"
+          style={{
+            marginBottom: '10px',
+            opacity: fade ? 0 : 1,
+            transition: 'opacity 0.3s ease-out',
+          }}
+        >
+          {error}
+        </Alert>
+      )}
+    </>
 
-        {error && <Alert severity="error" style={{ marginBottom: '10px' }}>{error}</Alert>}
 
         {existingPromoCode && (
         <Alert severity="info">
