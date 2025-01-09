@@ -1,20 +1,138 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Box, Typography, TextField, Button, Grid, Paper } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Box, Typography, TextField, Button, Grid, Paper, Modal, List, ListItem, ListItemText, IconButton, Alert } from '@mui/material';
+import { CopyAll, CheckCircle } from '@mui/icons-material';
+import axios from 'axios';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+
 
 const Checkout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { Price, Currency, Title, PromoCode } = location.state;
 
   const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [usedValidPromocode, setUsedValidPromocode] = useState('');
   const [discountedAmount, setDiscountedAmount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(Price);
+  const [favoritePromoCodes, setFavoritePromoCodes] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [copied, setCopied] = useState(null); // Track copied state
+  const [error, setError] = useState(''); // To handle error messages
+  const [success, setSuccess] = useState('');
+  const [fade, setFade] = useState(false);
 
-  const applyPromoCode = () => {
-    // Placeholder logic for applying promo code
-    const discount = promoCodeInput === 'DISCOUNT10' ? Price * 0.1 : 0;
-    setDiscountedAmount(discount);
-    setFinalAmount(Price - discount);
+    useEffect(() => {
+      if (success || error) {
+        setFade(false); // Reset fade-in
+        const fadeTimer = setTimeout(() => {
+          setFade(true);  // Start fading
+        }, 3000); // Start fade after 200ms
+  
+        const removeTimer = setTimeout(() => {
+          setSuccess('');
+          setError('');
+        }, 3500); // Remove after fade out (0.5s)
+  
+        return () => {
+          clearTimeout(fadeTimer);
+          clearTimeout(removeTimer);
+        };
+      }
+    }, [success, error]);
+
+  const applyPromoCode = async () => {
+    try {
+        // Step 1: Validate PromoCode via API
+        const response = await axios.post('http://localhost:8000/newPromocodes/check-exists', { promocode: promoCodeInput });
+
+        // Check if promo code is valid
+        if (!response.data.exists) {
+            // If promo code doesn't exist, display the message from the backend
+            setError(response.data.message || 'Invalid promo code. Please check and try again.');
+            return;
+        }
+
+        // Step 2: If promo code is valid, show success alert
+        setSuccess('Valid PromoCode. Discount applied.');
+        setUsedValidPromocode(promoCodeInput);
+
+        // Fetch rate info for LKR or USD
+        const rateResponse = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
+        const allPromocodeDiscountRate = rateResponse.data.rate.allPromocodeDiscountRate;
+        const allPromocodeDiscountRateForeign = rateResponse.data.rate.allPromocodeDiscountRateForeign;
+
+        // Step 3: Apply PromoCode Discount based on currency
+        let discount = 0;
+        if (Currency === 'LKR') {
+            discount = allPromocodeDiscountRate;
+        } else if (Currency === 'USD') {
+            discount = allPromocodeDiscountRateForeign;
+        }
+
+        // Update the discounted amount and final amount
+        setDiscountedAmount(discount);
+        setFinalAmount(Price - discount);
+
+        // Clear any existing error message
+        setError('');
+
+    } catch (error) {
+        // Handle network or unexpected errors
+        console.error('Error applying promo code:', error);
+
+        // Check if the error response has a message from the backend
+        if (error.response && error.response.data && error.response.data.message) {
+            // Use the backend error message if available
+            setError(error.response.data.message);
+        } else {
+            // Fallback for unexpected errors (network issues, etc.)
+            setError('Something went wrong. Please try again.');
+        }
+    }
+};
+
+  const fetchFavoritePromoCodes = async () => {
+    const userEmail = localStorage.getItem('userEmail');
+    try {
+      const response = await axios.get(`http://localhost:8000/favorites/getFavorites?email=${userEmail}`);
+      if (Array.isArray(response.data)) {
+        setFavoritePromoCodes(response.data);
+      } else {
+        console.error('Unexpected response format from the server');
+      }
+    } catch (error) {
+      console.error('Error fetching favorite promo codes:', error);
+    }
+  };
+
+  const handleCopyPromoCode = (promoCode) => {
+    navigator.clipboard.writeText(promoCode);
+    setCopied(promoCode); // Set the copied promo code for displaying tick
+
+    // Revert back to copy icon after 0.5s
+    setTimeout(() => {
+      setCopied(null);
+    }, 500);
+  };
+
+  const handleModalOpen = () => {
+    fetchFavoritePromoCodes();
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => setOpenModal(false);
+
+  const handlePayNow = () => {
+    navigate('/PromoCodePayments', {
+      state: {
+        Currency,
+        Title,
+        buyedPromoCode: PromoCode,
+        FinalAmount: finalAmount,
+        UsedPromocode: usedValidPromocode,
+      },
+    });
   };
 
   return (
@@ -29,6 +147,35 @@ const Checkout = () => {
         <Typography variant="h6" gutterBottom>
           The Promo code you are about to purchase: {PromoCode}
         </Typography>
+
+        <>
+      {success && (
+        <Alert
+          severity="success"
+          style={{
+            marginBottom: '10px',
+            opacity: fade ? 0 : 1,
+            transition: 'opacity 0.3s ease-out',
+          }}
+        >
+          {success}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert
+          severity="error"
+          style={{
+            marginBottom: '10px',
+            opacity: fade ? 0 : 1,
+            transition: 'opacity 0.3s ease-out',
+          }}
+        >
+          {error}
+        </Alert>
+        )}
+    </>
+
         <Box sx={{ my: 3 }}>
           <Typography variant="body1" gutterBottom>
             Apply Promo Code to get a discount:
@@ -50,14 +197,17 @@ const Checkout = () => {
             Apply Promo Code
           </Button>
         </Box>
+
         <Button
           variant="outlined"
           color="secondary"
           fullWidth
           sx={{ mb: 3 }}
+          onClick={handleModalOpen}
         >
           Select Promo Code from Favourite
         </Button>
+
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Typography variant="h6">
@@ -70,12 +220,68 @@ const Checkout = () => {
             </Typography>
           </Grid>
         </Grid>
+
         <Box sx={{ mt: 4 }}>
-          <Button variant="contained" color="success" fullWidth>
-            Pay Now
-          </Button>
+        <Grid container spacing={2}>
+            {/* Pay with Credit Card */}
+            <Grid item xs={12} md={6}>
+            <Button
+                variant="contained"
+                color="primary" // Blue color for Credit Card
+                fullWidth
+                startIcon={<CreditCardIcon />} // Icon for Credit Card
+                onClick={handlePayNow}
+                sx={{
+                backgroundColor: '#3f51b5', // Blue color for Credit Card
+                '&:hover': { backgroundColor: '#303f9f' }, // Darker blue on hover
+                }}
+            >
+                Pay with Credit Card
+            </Button>
+            </Grid>
+
+            {/* Pay with HSC */}
+            <Grid item xs={12} md={6}>
+            <Button
+                variant="contained"
+                color="secondary" // Light green color for HSC
+                fullWidth
+                startIcon={<img src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" alt="HSC" style={{ width: 24, height: 24 }} />} // Image for HSC
+                onClick={handlePayNow}
+                sx={{
+                backgroundColor: '#4caf50', // Green color for HSC
+                '&:hover': { backgroundColor: '#388e3c' }, // Darker green on hover
+                }}
+            >
+                Pay with HSC
+            </Button>
+            </Grid>
+        </Grid>
         </Box>
+
       </Paper>
+
+      {/* Modal for displaying favorite promo codes */}
+      <Modal open={openModal} onClose={handleModalClose}>
+        <Box sx={{ position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24 }}>
+          <Typography variant="h5" gutterBottom>Your Favorite Promo Codes</Typography>
+          {favoritePromoCodes.length === 0 ? (
+            <Alert severity="info">No favorite promo codes found.</Alert>
+          ) : (
+            <List>
+              {favoritePromoCodes.map((promoCode, index) => (
+                <ListItem key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <ListItemText primary={promoCode} />
+                  <IconButton onClick={() => handleCopyPromoCode(promoCode)}>
+                    {copied === promoCode ? <CheckCircle color="success" /> : <CopyAll />}
+                  </IconButton>
+                </ListItem>
+              ))}
+            </List>
+          )}
+          <Button onClick={handleModalClose} sx={{ mt: 2 }} variant="outlined" color="secondary">Close</Button>
+        </Box>
+      </Modal>
     </Box>
   );
 };
