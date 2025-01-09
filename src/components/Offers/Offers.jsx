@@ -485,6 +485,33 @@ const TextPage = () => {
               </Grid>
             ))}
 
+
+ {/* new Treasure Rates */}
+
+
+<Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🪙 Treasure Category Rates :</Typography>
+            </Grid>
+            {[
+              { label: 'HoliadaySri Coins Rate ( HSC : LKR )', name: 'HSCRate' },
+              { label: 'HoliadaySri Coins Rate ( HSC : USD )', name: 'HSCRateForeign' },
+              { label: 'HoliadaySri Diamond Rate ( HSD : LKR )', name: 'HSDRate' },
+              { label: 'HoliadaySri Gem Rate ( HSG : LKR )', name: 'HSGRate' },
+            ].map((field) => (
+              <Grid item xs={12} sm={6} key={field.name}>
+                <TextField
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={data[field.name] || ''}
+                  onChange={handleInputChange}
+                  sx={{ backgroundColor: '#fff', borderRadius: '10px' }}
+                  InputProps={{ style: { color: '#333' } }}
+                />
+              </Grid>
+            ))}
+
 {/* 10. Live Ride Category
   Live Ride Monthly Rate ( Price : LKR )
   Live Ride Daily Rate ( Price : LKR )

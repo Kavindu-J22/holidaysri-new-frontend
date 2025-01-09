@@ -21,6 +21,34 @@ const Checkout = () => {
   const [error, setError] = useState(''); // To handle error messages
   const [success, setSuccess] = useState('');
   const [fade, setFade] = useState(false);
+  const [calculatedHSCAmount, setCalculatedHSCAmount] = useState(0);
+  const [HSCRate, setHSCRate] = useState(null);
+  const [HSCRateForeign, setHSCRateForeign] = useState(null);
+
+  useEffect(() => {
+    // Fetch rates when the component mounts
+    const fetchRates = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
+        const { HSCRate, HSCRateForeign } = response.data.rate;
+        setHSCRate(HSCRate);
+        setHSCRateForeign(HSCRateForeign);
+      } catch (error) {
+        console.error('Error fetching rates:', error);
+      }
+    };
+
+    fetchRates();
+  }, []);
+
+  useEffect(() => {
+    // Recalculate HSC amount whenever rates or finalAmount change
+    if (Currency === 'LKR' && HSCRate) {
+      setCalculatedHSCAmount((finalAmount / HSCRate).toFixed(2));
+    } else if (Currency === 'USD' && HSCRateForeign) {
+      setCalculatedHSCAmount((finalAmount / HSCRateForeign).toFixed(2));
+    }
+  }, [Currency, HSCRate, HSCRateForeign, finalAmount]);
 
     useEffect(() => {
       if (success || error) {
@@ -135,6 +163,18 @@ const Checkout = () => {
     });
   };
 
+  const handlePayNowWithHsc = () => {
+    navigate('/HSCPayment', {
+      state: {
+        Currency:'HSC',
+        calculatedHSCAmount,
+        Title,
+        item: PromoCode,
+        UsedPromocode: usedValidPromocode,
+      },
+    });
+  };
+
   return (
     <Box sx={{ mt: 9, p: 3 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
@@ -205,7 +245,7 @@ const Checkout = () => {
           sx={{ mb: 3 }}
           onClick={handleModalOpen}
         >
-          Select Promo Code from Favourite
+          Select Promo Code from your Favourites ⭐
         </Button>
 
         <Grid container spacing={2}>
@@ -223,40 +263,56 @@ const Checkout = () => {
 
         <Box sx={{ mt: 4 }}>
         <Grid container spacing={2}>
-            {/* Pay with Credit Card */}
-            <Grid item xs={12} md={6}>
-            <Button
-                variant="contained"
-                color="primary" // Blue color for Credit Card
-                fullWidth
-                startIcon={<CreditCardIcon />} // Icon for Credit Card
-                onClick={handlePayNow}
-                sx={{
-                backgroundColor: '#3f51b5', // Blue color for Credit Card
-                '&:hover': { backgroundColor: '#303f9f' }, // Darker blue on hover
-                }}
-            >
-                Pay with Credit Card
-            </Button>
-            </Grid>
 
-            {/* Pay with HSC */}
-            <Grid item xs={12} md={6}>
+        {/* Pay with Credit Card */}
+        <Grid item xs={12} md={6}>
             <Button
-                variant="contained"
-                color="secondary" // Light green color for HSC
-                fullWidth
-                startIcon={<img src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" alt="HSC" style={{ width: 24, height: 24 }} />} // Image for HSC
-                onClick={handlePayNow}
-                sx={{
-                backgroundColor: '#4caf50', // Green color for HSC
-                '&:hover': { backgroundColor: '#388e3c' }, // Darker green on hover
-                }}
+            variant="contained"
+            fullWidth
+            startIcon={<CreditCardIcon />} // Icon for Credit Card
+            onClick={handlePayNow}
+            sx={{
+                backgroundColor: '#007BFF', // Bright, vibrant blue for Credit Card
+                color: '#FFFFFF', // White text for better contrast
+                fontWeight: 'bold', // Emphasize text
+                textTransform: 'none', // Maintain readable text casing
+                borderRadius: '8px', // Slightly rounded corners for modern look
+                padding: '12px 16px', // Add padding for better feel
+                '&:hover': { backgroundColor: '#0056b3' }, // Darker blue on hover
+            }}
             >
-                Pay with HSC
+            Pay with Credit Card
             </Button>
-            </Grid>
         </Grid>
+
+        {/* Pay with HSC */}
+        <Grid item xs={12} md={6}>
+            <Button
+            variant="contained"
+            fullWidth
+            onClick={handlePayNowWithHsc}
+            startIcon={
+                <img
+                src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1734337684/hsc_resll6_1_q0eksv.webp" // Replace with your actual URL
+                alt="HSC Coin"
+                style={{ width: 24, height: 24 }}
+                />
+            }
+            sx={{
+                backgroundColor: 'rgb(41, 126, 93)', // Google-style yellow for HSC button
+                color: '#FFFFFF', // White text for contrast
+                fontWeight: 'bold', // Emphasize text
+                textTransform: 'none', // Maintain readable text casing
+                borderRadius: '8px', // Slightly rounded corners
+                padding: '12px 16px', // Add padding
+                '&:hover': { backgroundColor: 'rgb(38, 104, 79)' }, // Slightly darker yellow on hover
+            }}
+            >
+            Pay with HSC - Amount {calculatedHSCAmount} HSC
+            </Button>
+        </Grid>
+        </Grid>
+
         </Box>
 
       </Paper>
