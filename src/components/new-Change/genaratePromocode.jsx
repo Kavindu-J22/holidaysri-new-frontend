@@ -52,12 +52,12 @@ const PromoCodePage = () => {
       setFade(false); // Reset fade-in
       const fadeTimer = setTimeout(() => {
         setFade(true);  // Start fading
-      }, 2000); // Start fade after 200ms
+      }, 3000); // Start fade after 200ms
 
       const removeTimer = setTimeout(() => {
         setSuccess('');
         setError('');
-      }, 2500); // Remove after fade out (0.5s)
+      }, 3500); // Remove after fade out (0.5s)
 
       return () => {
         clearTimeout(fadeTimer);
@@ -100,6 +100,7 @@ const PromoCodePage = () => {
   };
 
   const handleCheckout = async () => {
+
     if (!userPromoSet) {
       setError('Please choose your Promo Code before proceeding to checkout.');
       return;
@@ -127,6 +128,12 @@ const PromoCodePage = () => {
           setError('The promo code already purchased. Please choose a different promo code.');
           return;
         }
+
+            // Check if promo code has minimum 8 characters
+        if (finalPromoCode.length < 8) {
+        setError('PromoCode Not Completed. Generate or Customize Your Promo Code. if You Already Generated promocode Go to Generate Promo code Section and Try Checkout Now.');
+        return;
+        }
   
         // If promo code does not exist, proceed to checkout
         setError(''); // Clear any existing error
@@ -141,6 +148,7 @@ const PromoCodePage = () => {
       setError('An error occurred while checking the promo code. Please try again later.');
     }
   };
+  
 
   
   
