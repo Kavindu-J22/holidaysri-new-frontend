@@ -131,7 +131,7 @@ const PromoCodePage = () => {
 
             // Check if promo code has minimum 8 characters
         if (finalPromoCode.length < 8) {
-        setError('PromoCode Not Completed. Generate or Customize Your Promo Code. if You Already Generated promocode Go to Generate Promo code Section and Try Checkout Now.');
+        setError('PromoCode Not Completed. Generate or Customize Your Promo Code. if You Already Generated or Customized promocode Go To the Relevant Section and Try Checkout Now.');
         return;
         }
   
