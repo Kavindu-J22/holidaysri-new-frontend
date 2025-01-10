@@ -467,9 +467,36 @@ const TextPage = () => {
 
       </Grid>
       {[
-             { label: 'All Promocodes Discount Rate (LKR)', name: 'allPromocodeDiscountRate' },
-             { label: 'All Promocodes Discount Rate for Foreign (USD) ', name: 'allPromocodeDiscountRateForeign' },
+             { label: 'All Promocodes Discount Rate ( % )', name: 'allPromocodeDiscountRate' },
+             { label: 'Special Promocodes Discount Rate ( % )', name: 'specialPromocodeDiscountRate' },
+             
+            ].map((field) => (
+              <Grid item xs={12} sm={6} key={field.name}>
+                <TextField
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={data[field.name] || ''}
+                  onChange={handleInputChange}
+                  sx={{ backgroundColor: '#fff', borderRadius: '10px' }}
+                  InputProps={{ style: { color: '#333' } }}
+                />
+              </Grid>
+            ))}
 
+
+<Grid item xs={12}>
+              <Typography variant="subtitle1" gutterBottom color="#333">🎫  Earn Rates of All Promo Codes  :</Typography>
+
+      </Grid>
+      {[
+             { label: 'Diamond Promocode Earn Rate ( % )', name: 'diamondPromocodeEarnRate' },
+             { label: 'Gold Promocode Earn Rate ( % )', name: 'goldPromocodeEarnRate' },
+             { label: 'Silver Promocode Earn Rate ( % )', name: 'silverPromocodeEarnRate' },
+             { label: 'Free Promocode Earn Rate ( % )', name: 'freePromocodeEarnRate' },
+             { label: 'Special Promocode Earn Rate ( % )', name: 'specialPromocodeEarnRate' },
+             
             ].map((field) => (
               <Grid item xs={12} sm={6} key={field.name}>
                 <TextField

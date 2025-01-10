@@ -13,6 +13,8 @@ const Checkout = () => {
 
   const [promoCodeInput, setPromoCodeInput] = useState('');
   const [usedValidPromocode, setUsedValidPromocode] = useState('');
+  const [usedValidPromocodeOwner, setUsedValidPromocodeOwner] = useState('');
+  const [earnAmount, setEarnAmount] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(Price);
   const [favoritePromoCodes, setFavoritePromoCodes] = useState([]);
@@ -69,56 +71,89 @@ const Checkout = () => {
       }
     }, [success, error]);
 
-  const applyPromoCode = async () => {
-    try {
-        // Step 1: Validate PromoCode via API
-        const response = await axios.post('http://localhost:8000/newPromocodes/check-exists', { promocode: promoCodeInput });
+    const applyPromoCode = async () => {
+      try {
+          // Step 1: Validate PromoCode via API
+          const response = await axios.post('http://localhost:8000/newPromocodes/check-exists', { promocode: promoCodeInput });
+  
+          // Check if promo code is valid
+          if (!response.data.exists) {
+              // If promo code doesn't exist, display the message from the backend
+              setError(response.data.message || 'Invalid promo code. Please check and try again.');
+              return;
+          }
+  
+          // Step 2: If promo code is valid, show success alert
+          
+          setUsedValidPromocode(promoCodeInput);
+          setUsedValidPromocodeOwner(response.data.userEmail);
+          setSuccess(`Valid PromoCode. Discount applied. Promocode Owner: ${usedValidPromocodeOwner}`);
+  
+          // Fetch rate info for LKR or USD
+          const rateResponse = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
+          const allPromocodeDiscountRate = rateResponse.data.rate.allPromocodeDiscountRate;
+          const specialPromocodeDiscountRate = rateResponse.data.rate.specialPromocodeDiscountRate;
+  
+          const diamondPromocodeEarnRate = rateResponse.data.rate.diamondPromocodeEarnRate;
+          const goldPromocodeEarnRate = rateResponse.data.rate.goldPromocodeEarnRate;
+          const silverPromocodeEarnRate = rateResponse.data.rate.silverPromocodeEarnRate;
+          const freePromocodeEarnRate = rateResponse.data.rate.freePromocodeEarnRate;
+          const specialPromocodeEarnRate = rateResponse.data.rate.specialPromocodeEarnRate;
+  
+          // Step 3: Determine Discount Rate
+        let discountRate = allPromocodeDiscountRate; // Default discount rate
 
-        // Check if promo code is valid
-        if (!response.data.exists) {
-            // If promo code doesn't exist, display the message from the backend
-            setError(response.data.message || 'Invalid promo code. Please check and try again.');
-            return;
+        // Check if the valid promo code ends with 'SP'
+        if (promoCodeInput.slice(-2).toUpperCase() === 'SP') {
+            discountRate = specialPromocodeDiscountRate;
         }
 
-        // Step 2: If promo code is valid, show success alert
-        setSuccess('Valid PromoCode. Discount applied.');
-        setUsedValidPromocode(promoCodeInput);
-
-        // Fetch rate info for LKR or USD
-        const rateResponse = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
-        const allPromocodeDiscountRate = rateResponse.data.rate.allPromocodeDiscountRate;
-        const allPromocodeDiscountRateForeign = rateResponse.data.rate.allPromocodeDiscountRateForeign;
-
-        // Step 3: Apply PromoCode Discount based on currency
-        let discount = 0;
-        if (Currency === 'LKR') {
-            discount = allPromocodeDiscountRate;
-        } else if (Currency === 'USD') {
-            discount = allPromocodeDiscountRateForeign;
-        }
+        // Calculate the discount based on the rate and price
+        const discount = (Price / 100) * discountRate;
 
         // Update the discounted amount and final amount
-        setDiscountedAmount(discount);
-        setFinalAmount(Price - discount);
+        setDiscountedAmount(discount); // Set the calculated discount
+        setFinalAmount(Price - discount); // Set the final amount after applying discount
 
-        // Clear any existing error message
-        setError('');
+        let earnRate = 0; // Default earn rate
 
-    } catch (error) {
-        // Handle network or unexpected errors
-        console.error('Error applying promo code:', error);
-
-        // Check if the error response has a message from the backend
-        if (error.response && error.response.data && error.response.data.message) {
-            // Use the backend error message if available
-            setError(error.response.data.message);
-        } else {
-            // Fallback for unexpected errors (network issues, etc.)
-            setError('Something went wrong. Please try again.');
+        // Check if the valid promo code ends with specific suffixes
+        if (promoCodeInput.slice(-2).toUpperCase() === 'PD') {
+            earnRate =  (Price / 100) * diamondPromocodeEarnRate; // Diamond rate
+        } else if (promoCodeInput.slice(-2).toUpperCase() === 'PG') {
+            earnRate =  (Price / 100) * goldPromocodeEarnRate; // Gold rate
+        } else if (promoCodeInput.slice(-2).toUpperCase() === 'PS') {
+            earnRate =  (Price / 100) * silverPromocodeEarnRate; // Silver rate
+        } else if (promoCodeInput.slice(-2).toUpperCase() === 'PF') {
+            earnRate =  (Price / 100) * freePromocodeEarnRate; // Free rate
+        } else if (promoCodeInput.slice(-2).toUpperCase() === 'SP') {
+            earnRate =  (Price / 100) * specialPromocodeEarnRate; // Special rate
+        } else{
+          earnRate = 0; // Default rate 0
         }
-    }
-};
+
+        
+
+        setEarnAmount(earnRate); // Set the calculated Earns
+
+          // Clear any existing error message
+          setError('');
+        } catch (error) {
+          // Handle network or unexpected errors
+          console.error('Error applying promo code:', error);
+  
+          // Check if the error response has a message from the backend
+          if (error.response && error.response.data && error.response.data.message) {
+              // Use the backend error message if available
+              setError(error.response.data.message);
+          } else {
+              // Fallback for unexpected errors (network issues, etc.)
+              setError('Something went wrong. Please try again.');
+          }
+      }
+  };
+  
+  
 
   const fetchFavoritePromoCodes = async () => {
     const userEmail = localStorage.getItem('userEmail');
@@ -159,18 +194,22 @@ const Checkout = () => {
         buyedPromoCode: PromoCode,
         FinalAmount: finalAmount,
         UsedPromocode: usedValidPromocode,
+        UsedPromocodeOwner: usedValidPromocodeOwner,
+        Earns: earnAmount,
       },
     });
   };
 
   const handlePayNowWithHsc = () => {
-    navigate('/HSCPayment', {
+    navigate('/HSCPaymentPromocode', {
       state: {
         Currency:'HSC',
         calculatedHSCAmount,
         Title,
         item: PromoCode,
         UsedPromocode: usedValidPromocode,
+        UsedPromocodeOwner: usedValidPromocodeOwner,
+        Earns: earnAmount,
       },
     });
   };
@@ -310,6 +349,7 @@ const Checkout = () => {
             >
             Pay with HSC - Amount {calculatedHSCAmount} HSC
             </Button>
+
         </Grid>
         </Grid>
 
