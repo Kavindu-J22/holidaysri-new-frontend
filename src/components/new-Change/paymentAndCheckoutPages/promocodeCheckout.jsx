@@ -14,7 +14,9 @@ const Checkout = () => {
   const [promoCodeInput, setPromoCodeInput] = useState('');
   const [usedValidPromocode, setUsedValidPromocode] = useState('');
   const [usedValidPromocodeOwner, setUsedValidPromocodeOwner] = useState('');
+  const [usedValidPromocodType, setUsedValidPromocodeType] = useState('');
   const [earnAmount, setEarnAmount] = useState(0);
+  const [discountRateforDis, setDiscountRateforDis] = useState(0);
   const [discountedAmount, setDiscountedAmount] = useState(0);
   const [finalAmount, setFinalAmount] = useState(Price);
   const [favoritePromoCodes, setFavoritePromoCodes] = useState([]);
@@ -25,16 +27,15 @@ const Checkout = () => {
   const [fade, setFade] = useState(false);
   const [calculatedHSCAmount, setCalculatedHSCAmount] = useState(0);
   const [HSCRate, setHSCRate] = useState(null);
-  const [HSCRateForeign, setHSCRateForeign] = useState(null);
 
   useEffect(() => {
     // Fetch rates when the component mounts
     const fetchRates = async () => {
       try {
         const response = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
-        const { HSCRate, HSCRateForeign } = response.data.rate;
+        const { HSCRate, allPromocodeDiscountRate } = response.data.rate;
         setHSCRate(HSCRate);
-        setHSCRateForeign(HSCRateForeign);
+        setDiscountRateforDis(allPromocodeDiscountRate)
       } catch (error) {
         console.error('Error fetching rates:', error);
       }
@@ -43,14 +44,7 @@ const Checkout = () => {
     fetchRates();
   }, []);
 
-  useEffect(() => {
-    // Recalculate HSC amount whenever rates or finalAmount change
-    if (Currency === 'LKR' && HSCRate) {
-      setCalculatedHSCAmount((finalAmount / HSCRate).toFixed(2));
-    } else if (Currency === 'USD' && HSCRateForeign) {
-      setCalculatedHSCAmount((finalAmount / HSCRateForeign).toFixed(2));
-    }
-  }, [Currency, HSCRate, HSCRateForeign, finalAmount]);
+
 
     useEffect(() => {
       if (success || error) {
@@ -87,9 +81,10 @@ const Checkout = () => {
           
           setUsedValidPromocode(promoCodeInput);
           setUsedValidPromocodeOwner(response.data.userEmail);
+          setUsedValidPromocodeType(response.data.promocodeType);
           setSuccess(`Valid PromoCode. Discount applied. Promocode Owner: ${usedValidPromocodeOwner}`);
   
-          // Fetch rate info for LKR or USD
+          // Fetch rate info 
           const rateResponse = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
           const allPromocodeDiscountRate = rateResponse.data.rate.allPromocodeDiscountRate;
           const specialPromocodeDiscountRate = rateResponse.data.rate.specialPromocodeDiscountRate;
@@ -99,41 +94,38 @@ const Checkout = () => {
           const silverPromocodeEarnRate = rateResponse.data.rate.silverPromocodeEarnRate;
           const freePromocodeEarnRate = rateResponse.data.rate.freePromocodeEarnRate;
           const specialPromocodeEarnRate = rateResponse.data.rate.specialPromocodeEarnRate;
+          const HSCRate = rateResponse.data.rate.HSCRate;
   
           // Step 3: Determine Discount Rate
-        let discountRate = allPromocodeDiscountRate; // Default discount rate
+        let discountRate = allPromocodeDiscountRate / HSCRate; // Default discount rate
 
         // Check if the valid promo code ends with 'SP'
         if (promoCodeInput.slice(-2).toUpperCase() === 'SP') {
-            discountRate = specialPromocodeDiscountRate;
+            discountRate = specialPromocodeDiscountRate / HSCRate;
         }
 
-        // Calculate the discount based on the rate and price
-        const discount = (Price / 100) * discountRate;
-
         // Update the discounted amount and final amount
-        setDiscountedAmount(discount); // Set the calculated discount
-        setFinalAmount(Price - discount); // Set the final amount after applying discount
+        setDiscountedAmount(discountRate); // Set the calculated discount
+        setFinalAmount(Price - discountRate); // Set the final amount after applying discount
 
         let earnRate = 0; // Default earn rate
 
         // Check if the valid promo code ends with specific suffixes
-        if (promoCodeInput.slice(-2).toUpperCase() === 'PD') {
-            earnRate =  (Price / 100) * diamondPromocodeEarnRate; // Diamond rate
-        } else if (promoCodeInput.slice(-2).toUpperCase() === 'PG') {
-            earnRate =  (Price / 100) * goldPromocodeEarnRate; // Gold rate
-        } else if (promoCodeInput.slice(-2).toUpperCase() === 'PS') {
-            earnRate =  (Price / 100) * silverPromocodeEarnRate; // Silver rate
-        } else if (promoCodeInput.slice(-2).toUpperCase() === 'PF') {
-            earnRate =  (Price / 100) * freePromocodeEarnRate; // Free rate
-        } else if (promoCodeInput.slice(-2).toUpperCase() === 'SP') {
-            earnRate =  (Price / 100) * specialPromocodeEarnRate; // Special rate
+        if (usedValidPromocodType === 'Diamond Promo Code') {
+            earnRate = diamondPromocodeEarnRate; // Diamond rate
+        } else if (usedValidPromocodType === 'Gold Promo Code') {
+            earnRate = goldPromocodeEarnRate; // Gold rate
+        } else if (usedValidPromocodType === 'Silver Promo Code') {
+            earnRate = silverPromocodeEarnRate; // Silver rate
+        } else if (usedValidPromocodType === 'Free Promo Code') {
+            earnRate = freePromocodeEarnRate; // Free rate
+        } else if (usedValidPromocodType === 'Special Promo Code') {
+            earnRate = specialPromocodeEarnRate; // Special rate
         } else{
           earnRate = 0; // Default rate 0
         }
 
         
-
         setEarnAmount(earnRate); // Set the calculated Earns
 
           // Clear any existing error message
@@ -154,7 +146,6 @@ const Checkout = () => {
   };
   
   
-
   const fetchFavoritePromoCodes = async () => {
     const userEmail = localStorage.getItem('userEmail');
     try {
@@ -187,16 +178,7 @@ const Checkout = () => {
   const handleModalClose = () => setOpenModal(false);
 
   const handlePayNow = () => {
-    navigate('/PromoCodePayments', {
-      state: {
-        Currency,
-        Title,
-        buyedPromoCode: PromoCode,
-        FinalAmount: finalAmount,
-        UsedPromocode: usedValidPromocode,
-        UsedPromocodeOwner: usedValidPromocodeOwner,
-        Earns: earnAmount,
-      },
+    navigate('/coins', {
     });
   };
 
@@ -204,7 +186,7 @@ const Checkout = () => {
     navigate('/HSCPaymentPromocode', {
       state: {
         Currency:'HSC',
-        calculatedHSCAmount,
+        calculatedHSCAmount: finalAmount,
         Title,
         item: PromoCode,
         UsedPromocode: usedValidPromocode,
@@ -262,7 +244,7 @@ const Checkout = () => {
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Type PromoCode Here"
+            placeholder={`Type PromoCode Here and get ${discountRateforDis / HSCRate} HSC discount ( ${discountRateforDis} LKR )`}
             value={promoCodeInput}
             onChange={(e) => setPromoCodeInput(e.target.value)}
             sx={{ mb: 2 }}
@@ -320,7 +302,7 @@ const Checkout = () => {
                 '&:hover': { backgroundColor: '#0056b3' }, // Darker blue on hover
             }}
             >
-            Pay with Credit Card
+            Pay & Buy More HSC Now
             </Button>
         </Grid>
 
@@ -347,9 +329,9 @@ const Checkout = () => {
                 '&:hover': { backgroundColor: 'rgb(38, 104, 79)' }, // Slightly darker yellow on hover
             }}
             >
-            Pay with HSC - Amount {calculatedHSCAmount} HSC
+            Pay with HSC - Amount {finalAmount} HSC / =
             </Button>
-
+            
         </Grid>
         </Grid>
 

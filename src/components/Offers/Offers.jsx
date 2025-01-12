@@ -520,6 +520,7 @@ const TextPage = () => {
               <Typography variant="subtitle1" gutterBottom color="#333" fontSize="14px" fontWeight="600">🪙 Treasure Category Rates :</Typography>
             </Grid>
             {[
+              { label: 'Exchange Rate USD ( 1 USD TO LKR )', name: 'exchangeateUSD' },
               { label: 'HoliadaySri Coins Rate ( HSC : LKR )', name: 'HSCRate' },
               { label: 'HoliadaySri Coins Rate ( HSC : USD )', name: 'HSCRateForeign' },
               { label: 'HoliadaySri Diamond Rate ( HSD : LKR )', name: 'HSDRate' },

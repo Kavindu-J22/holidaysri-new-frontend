@@ -14,6 +14,7 @@ const PromoCodePage = () => {
   const userEmail = localStorage.getItem('userEmail');
   const [userFriends, setUserFriends] = useState([]);
   const [userFavorites, setUserFavorites] = useState([]);
+  const [exchangeRate, setExchangeRate] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -21,6 +22,7 @@ const PromoCodePage = () => {
         // Fetch rate data based on the id
         const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
         setData(response.data.rate);
+        setExchangeRate(response.data.rate.exchangeateUSD);
 
         // Fetch promocodes that are on and not expired
         const promoResponse = await axios.get('http://localhost:8000/newPromocodes/all');
@@ -61,8 +63,6 @@ const PromoCodePage = () => {
 
     fetchData();
   }, [id, userEmail]); // Dependency array includes id and userEmail
-  
-  
   
   
 
@@ -143,7 +143,7 @@ const PromoCodePage = () => {
 
   
 
-  const handlePurchase = (priceLKR, priceUSD, title) => {
+  const handlePurchase = (priceHSC, title) => {
     const userEmail = localStorage.getItem('userEmail');
     const countryCode = localStorage.getItem('countryCode');
 
@@ -161,11 +161,10 @@ const PromoCodePage = () => {
         return;
     }
 
-    const price = countryCode === '+94' ? priceLKR : priceUSD;
-    const currency = countryCode === '+94' ? 'LKR' : 'USD';
+    const price = priceHSC ;
 
     navigate('/genaratePromoCode', {
-        state: { Price: price, Currency: currency, Title: title, Subject: 'Promo code Purchase' },
+        state: { Price: price, Currency: 'HSC', Title: title, Subject: 'Promo code Purchase' },
     });
 };
 
@@ -188,12 +187,11 @@ const PromoCodePage = () => {
           As a HolidaySri agent, unlock your potential by using the Diamond Promo Code. Offer exclusive discounts to advertisers and earn a remarkable <span style={{ color: 'rgb(102, 248, 224)', fontWeight: '600' }}>450 LKR</span> per advertisement. An Extra benefit we give you <span style={{ color: 'rgb(233, 235, 116)' }}>Free 2000 HSC (HolidaySri Coins).</span> You can even sell this premium promo code at the highest price, ensuring you get the most value from your efforts. Start your journey to financial success today!
         </>
       ),
-      priceLKR: data.diamondPromocodeRate || 'Loading...',
-      priceUSD: data.diamondPromocodeRateForeign || 'Loading...',
+      priceHSC: data.diamondPromocodeRate || 'Loading...',
       buttonText: 'Purchase Now',
       color: 'rgb(52, 250, 233)',
       icon: <FaGem size={40} color="rgb(52, 250, 233)" />,
-      onClick: () => handlePurchase(data.diamondPromocodeRate, data.diamondPromocodeRateForeign, 'Diamond Promo Code'),
+      onClick: () => handlePurchase(data.diamondPromocodeRate, 'Diamond Promo Code'),
     },
     {
       title: 'Gold Promo Code',
@@ -202,12 +200,11 @@ const PromoCodePage = () => {
           Elevate your earning potential with the Gold Promo Code. Share it with advertisers to give them exclusive discounts and earn <span style={{ color: 'rgb(240, 214, 98)', fontWeight: '600' }}>300 LKR</span> per advertisement. An Extra benefit we give you <span style={{ color: 'rgb(233, 235, 116)' }}>Free 1700 HSC (HolidaySri Coins).</span> This code provides a golden opportunity to maximize your profits while delivering value to others.
         </>
       ),
-      priceLKR: data.goldPromocodeRate || 'Loading...',
-      priceUSD: data.goldPromocodeRateForeign || 'Loading...',
+      priceHSC: data.goldPromocodeRate || 'Loading...',
       buttonText: 'Purchase Now',
       color: 'rgb(240, 214, 98)',
       icon: <FaCrown size={40} color="rgb(240, 214, 98)" />,
-      onClick: () => handlePurchase(data.goldPromocodeRate, data.goldPromocodeRateForeign, 'Gold Promo Code'),
+      onClick: () => handlePurchase(data.goldPromocodeRate, 'Gold Promo Code'),
     },
     {
       title: 'Silver Promo Code',
@@ -216,12 +213,11 @@ const PromoCodePage = () => {
           Start earning with the Silver Promo Code. Help advertisers save money and receive <span style={{ color: '#BDC3C7', fontWeight: '600'}}>200 LKR</span> per advertisement. An Extra benefit we give you Free <span style={{ color: 'rgb(233, 235, 116)'}}>800 HSC (HolidaySri Coins).</span> Affordable and effective, this promo code is perfect for those starting their agent journey.
         </>
       ),
-      priceLKR: data.silverPromocodeRate || 'Loading...',
-      priceUSD: data.silverPromocodeRateForeign || 'Loading...',
+      priceHSC: data.silverPromocodeRate || 'Loading...',
       buttonText: 'Purchase Now',
       color: '#BDC3C7',
       icon: <FaStar size={40} color="#BDC3C7" />,
-      onClick: () => handlePurchase(data.silverPromocodeRate, data.silverPromocodeRateForeign, 'Silver Promo Code'),
+      onClick: () => handlePurchase(data.silverPromocodeRate, 'Silver Promo Code'),
     },
     {
       title: 'Pre-Used Promo Code',
@@ -247,7 +243,7 @@ const PromoCodePage = () => {
       buttonText: 'Get Now',
       color: '#E74C3C',
       icon: <FaGift size={40} color="#E74C3C" />,
-      onClick: () => navigate('/freePromoCodeGen'),
+      onClick: () => handlePurchase( 0 , 'Free Promo Code'),
     },
   ];
 
@@ -335,23 +331,41 @@ const PromoCodePage = () => {
               >
                 {promo.description}
               </p>
-              <h3 style={{ color: 'rgb(248, 180, 102)', marginBottom: '15px', fontSize: '17px' }}>
+
+              <h3 style={{ color: 'rgb(240, 209, 142)', marginBottom: '15px', fontSize: '17px' }}>
+                {(promo.title === 'Pre-Used Promo Code' || promo.title === 'Get Free Promo Code') ? (
+                  null // Return nothing for these titles
+                ) : (
+                  `${promo.priceHSC} HSC / =`
+                )}
+              </h3>
+
+              <p style={{ color: 'rgb(248, 180, 102)', marginBottom: '15px', fontSize: '12px' }}>
                 {(promo.title === 'Pre-Used Promo Code' || promo.title === 'Get Free Promo Code') ? (
                   promo.price
                 ) : (
-                  promo.priceLKR !== undefined && promo.priceUSD !== undefined ? (
-                    <>
-                      {localStorage.getItem('countryCode') ? (
-                        <>{localStorage.getItem('countryCode') === '+94' ? promo.priceLKR : promo.priceUSD} {localStorage.getItem('countryCode') === '+94' ? 'LKR' : 'USD'}</>
-                      ) : (
-                        `${promo.priceLKR} LKR / ${promo.priceUSD} USD`
-                      )}
-                    </>
+                  promo.priceHSC !== undefined && promo.priceHSC !== null ? (
+                    exchangeRate ? (
+                      <>
+                        {localStorage.getItem('countryCode') ? (
+                          localStorage.getItem('countryCode') === '+94' ? (
+                            `${promo.priceHSC * 100} LKR / =`
+                          ) : (
+                            `${((promo.priceHSC * 100) / exchangeRate).toFixed(2)} USD / =`
+                          )
+                        ) : (
+                          `${promo.priceHSC * 100} LKR / ${((promo.priceHSC * 100) / exchangeRate).toFixed(2)} USD / =`
+                        )}
+                      </>
+                    ) : (
+                      'Loading exchange rate...'
+                    )
                   ) : (
                     'Loading...'
                   )
                 )}
-              </h3>
+              </p>
+
             </div>
             <button
               style={{
