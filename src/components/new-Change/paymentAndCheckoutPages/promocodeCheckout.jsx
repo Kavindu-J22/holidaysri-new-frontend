@@ -25,7 +25,6 @@ const Checkout = () => {
   const [error, setError] = useState(''); // To handle error messages
   const [success, setSuccess] = useState('');
   const [fade, setFade] = useState(false);
-  const [calculatedHSCAmount, setCalculatedHSCAmount] = useState(0);
   const [HSCRate, setHSCRate] = useState(null);
 
   useEffect(() => {
@@ -82,13 +81,12 @@ const Checkout = () => {
           setUsedValidPromocode(promoCodeInput);
           setUsedValidPromocodeOwner(response.data.userEmail);
           setUsedValidPromocodeType(response.data.promocodeType);
-          setSuccess(`Valid PromoCode. Discount applied. Promocode Owner: ${usedValidPromocodeOwner}`);
+          setSuccess(`Valid PromoCode. Discount applied. ${usedValidPromocodeOwner}'s ${usedValidPromocodType} used.`);
   
           // Fetch rate info 
           const rateResponse = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
           const allPromocodeDiscountRate = rateResponse.data.rate.allPromocodeDiscountRate;
           const specialPromocodeDiscountRate = rateResponse.data.rate.specialPromocodeDiscountRate;
-  
           const diamondPromocodeEarnRate = rateResponse.data.rate.diamondPromocodeEarnRate;
           const goldPromocodeEarnRate = rateResponse.data.rate.goldPromocodeEarnRate;
           const silverPromocodeEarnRate = rateResponse.data.rate.silverPromocodeEarnRate;
@@ -104,22 +102,28 @@ const Checkout = () => {
             discountRate = specialPromocodeDiscountRate / HSCRate;
         }
 
+         // Ensure discountRate is not applied if Price < discountRate
+        if (Price < discountRate) {
+          discountRate = 0;
+        }
+
         // Update the discounted amount and final amount
         setDiscountedAmount(discountRate); // Set the calculated discount
         setFinalAmount(Price - discountRate); // Set the final amount after applying discount
 
         let earnRate = 0; // Default earn rate
+        const itemType = Title;
 
         // Check if the valid promo code ends with specific suffixes
-        if (usedValidPromocodType === 'Diamond Promo Code') {
+        if (itemType === 'Diamond Promo Code') {
             earnRate = diamondPromocodeEarnRate; // Diamond rate
-        } else if (usedValidPromocodType === 'Gold Promo Code') {
+        } else if (itemType === 'Gold Promo Code') {
             earnRate = goldPromocodeEarnRate; // Gold rate
-        } else if (usedValidPromocodType === 'Silver Promo Code') {
+        } else if (itemType === 'Silver Promo Code') {
             earnRate = silverPromocodeEarnRate; // Silver rate
-        } else if (usedValidPromocodType === 'Free Promo Code') {
+        } else if (itemType === 'Free Promo Code') {
             earnRate = freePromocodeEarnRate; // Free rate
-        } else if (usedValidPromocodType === 'Special Promo Code') {
+        } else if (itemType === 'Special Promo Code') {
             earnRate = specialPromocodeEarnRate; // Special rate
         } else{
           earnRate = 0; // Default rate 0
