@@ -241,93 +241,107 @@ const HSCPayment = () => {
   };
 
   return (
-    <Box sx={{ marginTop: '70px', padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        Payment (HSC) For - {Title}
-      </Typography>
-      <Typography variant="body1" sx={{ marginBottom: 2 }}>
-        Your Current HSC Amount: <strong>{userCurrentHsc} {Currency}</strong>
-      </Typography>
-      <Typography variant="body1" sx={{ marginBottom: 2 }}>
-        Item: <strong>{Title} - {item}</strong>
-      </Typography>
-      <Typography variant="body1" sx={{ marginBottom: 2 }}>
-        Used Promocode: <strong>{UsedPromocode}</strong>
-      </Typography>
-      <Typography variant="body1" sx={{ marginBottom: 4 }}>
-        Payable Amount: <strong>{calculatedHSCAmount} {Currency}</strong> 
-        <br />
-        <span style={{ fontSize: '0.9rem', color: 'gray' }}>
-          (After deducting {DiscountedAmount} {Currency} discount amount)
-        </span>
-      </Typography>
+<Box
+  sx={{
+    margin: '80px 10px 0',
+    padding: 3,
+    backgroundColor: '#f9f9f9',
+    borderRadius: '10px',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+  }}
+>
+  <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#333' }}>
+    Payment (HSC) For - {Title}
+  </Typography>
+  <Typography variant="body1" sx={{ marginBottom: 2, fontSize: '1rem', color: '#555' }}>
+    Your Current HSC Amount: <strong>{userCurrentHsc} {Currency}</strong>
+  </Typography>
+  <Typography variant="body1" sx={{ marginBottom: 2, fontSize: '1rem', color: '#555' }}>
+    Item: <strong>{Title} - {item}</strong>
+  </Typography>
+  <Typography variant="body1" sx={{ marginBottom: 2, fontSize: '1rem', color: '#555' }}>
+    Used Promocode: <strong>{UsedPromocode || 'N/A'}</strong>
+  </Typography>
+  <Typography variant="body1" sx={{ marginBottom: 4, fontSize: '1rem', color: '#555' }}>
+    Payable Amount: <strong>{calculatedHSCAmount} {Currency}</strong>
+    <br />
+    <span style={{ fontSize: '0.85rem', color: '#888' }}>
+      (After deducting {DiscountedAmount} {Currency} discount amount)
+    </span>
+  </Typography>
 
-      <>
-
-      {success && (
-        <Alert
-          severity="success"
-          style={{
-            marginBottom: '10px',
-            opacity: fade ? 0 : 1,
-            transition: 'opacity 0.3s ease-out',
-          }}
-        >
-          {success}
-        </Alert>
-      )}
-
-      {error && (
-        <Alert
-          severity="error"
-          style={{
-            marginBottom: '10px',
-            opacity: fade ? 0 : 1,
-            transition: 'opacity 0.3s ease-out',
-          }}
-        >
-          {error}
-        </Alert>
-      )}
-
-        {warning && (
-          <Alert
-            severity="warning"
-            style={{
-              marginBottom: '10px',
-              opacity: fade ? 0 : 1,
-              transition: 'opacity 0.3s ease-out',
-            }}
-          >
-            {warning}
-          </Alert>
-        )}
-
-        {info && (
-          <Alert
-            severity="info"
-            style={{
-              marginBottom: '10px',
-              opacity: fade ? 0 : 1,
-              transition: 'opacity 0.3s ease-out',
-            }}
-          >
-            {info}
-          </Alert>
-        )}
-
-        </>
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleVslidateDataToPay}
-        disabled={loading}
-        fullWidth
-        sx={{ marginBottom: 4 }}
+  <>
+    {success && (
+      <Alert
+        severity="success"
+        sx={{
+          marginBottom: 2,
+          opacity: fade ? 0 : 1,
+          transition: 'opacity 0.3s ease-out',
+        }}
       >
-        {loading ? <CircularProgress size={24} color="inherit" /> : 'Pay Now'}
-      </Button>
+        {success}
+      </Alert>
+    )}
+
+    {error && (
+      <Alert
+        severity="error"
+        sx={{
+          marginBottom: 2,
+          opacity: fade ? 0 : 1,
+          transition: 'opacity 0.3s ease-out',
+        }}
+      >
+        {error}
+      </Alert>
+    )}
+
+    {warning && (
+      <Alert
+        severity="warning"
+        sx={{
+          marginBottom: 2,
+          opacity: fade ? 0 : 1,
+          transition: 'opacity 0.3s ease-out',
+        }}
+      >
+        {warning}
+      </Alert>
+    )}
+
+    {info && (
+      <Alert
+        severity="info"
+        sx={{
+          marginBottom: 2,
+          opacity: fade ? 0 : 1,
+          transition: 'opacity 0.3s ease-out',
+        }}
+      >
+        {info}
+      </Alert>
+    )}
+  </>
+
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={handleVslidateDataToPay}
+    disabled={loading}
+    fullWidth
+    sx={{
+      marginBottom: 4,
+      padding: '12px 20px',
+      fontWeight: 'bold',
+      backgroundColor: loading ? '#ccc' : '#1976d2',
+      '&:hover': {
+        backgroundColor: '#115293',
+      },
+    }}
+  >
+    {loading ? <CircularProgress size={24} color="inherit" /> : 'Pay Now'}
+  </Button>
 
 
       <Dialog open={open} onClose={() => setOpen(false)}>

@@ -81,7 +81,7 @@ const Checkout = () => {
           setUsedValidPromocode(promoCodeInput);
           setUsedValidPromocodeOwner(response.data.userEmail);
           setUsedValidPromocodeType(response.data.promocodeType);
-          setSuccess(`Valid PromoCode. Discount applied. ${usedValidPromocodeOwner}'s ${usedValidPromocodType} used.`);
+          setSuccess(`Valid PromoCode. Discount applied and ${usedValidPromocodeOwner} ${usedValidPromocodType} used.`);
   
           // Fetch rate info 
           const rateResponse = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
