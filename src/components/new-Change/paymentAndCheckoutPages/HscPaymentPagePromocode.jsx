@@ -4,6 +4,7 @@ import axios from 'axios';
 import {
   Box,
   Typography,
+  Alert,
   Button,
   CircularProgress,
   Dialog,
@@ -20,6 +21,11 @@ const HSCPayment = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false); 
   const [popup, setPopup] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [warning, setWarning] = useState('');
+  const [info, setInfo] = useState('');
+  const [fade, setFade] = useState(false);
 
   useEffect(() => {
     const userEmail = localStorage.getItem('userEmail');
@@ -36,7 +42,7 @@ const HSCPayment = () => {
   const handlePayNow = async () => {
     if (userCurrentHsc < calculatedHSCAmount) {
       // Show insufficient balance popup
-      alert(`Insufficient HSC Balance: ${userCurrentHsc} ${Currency}. You need ${calculatedHSCAmount} ${Currency}. Please recharge to continue.`);
+      setError(`Insufficient HSC Balance: ${userCurrentHsc} ${Currency}. You need ${calculatedHSCAmount} ${Currency}. Please recharge to continue.`);
       return;
     }
   
@@ -51,7 +57,7 @@ const HSCPayment = () => {
       const user = userResponse.data.user;
   
       if (user._id !== userId || user.ProfileStatus === "inactive") {
-        alert("User validation failed. Please check your profile status or credentials.");
+        setWarning("User validation failed. Please check your profile status or credentials.");
         console.error("User validation failed. User ID or ProfileStatus mismatch.");
         setLoading(false);
         return;
@@ -65,7 +71,6 @@ const HSCPayment = () => {
         isAgent: "True",
       });
       console.log("User subscription and agent status updated successfully.");
-      alert("User subscription and agent status updated successfully.");
   
       // Step 3: Handle UsedPromocode updates if applicable
       if (UsedPromocode) {
@@ -78,10 +83,10 @@ const HSCPayment = () => {
             earns: Earns,
           });
           console.log("Promocode owner's earnings updated successfully.");
-          alert("Promocode owner's earnings updated successfully.");
+          
         } catch (error) {
           console.error("Error updating promocode owner's earnings:", error);
-          alert("Error updating promocode owner's earnings.");
+          
         }
   
         // Add Earn record to database
@@ -95,10 +100,10 @@ const HSCPayment = () => {
             item: `${item} - ${Title}`,
           });
           console.log("Earning record added successfully.");
-          alert("Earning record added successfully.");
+          
         } catch (error) {
           console.error("Error adding earning record:", error);
-          alert("Error adding earning record.");
+          
         }
       }
   
@@ -118,10 +123,10 @@ const HSCPayment = () => {
           forEarns: Earns,
         });
         console.log("Payment activity added successfully.");
-        alert("Payment activity added successfully.");
+        
       } catch (error) {
         console.error("Error adding payment activity:", error);
-        alert("Error adding payment activity.");
+        
       }
   
       // Step 5: Update coin balance (existing functionality)
@@ -133,16 +138,16 @@ const HSCPayment = () => {
         });
         if (coinResponse.data.success) {
           console.log("Coin balance updated successfully.");
-          alert(`HSC balance updated successfully.\nCurrent Balance: ${newBalance} ${Currency}`);
+          
         } else {
           console.error("Error updating coin balance.");
-          alert("Error updating coin balance.");
+          
           setLoading(false);
           return;
         }
       } catch (error) {
         console.error("Error updating coin balance:", error);
-        alert("Error updating coin balance.");
+        
       }
   
       // Step 6: Add new promocode to the system
@@ -154,10 +159,10 @@ const HSCPayment = () => {
           promocode: item,
         });
         console.log("New promocode added successfully.");
-        alert("New promocode added successfully.");
+        
       } catch (error) {
         console.error("Error adding new promocode:", error);
-        alert("Error adding new promocode.");
+        
       }
   
       // Final Success Message
@@ -166,7 +171,7 @@ const HSCPayment = () => {
       
     } catch (error) {
       console.error("Error during payment process:", error);
-      alert("An error occurred while processing your payment. Please try again later.");
+      setError("An error occurred while processing your payment. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -186,7 +191,7 @@ const HSCPayment = () => {
   
       if (response.data.exists) {
         // If the promocode already exists, set an error message
-        alert("Promocode Already Purchased. Check it in your Dashboard PromoCode & Agent Section");
+        setWarning("This Promocode Already Purchased. Check it in your Dashboard PromoCode & Agent Section to find Your PromoCode");
         return;
       }
   
@@ -202,11 +207,30 @@ const HSCPayment = () => {
   
       // Handle other errors
       console.error("Error checking promocode existence:", error);
-      alert("An error occurred while verifying the promocode. Please try again.");
+      setError("An error occurred while verifying the promocode. Please try again.");
     }
   };
   
+    useEffect(() => {
+      if (success || error || warning || info ) {
+        setFade(false); // Reset fade-in
+        const fadeTimer = setTimeout(() => {
+          setFade(true);  // Start fading
+        }, 3000); // Start fade after 200ms
   
+        const removeTimer = setTimeout(() => {
+          setSuccess('');
+          setError('');
+          setWarning(''),
+          setInfo('')
+        }, 3500); // Remove after fade out (0.5s)
+  
+        return () => {
+          clearTimeout(fadeTimer);
+          clearTimeout(removeTimer);
+        };
+      }
+    }, [success, error, warning, info]);
 
   const handleRecharge = () => {
     navigate('/getHSCpage');
@@ -237,6 +261,63 @@ const HSCPayment = () => {
           (After deducting {DiscountedAmount} {Currency} discount amount)
         </span>
       </Typography>
+
+      <>
+
+      {success && (
+        <Alert
+          severity="success"
+          style={{
+            marginBottom: '10px',
+            opacity: fade ? 0 : 1,
+            transition: 'opacity 0.3s ease-out',
+          }}
+        >
+          {success}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert
+          severity="error"
+          style={{
+            marginBottom: '10px',
+            opacity: fade ? 0 : 1,
+            transition: 'opacity 0.3s ease-out',
+          }}
+        >
+          {error}
+        </Alert>
+      )}
+
+        {warning && (
+          <Alert
+            severity="warning"
+            style={{
+              marginBottom: '10px',
+              opacity: fade ? 0 : 1,
+              transition: 'opacity 0.3s ease-out',
+            }}
+          >
+            {warning}
+          </Alert>
+        )}
+
+        {info && (
+          <Alert
+            severity="info"
+            style={{
+              marginBottom: '10px',
+              opacity: fade ? 0 : 1,
+              transition: 'opacity 0.3s ease-out',
+            }}
+          >
+            {info}
+          </Alert>
+        )}
+
+        </>
+
       <Button
         variant="contained"
         color="primary"
@@ -247,6 +328,7 @@ const HSCPayment = () => {
       >
         {loading ? <CircularProgress size={24} color="inherit" /> : 'Pay Now'}
       </Button>
+
 
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent>
