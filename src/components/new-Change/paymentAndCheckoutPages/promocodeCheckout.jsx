@@ -196,6 +196,7 @@ const Checkout = () => {
         UsedPromocode: usedValidPromocode,
         UsedPromocodeOwner: usedValidPromocodeOwner,
         Earns: earnAmount,
+        DiscountedAmount: discountedAmount,
       },
     });
   };
