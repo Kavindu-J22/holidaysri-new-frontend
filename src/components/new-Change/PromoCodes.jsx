@@ -423,7 +423,8 @@ const PromoCodePage = () => {
       <Box
         key={index}
         sx={{
-          background: 'linear-gradient(135deg, rgba(254, 255, 255, 0.78), rgba(255, 255, 255, 0.34))',
+          background: 'linear-gradient(135deg, rgba(240, 240, 255, 0.9), rgba(230, 230, 255, 0.6))',
+
           borderRadius: 2,
           boxShadow: 2,
           padding: 3,

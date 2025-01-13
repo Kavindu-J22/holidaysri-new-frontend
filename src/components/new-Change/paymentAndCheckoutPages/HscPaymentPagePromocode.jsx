@@ -389,7 +389,7 @@ const HSCPayment = () => {
               Paid Amount: {calculatedHSCAmount}{Currency}.
             </Typography>
             <Typography variant="body1" gutterBottom>
-             Current HSC Balance: {userCurrentHsc} {Currency}
+             Current HSC Balance: {userCurrentHsc - calculatedHSCAmount} {Currency}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               You Are Now Our Valuable Agent. Earn and Enjoy. Good Luck!

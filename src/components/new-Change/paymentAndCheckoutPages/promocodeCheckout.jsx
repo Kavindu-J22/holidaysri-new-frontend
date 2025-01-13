@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Typography, TextField, Button, Grid, Paper, Modal, List, ListItem, ListItemText, IconButton, Alert } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, Paper, Modal, List, ListItem, ListItemText, IconButton, Alert, InputAdornment } from '@mui/material';
 import { CopyAll, CheckCircle } from '@mui/icons-material';
 import axios from 'axios';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 
 const Checkout = () => {
@@ -246,21 +247,40 @@ const Checkout = () => {
           <Typography variant="body1" gutterBottom>
             Apply Promo Code to get a discount:
           </Typography>
+
           <TextField
             fullWidth
             variant="outlined"
+            inputProps={{ maxLength: 11 }}
             placeholder={`Type PromoCode Here and get ${discountRateforDis / HSCRate} HSC discount ( ${discountRateforDis} LKR )`}
             value={promoCodeInput}
-            onChange={(e) => setPromoCodeInput(e.target.value)}
+            onChange={(e) => {
+              const input = e.target.value;
+              // Allow only uppercase letters (A-Z) and numbers (0-9)
+              const filteredInput = input.toUpperCase().replace(/[^A-Z0-9]/g, '');
+              setPromoCodeInput(filteredInput);
+            }}
             sx={{ mb: 2 }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {promoCodeInput && (
+                    <IconButton onClick={() => setPromoCodeInput('')} edge="end">
+                      <HighlightOffIcon />
+                    </IconButton>
+                  )}
+                </InputAdornment>
+              ),
+            }}
           />
+
           <Button
             variant="contained"
             color="primary"
             onClick={applyPromoCode}
             fullWidth
           >
-            Apply Promo Code
+            Apply Promo Code - Click Twice To Verify Your Agent
           </Button>
         </Box>
 
