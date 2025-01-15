@@ -88,7 +88,7 @@ import ProfileDashboard from "./components/new-Change/profile";
 import GenaratePromocode from "./components/new-Change/genaratePromocode";
 import PromocodeCheckout from "./components/new-Change/paymentAndCheckoutPages/promocodeCheckout";
 import PromoHscpayments from "./components/new-Change/paymentAndCheckoutPages/HscPaymentPagePromocode";
-
+import NewDestination from "./pages/alllocations/newDestination";
 
 
 // Old Imports
@@ -672,6 +672,7 @@ const SidebarWithNavbar = () => {
     <Route path="/genaratePromoCode" element={<GenaratePromocode />} />
     <Route path="/promoCheckouts" element={<PromocodeCheckout />} />
     <Route path="/HSCPaymentPromocode" element={<PromoHscpayments />} />
+    <Route path="/destination/:id" element={<NewDestination />} />
 
     {/* No-side bar pages */}
     <Route path="/register" element={<NewRegister />} />

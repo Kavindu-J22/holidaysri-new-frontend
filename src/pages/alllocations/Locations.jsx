@@ -334,6 +334,9 @@ const ExploreDestinations = () => {
               {showMore[location._id]
                 ? location.details
                 : `${location.details.substring(0, 100)}...`}
+              {showMore[location._id] && location.details.length > 100 && (
+                <span>{location.details.substring(100, 150)}...</span>
+              )}
               <button
                 onClick={() => toggleShowMore(location._id)}
                 style={{
