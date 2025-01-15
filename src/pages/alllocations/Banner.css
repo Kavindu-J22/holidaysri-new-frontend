@@ -2,7 +2,7 @@
 .video-container {
   height: 350px;
   position: relative;
-  margin-top: 70px;
+  margin-bottom: 20px;
   border-radius: 40px;
   box-shadow: 
     0 4px 6px rgba(0, 0, 0, 0.2),  /* Soft shadow */

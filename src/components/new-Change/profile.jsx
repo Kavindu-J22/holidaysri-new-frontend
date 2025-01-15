@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import RatesPage from "../../components/Offers/Offers";
+import AddDestinations from "../../pages/alllocations/addLocations";
 import { BiSolidCategory } from 'react-icons/bi';
 import { ImProfile } from "react-icons/im";
 
@@ -25,6 +26,7 @@ const ProfilePage = () => {
         { text: 'Profile', icon: <ImProfile /> },
         { text: 'Rates', icon: <ImProfile /> },
         { text: 'Advertisements', icon: <ImProfile /> },
+        { text: 'Add Destinations', icon: <ImProfile /> },
         { text: 'Earnings', icon: <ImProfile /> },
         { text: 'Accounts', icon: <ImProfile /> },
         { text: 'Settings', icon: <ImProfile /> },
@@ -70,6 +72,8 @@ const ProfilePage = () => {
                 return <RatesPage />;
             case 'Advertisements':
                 return <div>Advertisements Page Content</div>;
+            case 'Add Destinations':
+                    return <AddDestinations />;
             case 'Earnings':
                 return <div>Earnings Page Content</div>;
             case 'Accounts':
