@@ -43,15 +43,16 @@ const ImageSlider = ({ images }) => {
 
 // Mapping of climates with relevant emojis
 const climateEmojis = {
-  Tropical: "🌴",
-  Dry: "🌵",
-  Temperate: "🌳",
-  Continental: "❄️",
-  Polar: "☃️",
-  Mediterranean: "🍇",
-  Arid: "🏜️",
-  "Humid Subtropical": "🌿",
-  Oceanic: "🌊"
+  "Dry zone": "🌵",
+  "Intermediate zone": "🍃",
+  "Montane zone": "🥶",
+  "Semi-Arid zone": "🌾",
+  "Oceanic zone": "🌊",
+  "Tropical Wet zone": "🌴",
+  "Tropical Submontane": "🌿",
+  "Tropical Dry Zone":"🍂",
+  "Tropical Monsoon Climate": "🌧️",
+  "Tropical Savanna Climate": "🌞",
 };
 
 const ExploreDestinations = () => {
@@ -247,15 +248,16 @@ const ExploreDestinations = () => {
         >
           <MenuItem value="">All Climates</MenuItem>
           {[
-            "Tropical",
-            "Dry",
-            "Temperate",
-            "Continental",
-            "Polar",
-            "Mediterranean",
-            "Arid",
-            "Humid Subtropical",
-            "Oceanic",
+            "Dry zone",
+            "Intermediate zone",
+            "Montane zone",
+            "Semi-Arid zone",
+            "Oceanic zone",
+            "Tropical Wet zone",
+            "Tropical Submontane",
+            "Tropical Dry Zone",
+            "Tropical Monsoon Climate",
+            "Tropical Savanna Climate",
           ].map((cli) => (
             <MenuItem key={cli} value={cli}>
               {climateEmojis[cli]} {cli}

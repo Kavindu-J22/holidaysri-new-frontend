@@ -320,15 +320,16 @@ const handleSavelocation = async (locationName) => {
   };
 
   const climateEmojis = {
-    "Tropical": "🌴",
-    "Dry": "🌵",
-    "Temperate": "🌳",
-    "Continental": "🏞️",
-    "Polar": "❄️",
-    "Mediterranean": "🍇",
-    "Arid": "🌵",
-    "Humid Subtropical": "🌿",
-    "Oceanic": "🌊",
+    "Dry zone": "🌵(hot temperatures)",
+    "Intermediate zone": "🍃(moderately cool)",
+    "Montane zone": "🥶(Cool to cold)",
+    "Semi-Arid zone": "🌾(arid & dry)",
+    "Oceanic zone": "🌊(Moderate & sea experience)",
+    "Tropical Wet zone": "🌴(Warm & humidity)",
+    "Tropical Submontane": "🌿(Moderately warm)",
+    "Tropical Dry Zone":"🍂(high temperatures)",
+    "Tropical Monsoon Climate": "🌧️(Warm & rainy)",
+    "Tropical Savanna Climate": "🌞(wet and dry)",
   };
 
     // Handle show more functionality
