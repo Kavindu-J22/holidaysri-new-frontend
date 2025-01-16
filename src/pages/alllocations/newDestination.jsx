@@ -135,6 +135,7 @@ const DestinationDetailPage = () => {
   const [userComment, setUserComment] = useState("");
   const [currrentDistrict, setCurrrentDistrict] = useState("");
   const [userRating, setUserRating] = useState(0);
+  const [alluserRatings, setAlluserRatings] = useState(0);
   const [visibleComments, setVisibleComments] = useState(5);
   const navigate = useNavigate();
 
@@ -165,6 +166,15 @@ const DestinationDetailPage = () => {
     return (weightedSum / totalRatings).toFixed(1);
   };
 
+    // useEffect to update the state with totalRatings only once
+  useEffect(() => {
+    if (location?.ratings) {
+      const totalRatings = location.ratings.length;
+      setAlluserRatings(totalRatings);  // Update totalRatings only when location.ratings changes
+    }
+  }, [location?.ratings]);
+
+  
   const handleAddComment = async () => {
     const userEmail = localStorage.getItem("userEmail");
   
@@ -381,6 +391,15 @@ const handleSavelocation = async (locationName) => {
         window.open(url, '_blank');
       };
 
+      const formatNumber = (number) => {
+        if (number >= 1000000) {
+          return (number / 1000000).toFixed(1) + 'M'; // Format as millions
+        } else if (number >= 1000) {
+          return (number / 1000).toFixed(1) + 'K'; // Format as thousands
+        }
+        return number; // Return the number as is if less than 1000
+      };
+
   return (
 <Box
   style={{
@@ -552,13 +571,28 @@ const handleSavelocation = async (locationName) => {
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', 
           overflow: 'hidden'
       }}>
-        <Typography variant="h6" mb={2} sx={{ 
-            color: '#fff', 
-            fontWeight: 'bold', 
-            textAlign: 'left' 
-        }}>
-          Average Rating: {calculateFinalRating()} / 5 ⭐
-        </Typography>
+      <Typography
+        variant="h6"
+        mb={1}
+        sx={{
+          color: '#fff',
+          fontWeight: 'bold',
+          textAlign: 'left',
+        }}
+      >
+        Average Rating: {calculateFinalRating()} / 5 ⭐
+      </Typography>
+
+      <Typography
+        mb={2}
+        sx={{
+          color: 'rgba(236, 230, 230, 0.74)',
+          textAlign: 'left',
+          fontSize: '10px',
+        }}
+      >
+        {formatNumber(alluserRatings)} Unique Ratings
+      </Typography>
         <Box sx={{ width: '100%', height: '170px', display: 'flex', justifyContent: 'center' }}>
           <Bar
             data={{
@@ -644,36 +678,45 @@ const handleSavelocation = async (locationName) => {
             boxShadow: 2,
         }}
         >
-        <Typography
-        variant="h5"
-        mb={2}
-        sx={{
-            fontWeight: 'bold',
-            color: '#fff',
-            fontSize: { xs: '1rem', sm: '1.5rem' }, // Responsive font size
-            display: 'flex',
-            alignItems: 'center', // Align icon and text
-        }}
-        >
-        <FaUsers sx={{ color: '#34495E', marginRight: '20px' }} />&nbsp;   
-        Reviews & Ratings :
-        </Typography>
-
-        {feedbackWithRatings?.slice(0, visibleComments).map(({ userEmail, comment, rating }, idx) => (
-          <Paper
-        key={idx}
+      <Typography
+      variant="h5"
+      mb={2}
+      sx={{
+        fontWeight: 'bold',
+        color: '#fff',
+        fontSize: { xs: '1rem', sm: '1.5rem' }, // Responsive font size
+        display: 'flex',
+        alignItems: 'center', // Align icon and text
+      }}
+    >
+      <FaUsers sx={{ color: '#34495E', marginRight: '20px' }} />&nbsp;
+      Reviews & Ratings
+      <span
         style={{
-          padding: '10px',
-          marginBottom: '5px',
-          background: 'linear-gradient(135deg, rgb(53, 51, 51) 0%, rgb(26, 25, 25) 100%)',
-          borderRadius: '10px',
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'row', // For desktop
-          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-          border: '1px solid rgba(255, 255, 255, 0.3)', // Light border for definition
+          fontSize: '0.9rem', // Smaller font size for comments count
+          color: 'rgba(236, 230, 230, 0.74)', // Change color for comment count
+          marginLeft: '8px',
         }}
       >
+        ( {formatNumber(feedbackWithRatings?.length)} Reviews )
+      </span>
+    </Typography>
+
+      {feedbackWithRatings?.slice(0, visibleComments).map(({ userEmail, comment, rating }, idx) => (
+        <Paper
+          key={idx}
+          style={{
+            padding: '10px',
+            marginBottom: '5px',
+            background: 'linear-gradient(135deg, rgb(53, 51, 51) 0%, rgb(26, 25, 25) 100%)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row', // For desktop
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+            border: '1px solid rgba(255, 255, 255, 0.3)', // Light border for definition
+          }}
+        >
 
             {/* Email Avatar with Deterministic Background and First Letter */}
             <Avatar
