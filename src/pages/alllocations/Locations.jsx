@@ -277,6 +277,7 @@ const ExploreDestinations = () => {
         padding: "20px",
         gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
         backgroundColor: "rgba(0, 0, 0, 0.48)",
+        backdropFilter: "blur(10px)",
         marginTop: "10px",
         borderRadius: "10px",
         gridTemplateRows: "auto",

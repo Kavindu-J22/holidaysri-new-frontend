@@ -9,6 +9,8 @@ import {
   Paper,
   Avatar,
   Rating,
+  Backdrop,
+  Grid,
 } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos, Favorite, Map, Save } from "@mui/icons-material";
 import axios from "axios";
@@ -17,7 +19,8 @@ import "chart.js/auto";
 import { Send as SendIcon } from '@mui/icons-material';
 import { IoIosChatboxes } from "react-icons/io";
 import { FaUsers } from "react-icons/fa";
-
+import { FaMapLocationDot } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 const generateColorFromEmail = (email) => {
     let hash = 0;
@@ -130,8 +133,10 @@ const DestinationDetailPage = () => {
   const { id } = useParams();
   const [location, setLocation] = useState(null);
   const [userComment, setUserComment] = useState("");
+  const [currrentDistrict, setCurrrentDistrict] = useState("");
   const [userRating, setUserRating] = useState(0);
   const [visibleComments, setVisibleComments] = useState(5);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -140,6 +145,7 @@ const DestinationDetailPage = () => {
           `http://localhost:8000/location/get/${id}`
         );
         setLocation(response.data.location);
+        setCurrrentDistrict(response.data.location.district);
       } catch (error) {
         console.error("Error fetching location data:", error);
       }
@@ -206,6 +212,12 @@ const DestinationDetailPage = () => {
       return;
     }
   
+    if (!userRating || userRating === 0) {
+      // Check if userRating is 0 or undefined
+      alert("Please provide a valid rating before submitting.");
+      return;
+    }
+  
     try {
       // Check if the user has already rated
       const hasRated = location.ratings.some(
@@ -233,6 +245,7 @@ const DestinationDetailPage = () => {
       console.error("Error adding rating:", error);
     }
   };
+  
   
   
 
@@ -337,6 +350,37 @@ const handleSavelocation = async (locationName) => {
         setVisibleComments((prev) => prev + 10); // Load 10 more comments
       };
 
+    const renderStars = (rating) => {
+        const filledStars = '⭐'.repeat(Math.floor(rating)); // Filled stars
+        const emptyStars = '☆'.repeat(5 - Math.floor(rating)); // Empty stars
+        return filledStars + emptyStars;
+      };
+
+
+      const categories = [
+        { label: 'Hotels & Accommodations', icon: '🏨', path: `Hotels/${currrentDistrict}` },
+        { label: 'Cafes & Restaurants', icon: '☕', path: `restaurants/${currrentDistrict}` },
+        { label: 'Foods & Beverages', icon: '🍽️', path: `Foods/${currrentDistrict}` },
+        { label: 'Live Rides Updates', icon: '🎢', path: `liveRides/${currrentDistrict}` },
+        { label: 'Vehicle Rentals & Hire Services', icon: '🚗', path: `Vehicles/${currrentDistrict}` },
+        { label: 'Travel Budys', icon: '🧑‍🤝‍🧑', path: `travelBudys/${currrentDistrict}` },
+        { label: 'Tour Guiders', icon: '👨‍🏫', path: `Guiders/${currrentDistrict}` },
+        { label: 'Tour Packages', icon: '📦', path: `Packages/${currrentDistrict}` },
+        { label: 'Events Updates', icon: '🎉', path: `Events/${currrentDistrict}` },
+        { label: 'Delivery Partners', icon: '🚚', path: `Delivery/${currrentDistrict}` },
+        { label: 'Fitness & Health', icon: '💪', path: `Fitness/${currrentDistrict}` },
+        { label: 'Help & donate civilians', icon: '💰', path: `Donations/${currrentDistrict}` },
+      ];
+
+      const handleGoogleSearch = (type, locationName) => {
+        const query = `${locationName} Sri Lanka`;
+        const url =
+          type === 'images'
+            ? `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`
+            : `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        window.open(url, '_blank');
+      };
+
   return (
 <Box
   style={{
@@ -346,7 +390,8 @@ const handleSavelocation = async (locationName) => {
     marginRight: '10px',
     marginBottom: '15px',
     maxWidth: '100%',
-    background: 'linear-gradient(to right, #ffffff, #f0f0f0)',
+    background: 'linear-gradient(to right,rgba(27, 26, 26, 0.61),rgb(41, 39, 39))',
+    backdropFilter: 'blur(10px)',
     boxShadow: '0px 0px 10px rgba(0,0,0,0.1)',
     borderRadius: '10px',
   }}
@@ -363,9 +408,9 @@ const handleSavelocation = async (locationName) => {
         padding: { xs: 2, sm: 3 }, 
         borderRadius: 2, 
         boxShadow: 3, 
-        backgroundColor: '#ffffff', 
+        background: 'linear-gradient(135deg, rgba(248, 246, 246, 0.94) 0%, rgba(220, 220, 220, 0.74) 100%)', 
         mx: 'auto', 
-        mb: 3 
+        mb: 2 
         }}>
     {/* Location Name with Circle and Background Image */}
     <Box sx={{ 
@@ -396,17 +441,27 @@ const handleSavelocation = async (locationName) => {
         {/* Location Info */}
         <Box sx={{ mb: 3 }}>
             <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: '500', color: '#555', mb: 1 }}>
-            <strong>Province:</strong> {location.province}
+            <strong>Province:</strong> {location.province}, Sri lanka
             </Typography>
             <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: '500', color: '#555', mb: 1 }}>
-            <strong>District:</strong> {location.district}
+            <strong>District:</strong> {location.district} district
             </Typography>
             <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: '500', color: '#555', mb: 1 }}>
             <strong>Distance from Colombo:</strong> {location.distanceFromColombo} KM
             </Typography>
-            <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: '500', color: '#555', mb: 1 }}>
-            <strong>Climate:</strong> {location.climate} {climateEmojis[location.climate] || "🌍"}
-            </Typography>
+            <Typography 
+            variant="body1" 
+            sx={{ 
+                fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                fontWeight: '500', 
+                color: '#555', 
+                mb: 1 
+            }}
+        >
+            <strong>Climate:</strong> 
+            <span>{location.climate}</span>&nbsp;
+            <span style={{ color: 'rgba(55, 77, 119, 0.77)', fontSize: '10px' }}>{climateEmojis[location.climate] || "🌍"}</span>
+        </Typography>
         </Box>
 
         {/* Action Buttons (Save & Favorite) */}
@@ -451,7 +506,18 @@ const handleSavelocation = async (locationName) => {
         <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333', mb: 2 }}>
             Description
         </Typography>
-        <Typography variant="body2" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, color: '#666', mb: 3 }}>
+        <Typography 
+            variant="body2" 
+            sx={{ 
+                fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                color: '#666', 
+                mb: 3, 
+                display: 'flex', 
+                justifyContent: 'space-between', // Adjust alignment
+                textAlign: 'justify', // Justify the text
+                lineHeight: 1.5 // Optional, to ensure readability
+            }}
+        >
             {location.details}
         </Typography>
 
@@ -479,11 +545,21 @@ const handleSavelocation = async (locationName) => {
         </Box>
 
 
-      <Box mb={2} sx={{ padding: '8px', backgroundColor: '#f9f9f9', borderRadius: '8px' }}>
-        <Typography variant="h6" mb={1}>
+        <Box mb={2} sx={{ 
+          padding: '16px', 
+          background: 'linear-gradient(135deg,rgba(247, 249, 252, 0.19) 0%,rgba(228, 235, 245, 0.3) 100%)', 
+          borderRadius: '12px', 
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', 
+          overflow: 'hidden'
+      }}>
+        <Typography variant="h6" mb={2} sx={{ 
+            color: '#fff', 
+            fontWeight: 'bold', 
+            textAlign: 'left' 
+        }}>
           Average Rating: {calculateFinalRating()} / 5 ⭐
         </Typography>
-        <Box sx={{ width: '100%', height: '150px' }}>
+        <Box sx={{ width: '100%', height: '170px', display: 'flex', justifyContent: 'center' }}>
           <Bar
             data={{
               labels: ["1 ⭐", "2 ⭐", "3 ⭐", "4 ⭐", "5 ⭐"],
@@ -491,10 +567,26 @@ const handleSavelocation = async (locationName) => {
                 {
                   data: ratingsDistribution,
                   backgroundColor: [
-                    "#ff6f61",
-                    "#ffb74d",
-                    "#ffd54f",
-                    "#81c784",
+                    "#ff4b5c",  // Professional Red
+                    "#ffa41b",  // Vibrant Orange
+                    "#ffeb3b",  // Bright Yellow
+                    "#4caf50",  // Standard Green
+                    "#2196f3",  // Classic Blue
+                  ],
+                  borderColor: [
+                    "#cc3a47",
+                    "#cc8314",
+                    "#ccb32a",
+                    "#3b8c3a",
+                    "#1b7ac4",
+                  ],
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  hoverBackgroundColor: [
+                    "#ff6b7a",
+                    "#ffbf47",
+                    "#fff176",
+                    "#6fbf73",
                     "#64b5f6",
                   ],
                 },
@@ -504,9 +596,41 @@ const handleSavelocation = async (locationName) => {
               indexAxis: "y",
               plugins: {
                 legend: { display: false },
+                tooltip: {
+                  backgroundColor: '#333',
+                  titleColor: '#fff',
+                  bodyColor: '#fff',
+                },
               },
               responsive: true,
               maintainAspectRatio: false,
+              scales: {
+                x: {
+                  ticks: {
+                    color: '#fff',
+                  },
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0)',
+                  },
+                },
+                y: {
+                  ticks: {
+                    color: '#fff',
+                  },
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.1)',
+                  },
+                },
+              },
+              elements: {
+                bar: {
+                  borderSkipped: false,
+                  shadowOffsetX: 2,
+                  shadowOffsetY: 2,
+                  shadowBlur: 5,
+                  shadowColor: 'rgba(0, 0, 0, 0.2)',
+                },
+              },
             }}
           />
         </Box>
@@ -515,10 +639,9 @@ const handleSavelocation = async (locationName) => {
       <Box
         sx={{
             padding: { xs: 2, sm: 3 }, // Smaller padding on extra small screens
-            backgroundColor: '#f9f9f9',
+            backgroundColor: 'rgba(252, 253, 255, 0.16)',
             borderRadius: 2,
             boxShadow: 2,
-            margin: { xs: '5px', sm: '10px' }, // Adjust margin for smaller screens
         }}
         >
         <Typography
@@ -526,29 +649,32 @@ const handleSavelocation = async (locationName) => {
         mb={2}
         sx={{
             fontWeight: 'bold',
-            color: '#34495E',
+            color: '#fff',
             fontSize: { xs: '1rem', sm: '1.5rem' }, // Responsive font size
             display: 'flex',
             alignItems: 'center', // Align icon and text
         }}
         >
         <FaUsers sx={{ color: '#34495E', marginRight: '20px' }} />&nbsp;   
-        User Feedbacks & Ratings
+        Reviews & Ratings :
         </Typography>
 
         {feedbackWithRatings?.slice(0, visibleComments).map(({ userEmail, comment, rating }, idx) => (
-            <Paper
-            key={idx}
-            style={{
-                padding: '10px',
-                marginBottom: '10px',
-                backgroundColor: '#f9f9f9',
-                borderRadius: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'row', // For desktop
-            }}
-            >
+          <Paper
+        key={idx}
+        style={{
+          padding: '10px',
+          marginBottom: '5px',
+          background: 'linear-gradient(135deg, rgb(53, 51, 51) 0%, rgb(26, 25, 25) 100%)',
+          borderRadius: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row', // For desktop
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+          border: '1px solid rgba(255, 255, 255, 0.3)', // Light border for definition
+        }}
+      >
+
             {/* Email Avatar with Deterministic Background and First Letter */}
             <Avatar
                 sx={{
@@ -561,60 +687,73 @@ const handleSavelocation = async (locationName) => {
                 {userEmail?.charAt(0).toUpperCase()}
             </Avatar>
             <Box sx={{ flex: 1 }}>
-                <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, color: 'rgba(255, 255, 255, 0.59)' }}>
                 <strong>{userEmail}</strong>
                 </Typography>
                 <Typography
                 variant="body2"
                 color="textSecondary"
-                sx={{ marginTop: 1, fontSize: { xs: '0.8rem', sm: '0.9rem' } }}
+                sx={{ marginTop: 1, fontSize: { xs: '0.8rem', sm: '0.9rem' }, color: 'rgba(255, 255, 255, 0.59)' }}
                 >
                 {comment || 'No comment provided'}
                 </Typography>
+                
                 {rating ? (
                 <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{ marginTop: 1, fontSize: { xs: '0.8rem', sm: '0.9rem' } }}
+                  variant="body2"
+                  color="textSecondary"
+                  sx={{ marginTop: 1, fontSize: { xs: '0.7rem', sm: '0.8rem' } }}
                 >
-                    Rating: {rating} ⭐
+                  {renderStars(rating)}
                 </Typography>
-                ) : (
+              ) : (
                 <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{ marginTop: 1, fontSize: { xs: '0.8rem', sm: '0.9rem' } }}
+                  variant="body2"
+                  color="textSecondary"
+                  sx={{ marginTop: 1, fontSize: { xs: '0.5rem', sm: '0.7rem' }, color: 'rgba(255, 255, 255, 0.59)' }}
                 >
-                    Rating: Not provided
+                  Rating Not provided
                 </Typography>
-                )}
+              )}
             </Box>
             </Paper>
         ))}
 
         {/* Show More Button */}
         {feedbackWithRatings?.length > visibleComments && (
-            <Button
-            variant="outlined"
-            color="primary"
+          <Button
+            variant="contained"
             onClick={handleShowMore}
             sx={{
-                mt: 2,
-                fontSize: { xs: '0.6rem', sm: '0.7rem' }, // Responsive font size
-                padding: { xs: '5px 10px', sm: '10px 20px' }, // Responsive padding
+              mt: 2,
+              fontSize: { xs: '0.8rem', sm: '0.9rem' }, // Responsive font size
+              padding: { xs: '6px 12px', sm: '10px 15px' }, // Responsive padding
+              background: 'rgb(4, 102, 69)', // Gradient background
+              color: '#fff', // White text
+              borderRadius: '8px', // Rounded corners
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)', // Subtle shadow
+              textTransform: 'none', // Normal case text
+              '&:hover': {
+                background: 'rgb(17, 97, 70)', // Hover gradient
+                boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)', // Increased shadow on hover
+              },
+              '&:active': {
+                boxShadow: 'inset 0 3px 10px rgba(0, 0, 0, 0.3)', // Inner shadow on click
+              },
             }}
-            >
+          >
             Show More
-            </Button>
+          </Button>
+
         )}
         </Box>
 
 
         <Box
-            mt={4}
+            mt={2}
             sx={{
                 padding: { xs: 2, sm: 3 }, // Responsive padding for smaller screens
-                backgroundColor: '#f9f9f9',
+                background: 'rgba(248, 246, 246, 0.2)',
                 borderRadius: 2,
                 boxShadow: 2,
             }}
@@ -624,12 +763,12 @@ const handleSavelocation = async (locationName) => {
                 mb={2}
                 sx={{
                 fontWeight: 'bold',
-                color: '#34495E',
+                color: '#fff',
                 fontSize: { xs: '1.2rem', sm: '1.5rem' }, // Responsive font size
                 }}
             >
-                <IoIosChatboxes  sx={{ color: '#34495E', marginRight: '20px' }} />&nbsp;
-                Add Your Feedback
+                <IoIosChatboxes  sx={{ color: '#fff', marginRight: '20px' }} />&nbsp;
+                Add Your Review
                 
             </Typography>
 
@@ -637,7 +776,7 @@ const handleSavelocation = async (locationName) => {
                 sx={{
                 padding: { xs: 2, sm: 3 }, // Responsive padding
                 marginBottom: 2,
-                backgroundColor: '#ffffff',
+                background: 'linear-gradient(135deg, rgb(53, 51, 51) 0%, rgb(26, 25, 25) 100%)',
                 borderRadius: 2,
                 }}
             >
@@ -652,7 +791,7 @@ const handleSavelocation = async (locationName) => {
                 sx={{
                     marginBottom: '16px',
                     borderRadius: '8px',
-                    backgroundColor: '#f0f0f0',
+                    backgroundColor: 'rgba(240, 239, 239, 0.43)',
                     padding: '10px',
                     fontSize: { xs: '0.9rem', sm: '1rem' }, // Responsive font size
                 }}
@@ -663,22 +802,29 @@ const handleSavelocation = async (locationName) => {
                 variant="body1"
                 sx={{
                     marginBottom: 2,
-                    color: '#34495E',
+                    color: 'rgba(236, 227, 200, 0.95)',
                     fontSize: { xs: '0.9rem', sm: '1rem' }, // Responsive font size
                 }}
                 >
                 Rate This Location:
                 </Typography>
                 <Rating
-                name="rating"
-                value={userRating}
-                onChange={(e, newValue) => setUserRating(newValue)}
-                sx={{
-                    marginBottom: 2,
-                    fontSize: { xs: '2rem', sm: '2.2rem' }, // Responsive size for Rating
-                }}
-                size="large"
-                />
+                  name="rating"
+                  value={userRating}
+                  onChange={(e, newValue) => setUserRating(newValue)}
+                  sx={{
+                      marginBottom: 2,
+                      fontSize: { xs: '2rem', sm: '2.2rem' }, // Responsive size for Rating
+                      '& .MuiRating-icon': {
+                          color: 'rgba(243, 198, 64, 0.95)', // Color for filled stars
+                      },
+                      '& .MuiRating-iconEmpty': {
+                          color: 'rgba(241, 220, 157, 0.73)', // Color for empty stars (border)
+                      },
+                  }}
+                  size="large"
+              />
+
 
                 <Box
                 sx={{
@@ -690,10 +836,24 @@ const handleSavelocation = async (locationName) => {
                 >
                 <Button
                     variant="contained"
+                    color="secondary"
+                    onClick={handleAddRating}
+                    sx={{
+                    padding: { xs: '8px', sm: '8px 20px' }, // Responsive padding
+                    textTransform: 'none',
+                    fontSize: { xs: '12px', sm: '12px' }, // Responsive font size
+                    fontWeight: 'bold',
+                    borderRadius: '30px',
+                    }}
+                >
+                    Submit Rating ⭐
+                </Button>
+                <Button
+                    variant="contained"
                     color="primary"
                     onClick={handleAddComment}
                     sx={{
-                    padding: { xs: '10px', sm: '8px 20px' }, // Responsive padding
+                    padding: { xs: '8px', sm: '8px 20px' }, // Responsive padding
                     textTransform: 'none',
                     fontSize: { xs: '12px', sm: '12px' }, // Responsive font size
                     fontWeight: 'bold',
@@ -705,23 +865,97 @@ const handleSavelocation = async (locationName) => {
                 >
                     Submit Comment
                 </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleAddRating}
-                    sx={{
-                    padding: { xs: '10px', sm: '8px 20px' }, // Responsive padding
-                    textTransform: 'none',
-                    fontSize: { xs: '12px', sm: '12px' }, // Responsive font size
-                    fontWeight: 'bold',
-                    borderRadius: '30px',
-                    }}
-                >
-                    Submit Rating ⭐
-                </Button>
                 </Box>
             </Paper>
             </Box>
+
+      {/* Categories Grid */}
+      <Box sx={{ padding: '20px', borderRadius: '12px', background: 'linear-gradient(135deg, rgba(248, 246, 246, 0.94) 0%, rgba(220, 220, 220, 0.74) 100%)', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)', marginTop: '20px' }}>
+      {/* Title */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <FaMapLocationDot color="primary" sx={{ fontSize: '2rem', mr: 1 }} />
+        <Typography variant="h5" fontWeight="bold">
+          Discover {location.locationName} by Category
+        </Typography>
+      </Box>
+
+      {/* Categories Grid */}
+      <Grid container spacing={3}>
+        {categories.map((category, idx) => (
+          <Grid item xs={12} sm={6} md={4} key={idx}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => navigate(`/${category.path}`)}
+              sx={{
+                background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+                color: '#fff',
+                padding: '15px',
+                borderRadius: '10px',
+                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+                textTransform: 'none',
+                fontSize: '1rem',
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)',
+                  boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
+                },
+              }}
+            >
+              <span style={{ marginRight: '10px', fontSize: '1.5rem' }}>{category.icon}</span>
+              {category.label}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Descriptive Text */}
+      <Typography variant="body1" mt={4} color="textSecondary">
+        Use the side menu and explore more categories. Don't miss to check other categories where you can find professionals like Doctors and Lawyers, as well as exclusive gift packs, fashion items, and more. Use the filter or search options to find your results.
+      </Typography>
+
+      {/* Additional Buttons */}
+      <Box mt={4}>
+        <Button
+          variant="outlined"
+          color="primary"
+          fullWidth
+          onClick={() => handleGoogleSearch('images', location.locationName)}
+          sx={{
+            marginBottom: '10px',
+            textTransform: 'none',
+            fontSize: '1rem',
+            padding: '10px',
+            borderRadius: '10px',
+            '&:hover': {
+              backgroundColor: '#f0f0f0',
+            },
+          }}
+        >
+          View More Images of {location.locationName} in Google
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          fullWidth
+          onClick={() => handleGoogleSearch('info', location.locationName)}
+          sx={{
+            textTransform: 'none',
+            fontSize: '1rem',
+            padding: '10px',
+            borderRadius: '10px',
+            '&:hover': {
+              backgroundColor: '#f0f0f0',
+            },
+          }}
+        >
+          Know More About {location.locationName} in Google
+        </Button>
+      </Box>
+
+    </Box> 
 
     </>
   ) : (
