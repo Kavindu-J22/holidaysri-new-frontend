@@ -21,6 +21,9 @@ import { IoIosChatboxes } from "react-icons/io";
 import { FaUsers } from "react-icons/fa";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
+import { FaImages } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { IoDocuments } from "react-icons/io5";
 
 const generateColorFromEmail = (email) => {
     let hash = 0;
@@ -877,128 +880,158 @@ const handleSavelocation = async (locationName) => {
                     justifyContent: 'space-between',
                 }}
                 >
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleAddRating}
-                    sx={{
-                    padding: { xs: '8px', sm: '8px 20px' }, // Responsive padding
-                    textTransform: 'none',
-                    fontSize: { xs: '12px', sm: '12px' }, // Responsive font size
-                    fontWeight: 'bold',
-                    borderRadius: '30px',
-                    }}
-                >
-                    Submit Rating ⭐
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddComment}
-                    sx={{
-                    padding: { xs: '8px', sm: '8px 20px' }, // Responsive padding
-                    textTransform: 'none',
-                    fontSize: { xs: '12px', sm: '12px' }, // Responsive font size
-                    fontWeight: 'bold',
-                    borderRadius: '30px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    }}
-                    endIcon={<SendIcon />}
-                >
-                    Submit Comment
-                </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={handleAddRating}
+                sx={{
+                  padding: { xs: '8px', sm: '8px 20px' }, // Responsive padding
+                  textTransform: 'none',
+                  fontSize: { xs: '12px', sm: '12px' }, // Responsive font size
+                  fontWeight: 'bold',
+                  borderRadius: '30px',
+                  backgroundColor: 'rgba(128, 0, 128, 0.27)', // Purple transparency
+                  border: '2px solid rgba(128, 5, 128, 0.66)', // Purple border
+                  color: '#fff', // Purple text color
+                  '&:hover': {
+                    backgroundColor: 'rgba(128, 0, 128, 0.58)', // Darker purple on hover
+                  }
+                }}
+              >
+                Submit Rating ⭐
+              </Button>
+
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleAddComment}
+                sx={{
+                  padding: { xs: '8px', sm: '8px 20px' }, // Responsive padding
+                  textTransform: 'none',
+                  fontSize: { xs: '12px', sm: '12px' }, // Responsive font size
+                  fontWeight: 'bold',
+                  borderRadius: '30px',
+                  backgroundColor: 'rgba(0, 132, 255, 0.25)', // Blue transparency
+                  border: '2px solid rgba(0, 132, 255, 0.25)', // Blue border
+                  color: '#fff', // Blue text color
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 132, 255, 0.45)', // Darker blue on hover
+                  }
+                }}
+                endIcon={<SendIcon />}
+              >
+                Submit Comment
+              </Button>
+
                 </Box>
             </Paper>
             </Box>
 
-      {/* Categories Grid */}
-      <Box sx={{ padding: '20px', borderRadius: '12px', background: 'linear-gradient(135deg, rgba(248, 246, 246, 0.94) 0%, rgba(220, 220, 220, 0.74) 100%)', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)', marginTop: '20px' }}>
-      {/* Title */}
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-        <FaMapLocationDot color="primary" sx={{ fontSize: '2rem', mr: 1 }} />
-        <Typography variant="h5" fontWeight="bold">
-          Discover {location.locationName} by Category
-        </Typography>
-      </Box>
+            <Box
+  sx={{
+    padding: '20px',
+    borderRadius: '12px',
+    background: 'linear-gradient(135deg, rgba(248, 246, 246, 0.94) 0%, rgba(220, 220, 220, 0.74) 100%)',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+    marginTop: '20px',
+  }}
+>
+  {/* Title Section */}
+  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+    <FaMapLocationDot color="primary" sx={{ fontSize: '2.5rem', mr: 2 }} />
+    <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+      Discover {location.locationName} by Category
+    </Typography>
+  </Box>
 
-      {/* Categories Grid */}
-      <Grid container spacing={3}>
-        {categories.map((category, idx) => (
-          <Grid item xs={12} sm={6} md={4} key={idx}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={() => navigate(`/${category.path}`)}
-              sx={{
-                background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
-                color: '#fff',
-                padding: '15px',
-                borderRadius: '10px',
-                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-                textTransform: 'none',
-                fontSize: '1rem',
-                display: 'flex',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)',
-                  boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
-                },
-              }}
-            >
-              <span style={{ marginRight: '10px', fontSize: '1.5rem' }}>{category.icon}</span>
-              {category.label}
-            </Button>
-          </Grid>
-        ))}
+  {/* Categories Grid */}
+  <Grid container spacing={3}>
+    {categories.map((category, idx) => (
+      <Grid item xs={12} sm={6} md={4} key={idx}>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => navigate(`/${category.path}`)}
+          sx={{
+            background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+            color: '#fff',
+            padding: '15px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+            textTransform: 'none',
+            fontSize: { xs: '1rem', sm: '1.1rem' },
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)',
+              boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
+            },
+          }}
+        >
+          <Box sx={{ marginRight: '10px', fontSize: '1.5rem' }}>
+            {category.icon}
+          </Box>
+          {category.label}
+        </Button>
       </Grid>
+    ))}
+  </Grid>
 
-      {/* Descriptive Text */}
-      <Typography variant="body1" mt={4} color="textSecondary">
-        Use the side menu and explore more categories. Don't miss to check other categories where you can find professionals like Doctors and Lawyers, as well as exclusive gift packs, fashion items, and more. Use the filter or search options to find your results.
-      </Typography>
+  {/* Descriptive Text Section */}
+  <Typography
+    variant="body1"
+    mt={4}
+    color="textSecondary"
+    sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+  >
+    Use the side menu to explore more categories. Check out other options such as professionals like Doctors and Lawyers, exclusive gift packs, fashion items, and more. Use the filter or search options to find your ideal results.
+  </Typography>
 
-      {/* Additional Buttons */}
-      <Box mt={4}>
-        <Button
-          variant="outlined"
-          color="primary"
-          fullWidth
-          onClick={() => handleGoogleSearch('images', location.locationName)}
-          sx={{
-            marginBottom: '10px',
-            textTransform: 'none',
-            fontSize: '1rem',
-            padding: '10px',
-            borderRadius: '10px',
-            '&:hover': {
-              backgroundColor: '#f0f0f0',
-            },
-          }}
-        >
-          View More Images of {location.locationName} in Google
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          fullWidth
-          onClick={() => handleGoogleSearch('info', location.locationName)}
-          sx={{
-            textTransform: 'none',
-            fontSize: '1rem',
-            padding: '10px',
-            borderRadius: '10px',
-            '&:hover': {
-              backgroundColor: '#f0f0f0',
-            },
-          }}
-        >
-          Know More About {location.locationName} in Google
-        </Button>
-      </Box>
+  {/* Additional Buttons Section */}
+  <Box mt={4}>
+    <Button
+      variant="outlined"
+      color="primary"
+      fullWidth
+      onClick={() => handleGoogleSearch('images', location.locationName)}
+      sx={{
+        marginBottom: '10px',
+        textTransform: 'none',
+        fontSize: '1rem',
+        padding: '12px',
+        borderRadius: '12px',
+        '&:hover': {
+          backgroundColor: '#f0f0f0',
+        },
+      }}
+    >
+      <FaImages style={{ marginRight: '10px', fontSize: '1.2rem' }} />
+      View More Images of {location.locationName} in Google
+      <FcGoogle style={{ marginLeft: '10px', fontSize: '1.2rem' }}/>
+    </Button>
+    <Button
+      variant="outlined"
+      color="secondary"
+      fullWidth
+      onClick={() => handleGoogleSearch('info', location.locationName)}
+      sx={{
+        textTransform: 'none',
+        fontSize: '1rem',
+        padding: '12px',
+        borderRadius: '12px',
+        '&:hover': {
+          backgroundColor: '#f0f0f0',
+        },
+      }}
+    >
+      <IoDocuments style={{ marginRight: '10px', fontSize: '1.2rem' }} />
+      Know More About {location.locationName} in Google
+      <FcGoogle style={{ marginLeft: '10px', fontSize: '1.2rem' }}/>
+    </Button>
+  </Box>
+</Box>
 
-    </Box> 
 
     </>
   ) : (
