@@ -80,7 +80,7 @@ const ExploreDestinations = () => {
   useEffect(() => {
     async function getAllLocations() {
       try {
-        const res = await axios.get("https://holidaysri-backend-9xm4.onrender.com/location/");
+        const res = await axios.get("http://localhost:8000/location/");
         setLocations(res.data);
         setFilteredLocations(res.data);
       } catch (error) {
@@ -92,9 +92,11 @@ const ExploreDestinations = () => {
   }, []);
 
   useEffect(() => {
+    // Modified filtering logic to include locationType in the search criteria
     const filtered = locations.filter((location) => {
       return (
-        location.locationName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (location.locationName.toLowerCase().includes(searchTerm.toLowerCase()) || // Check if searchTerm matches locationName
+         location.locationType?.toLowerCase().includes(searchTerm.toLowerCase())) && // Check if searchTerm matches locationType (NEW)
         (province === "" || location.province === province) &&
         (district === "" || location.district === district) &&
         (climate === "" || location.climate === climate)
@@ -165,7 +167,7 @@ const ExploreDestinations = () => {
     {/* Search by Location Name */}
     <Grid item xs={12} md={5}>
       <TextField
-        label={`Search by Location Name (Across ${locations.length} locations) 🔍`}
+        label={`Search by Location Name or Type (Across ${locations.length} locations) 🔍`}
         variant="outlined"
         fullWidth
         value={searchTerm}
@@ -321,9 +323,14 @@ const ExploreDestinations = () => {
             <ImageSlider images={location.images} />
           </div>
           <div style={{ padding: "10px" }}>
-            <h3 style={{ margin: "10px 0", fontSize: "18px", fontWeight: "bold" }}>
+
+            <p style={{ margin: "5px 0 0 0", color: "rgb(156, 157, 160)", fontSize: "9px" }}>
+              {location.locationType}
+            </p>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "18px", fontWeight: "bold" }}>
               {location.locationName}
             </h3>
+            
             <p style={{ margin: "5px 0", color: "#7f8c8d" }}>
               <strong>Province:</strong> {location.province}
             </p>

@@ -39,6 +39,7 @@ const AddLocation = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const [climate, setClimate] = useState('');
   const [map, setMap] = useState('');
+  const [locationType, setLocationType] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -96,6 +97,7 @@ const AddLocation = () => {
       backgroundImage: uploadedBackgroundImage,
       climate,
       map,
+      locationType,
     };
 
     try {
@@ -112,6 +114,7 @@ const AddLocation = () => {
       setBackgroundImage('');
       setClimate('');
       setMap('');
+      setLocationType('');
     } catch (err) {
       setError('Error adding location. Please try again.');
       setSuccess('');
@@ -267,6 +270,18 @@ const AddLocation = () => {
                 }}
             />
         </Grid>
+
+        {/* Location Type */}
+          <Grid item xs={12}>
+            <TextField
+              label="Location Type"
+              fullWidth
+              multiline
+              value={locationType}
+              onChange={(e) => setLocationType(e.target.value)}
+              required
+            />
+          </Grid>
 
           {/* Images */}
           <Grid item xs={12}>

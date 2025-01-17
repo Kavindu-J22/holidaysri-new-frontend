@@ -455,9 +455,15 @@ const handleSavelocation = async (locationName) => {
             mb: 1,
         }}
         />
+        <Box>
         <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333' }}>
         {location.locationName}
         </Typography>
+        <Typography sx={{ fontSize: '10px', color: 'rgba(97, 98, 100, 0.94)' }}>
+        {location.locationType}
+        </Typography>
+        </Box>
+
     </Box>
 
         {/* Location Info */}
@@ -676,7 +682,7 @@ const handleSavelocation = async (locationName) => {
       <Box
         sx={{
             padding: { xs: 2, sm: 3 }, // Smaller padding on extra small screens
-            backgroundColor: 'rgba(252, 253, 255, 0.16)',
+            backgroundColor: 'rgba(252, 253, 255, 0.24)',
             borderRadius: 2,
             boxShadow: 2,
         }}
@@ -739,7 +745,7 @@ const handleSavelocation = async (locationName) => {
                 <Typography
                 variant="body2"
                 color="textSecondary"
-                sx={{ marginTop: 1, fontSize: { xs: '0.8rem', sm: '0.9rem' }, color: 'rgba(255, 255, 255, 0.59)' }}
+                sx={{ marginTop: 1, fontSize: { xs: '0.8rem', sm: '0.9rem' }, color: 'rgba(255, 255, 255, 0.59)', textAlign: 'justify', marginRight: '10px' }}
                 >
                 {comment || 'No comment provided'}
                 </Typography>
@@ -799,7 +805,7 @@ const handleSavelocation = async (locationName) => {
             mt={2}
             sx={{
                 padding: { xs: 2, sm: 3 }, // Responsive padding for smaller screens
-                background: 'rgba(248, 246, 246, 0.2)',
+                background: 'rgba(248, 246, 246, 0.29)',
                 borderRadius: 2,
                 boxShadow: 2,
             }}
@@ -837,7 +843,7 @@ const handleSavelocation = async (locationName) => {
                 sx={{
                     marginBottom: '16px',
                     borderRadius: '8px',
-                    backgroundColor: 'rgba(240, 239, 239, 0.43)',
+                    backgroundColor: 'rgba(240, 239, 239, 0.48)',
                     padding: '10px',
                     fontSize: { xs: '0.9rem', sm: '1rem' }, // Responsive font size
                 }}
@@ -927,111 +933,133 @@ const handleSavelocation = async (locationName) => {
             </Paper>
             </Box>
 
-            <Box
-  sx={{
-    padding: '20px',
-    borderRadius: '12px',
-    background: 'linear-gradient(135deg, rgba(248, 246, 246, 0.94) 0%, rgba(220, 220, 220, 0.74) 100%)',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-    marginTop: '20px',
-  }}
->
-  {/* Title Section */}
-  <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-    <FaMapLocationDot color="primary" sx={{ fontSize: '2.5rem', mr: 2 }} />
-    <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
-      Discover {location.locationName} by Category
-    </Typography>
-  </Box>
+       <Box
+      sx={{
+        padding: '20px',
+        borderRadius: '5px',
+        background: 'linear-gradient(135deg, rgba(247, 240, 227, 0.92) 0%, rgba(220, 220, 220, 0.69) 100%)',
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+        marginTop: '20px',
+        paddingTop: '25px',
+      }}
+    >
+    {/* Title Section */}
+      <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', mb: 3 }}>
+      <Typography variant="h5" fontWeight="bold"  sx={{ fontSize: '1.2rem', mr: 1 }}>
+         🐾
+        </Typography>
+        <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { sm: '1rem' }, color: 'rgb(54, 63, 80)' }}>
+          Discover {location.locationName} by Category :
+        </Typography>
+      </Box>
 
-  {/* Categories Grid */}
-  <Grid container spacing={3}>
-    {categories.map((category, idx) => (
-      <Grid item xs={12} sm={6} md={4} key={idx}>
+      {/* Categories Grid */}
+      <Grid container spacing={2}>
+        {categories.map((category, idx) => (
+          <Grid item xs={12} sm={6} md={4} key={idx}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => navigate(`/${category.path}`)}
+              sx={{
+                background: 'linear-gradient(135deg,rgb(27, 46, 46) 0%,rgb(39, 59, 95) 100%)',
+                color: '#fff',
+                padding: '15px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                textTransform: 'none',
+                fontSize: { xs: '1rem', sm: '1.1rem' },
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, rgb(39, 59, 95) 0%, rgb(27, 46, 46) 100%)',
+                  boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
+                },
+              }}
+            >
+              <Box sx={{ marginRight: '10px', fontSize: '1.5rem' }}>
+                {category.icon}
+              </Box>
+              {category.label}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Descriptive Text Section */}
+      <Typography
+        variant="body1"
+        mt={4}
+        color="textSecondary"
+        sx={{
+          fontSize: { xs: '0.875rem', sm: '1rem' },
+          textAlign: 'justify', // Align text to justify
+          lineHeight: 1.6, // Enhance readability
+        }}
+      >
+        Discover a variety of exciting options in <strong>{location.locationName}</strong>. 
+        Use the <strong>Side menu</strong> to explore unique categories such as professionals like 
+        <strong> Doctors</strong> and <strong>Lawyers</strong>. Don't miss out to check 
+        <strong style={{ color: 'rgb(40, 12, 59)' }}> Other Special Categories</strong>, It's including exclusive gift packs, 
+        stylish fashion items, and much more.
+        <br />
+        <br />
+        <strong>
+          Utilize the filter or search options to easily find your ideal results and uncover 
+          the hidden gems of {location.locationName}.
+        </strong> 
+      </Typography>
+
+
+      {/* Additional Buttons Section */}
+      <Box mt={4}>
         <Button
-          variant="contained"
+          variant="contained" // Changed to 'contained' for a filled background
+          color="primary"
           fullWidth
-          onClick={() => navigate(`/${category.path}`)}
+          onClick={() => handleGoogleSearch('images', location.locationName)}
           sx={{
-            background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
-            color: '#fff',
-            padding: '15px',
-            borderRadius: '12px',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+            marginBottom: '10px',
             textTransform: 'none',
-            fontSize: { xs: '1rem', sm: '1.1rem' },
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
+            fontSize: '1rem',
+            padding: '10px',
+            borderRadius: '50px',
+            background: 'rgb(27, 108, 114)', // Gradient background for the button
+            color: '#fff',
             '&:hover': {
-              background: 'linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)',
-              boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
+              background: 'rgb(19, 89, 94)',
             },
           }}
         >
-          <Box sx={{ marginRight: '10px', fontSize: '1.5rem' }}>
-            {category.icon}
-          </Box>
-          {category.label}
+          <FaImages style={{ marginRight: '10px', fontSize: '1.2rem' }} />
+          View More Images of {location.locationName} in Google
+          <FcGoogle style={{ marginLeft: '10px', fontSize: '1.2rem' }} />
         </Button>
-      </Grid>
-    ))}
-  </Grid>
+        <Button
+          variant="contained" // Changed to 'contained' for a filled background
+          color="secondary"
+          fullWidth
+          onClick={() => handleGoogleSearch('info', location.locationName)}
+          sx={{
+            textTransform: 'none',
+            fontSize: '1rem',
+            padding: '10px',
+            borderRadius: '50px',
+            background: 'rgb(143, 34, 79)', // Gradient background for the button
+            color: '#fff',
+            '&:hover': {
+              background: 'rgb(117, 28, 63)',
+            },
+          }}
+        >
+          <IoDocuments style={{ marginRight: '10px', fontSize: '1.2rem' }} />
+          Know More About {location.locationName} in Google
+          <FcGoogle style={{ marginLeft: '10px', fontSize: '1.2rem' }} />
+        </Button>
+      </Box>
 
-  {/* Descriptive Text Section */}
-  <Typography
-    variant="body1"
-    mt={4}
-    color="textSecondary"
-    sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
-  >
-    Use the side menu to explore more categories. Check out other options such as professionals like Doctors and Lawyers, exclusive gift packs, fashion items, and more. Use the filter or search options to find your ideal results.
-  </Typography>
-
-  {/* Additional Buttons Section */}
-  <Box mt={4}>
-    <Button
-      variant="outlined"
-      color="primary"
-      fullWidth
-      onClick={() => handleGoogleSearch('images', location.locationName)}
-      sx={{
-        marginBottom: '10px',
-        textTransform: 'none',
-        fontSize: '1rem',
-        padding: '12px',
-        borderRadius: '12px',
-        '&:hover': {
-          backgroundColor: '#f0f0f0',
-        },
-      }}
-    >
-      <FaImages style={{ marginRight: '10px', fontSize: '1.2rem' }} />
-      View More Images of {location.locationName} in Google
-      <FcGoogle style={{ marginLeft: '10px', fontSize: '1.2rem' }}/>
-    </Button>
-    <Button
-      variant="outlined"
-      color="secondary"
-      fullWidth
-      onClick={() => handleGoogleSearch('info', location.locationName)}
-      sx={{
-        textTransform: 'none',
-        fontSize: '1rem',
-        padding: '12px',
-        borderRadius: '12px',
-        '&:hover': {
-          backgroundColor: '#f0f0f0',
-        },
-      }}
-    >
-      <IoDocuments style={{ marginRight: '10px', fontSize: '1.2rem' }} />
-      Know More About {location.locationName} in Google
-      <FcGoogle style={{ marginLeft: '10px', fontSize: '1.2rem' }}/>
-    </Button>
-  </Box>
-</Box>
-
+    </Box>
 
     </>
   ) : (
