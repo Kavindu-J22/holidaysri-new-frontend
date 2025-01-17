@@ -163,8 +163,8 @@ const DestinationDetailPage = () => {
   const [visibleComments, setVisibleComments] = useState(5);
   const navigate = useNavigate();
   const locationUrl = id
-  ? `http://localhost:5173/destination/${encodeURIComponent(id.replace(/\s+/g, '-').toLowerCase())}`
-  : 'http://localhost:5173/destinations'; // Fallback to a default value
+  ? `https://holidaysri.com/destination/${encodeURIComponent(id.replace(/\s+/g, '-').toLowerCase())}`
+  : 'https://holidaysri.com/destinations'; // Fallback to a default value
 
 
   useEffect(() => {
@@ -1134,7 +1134,14 @@ const handleSavelocation = async (locationName) => {
 
     </>
   ) : (
-    <Typography variant="h5" textAlign="center">
+    <Typography
+      variant="h5"
+      textAlign="center"
+      sx={{
+        color: '#fff', // Set text color to white
+        fontStyle: 'italic', // Make the text italic
+      }}
+    >
       Loading destination details...
     </Typography>
   )}
