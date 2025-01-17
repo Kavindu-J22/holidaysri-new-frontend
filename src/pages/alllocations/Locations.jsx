@@ -315,8 +315,17 @@ const ExploreDestinations = () => {
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             background: 'linear-gradient(135deg, rgb(53, 51, 51) 0%, rgb(26, 25, 25) 100%)',
             backdropFilter: "blur(10px)",
-            color: "rgb(160, 168, 184)",
+            color: "rgb(171, 178, 194)",
+            border: '1px solid rgba(255, 255, 255, 0.12)',
             position: "relative",
+            transition: "transform 0.3s ease",
+          }}
+            // Hover effect to scale up
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.013)"; // Slightly enlarge the div
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)"; // Reset to original size
           }}
         >
           <div style={{ width: "100%", height: "200px" }}>
@@ -331,16 +340,16 @@ const ExploreDestinations = () => {
               {location.locationName}
             </h3>
             
-            <p style={{ margin: "5px 0", color: "#7f8c8d" }}>
+            <p style={{ margin: "5px 0", color: "rgb(156, 157, 160)" }}>
               <strong>Province:</strong> {location.province}
             </p>
-            <p style={{ margin: "5px 0", color: "#7f8c8d" }}>
+            <p style={{ margin: "5px 0", color: "rgb(156, 157, 160)" }}>
               <strong>District:</strong> {location.district}
             </p>
             <p style={{ margin: "5px 0", color: "#7f8c8d" }}>
               <strong>Climate:</strong> {location.climate}
             </p>
-            <p style={{ margin: "10px 0", color: "rgb(123, 126, 136)" }}>
+            <p style={{ margin: "10px 0", color: "rgb(134, 136, 141)" }}>
               {showMore[location._id]
                 ? location.details
                 : `${location.details.substring(0, 100)}...`}
