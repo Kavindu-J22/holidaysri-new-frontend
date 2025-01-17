@@ -9,7 +9,6 @@ import {
   Paper,
   Avatar,
   Rating,
-  Backdrop,
   Grid,
 } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos, Favorite, Map, Save } from "@mui/icons-material";
@@ -19,11 +18,33 @@ import "chart.js/auto";
 import { Send as SendIcon } from '@mui/icons-material';
 import { IoIosChatboxes } from "react-icons/io";
 import { FaUsers } from "react-icons/fa";
-import { FaMapLocationDot } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { FaImages } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { IoDocuments } from "react-icons/io5";
+import { Share as ShareIcon } from '@mui/icons-material';
+
+
+const handleShare = (locationName, locationUrl) => {
+  const shareData = {
+    title: `Explore ${locationName}`,
+    text: `Check out this amazing location: ${locationName}`,
+    url: locationUrl, // Ensure you pass a valid URL
+  };
+
+  if (navigator.share) {
+    // Use Web Share API if available
+    navigator
+      .share(shareData)
+      .then(() => console.log('Location shared successfully!'))
+      .catch((error) => console.error('Error sharing location:', error));
+  } else {
+    // Fallback: Copy URL to clipboard
+    navigator.clipboard.writeText(locationUrl).then(() => {
+      alert('Link copied to clipboard! Share it with your friends.');
+    });
+  }
+};
 
 const generateColorFromEmail = (email) => {
     let hash = 0;
@@ -141,6 +162,10 @@ const DestinationDetailPage = () => {
   const [alluserRatings, setAlluserRatings] = useState(0);
   const [visibleComments, setVisibleComments] = useState(5);
   const navigate = useNavigate();
+  const locationUrl = id
+  ? `http://localhost:5173/destination/${encodeURIComponent(id.replace(/\s+/g, '-').toLowerCase())}`
+  : 'http://localhost:5173/destinations'; // Fallback to a default value
+
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -455,27 +480,72 @@ const handleSavelocation = async (locationName) => {
             mb: 1,
         }}
         />
-        <Box>
-        <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333' }}>
+
+      <Box sx={{
+        display: 'flex',
+        flexGrow: 1,
+        alignItems: 'center',
+        flexDirection: { xs: 'column', sm: 'row' }, // Stack items on smaller screens, row layout on desktop
+        textAlign: { xs: 'center', sm: 'left' }, // Center text on smaller screens
+        justifyContent: { xs: 'center', sm: 'space-between' }, // Space items evenly in desktop mode
+      }}>
+
+      <Box sx={{   
+        pb:1,
+      }}>
+
+        <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333',pb: 0.2 }}>
         {location.locationName}
         </Typography>
         <Typography sx={{ fontSize: '10px', color: 'rgba(97, 98, 100, 0.94)' }}>
         {location.locationType}
         </Typography>
+
         </Box>
+
+      {/* Share Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          fontSize: { xs: '0.7rem', sm: '0.8rem' }, // Smaller text size
+          padding: { xs: '5px 12px', sm: '6px 15px' }, // Smaller padding for compact look
+          borderRadius: '16px', // Slightly reduced border radius
+          textTransform: 'none',
+          background: 'rgb(19, 61, 85)',
+          display: 'flex',
+          alignItems: 'center',
+          marginLeft: { xs: 0, md: '15px' }, // Margin-left only for desktop mode (md and up)
+          '&:hover': {
+              backgroundColor: 'rgb(41, 82, 105)', // Darker purple on hover
+          }
+        }}
+        startIcon={
+          <ShareIcon
+            sx={{
+              fontSize: { xs: '1rem', sm: '1.2rem' }, // Adjust icon size
+            }}
+          />
+        }
+        onClick={() => handleShare(location.locationName, locationUrl)} // Pass location details to handleShare
+      >
+        Share
+      </Button>
+
+      </Box>
 
     </Box>
 
         {/* Location Info */}
         <Box sx={{ mb: 3 }}>
             <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: '500', color: '#555', mb: 1 }}>
-            <strong>Province:</strong> {location.province}, Sri lanka
+            <strong>Province :</strong> {location.province}, Sri lanka
             </Typography>
             <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: '500', color: '#555', mb: 1 }}>
-            <strong>District:</strong> {location.district} district
+            <strong>District :</strong> {location.district} district
             </Typography>
             <Typography variant="body1" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: '500', color: '#555', mb: 1 }}>
-            <strong>Distance from Colombo:</strong> {location.distanceFromColombo} KM
+            <strong>Distance from Colombo :</strong> {location.distanceFromColombo} KM <span style={{ color: 'rgba(55, 77, 119, 0.77)', fontSize: '10px' }}>(approx)</span>
             </Typography>
             <Typography 
             variant="body1" 
@@ -486,14 +556,14 @@ const handleSavelocation = async (locationName) => {
                 mb: 1 
             }}
         >
-            <strong>Climate:</strong> 
+            <strong>Climate :</strong> 
             <span>{location.climate}</span>&nbsp;
             <span style={{ color: 'rgba(55, 77, 119, 0.77)', fontSize: '10px' }}>{climateEmojis[location.climate] || "🌍"}</span>
         </Typography>
         </Box>
 
-        {/* Action Buttons (Save & Favorite) */}
-        <Box sx={{ 
+      {/* Action Buttons (Save & Favorite) */}
+      <Box sx={{ 
             display: 'flex', 
             flexDirection: { xs: 'column', sm: 'row' }, 
             justifyContent: 'space-between', 
@@ -521,6 +591,7 @@ const handleSavelocation = async (locationName) => {
                     fontSize: { xs: 10, sm: 12 },
                     padding: '8px 20px',
                     borderRadius: '20px',
+                    background: 'rgb(12, 109, 64)',
                     textTransform: 'none',
                 }}
                 startIcon={<Save />}
@@ -1002,12 +1073,12 @@ const handleSavelocation = async (locationName) => {
         Use the <strong>Side menu</strong> to explore unique categories such as professionals like 
         <strong> Doctors</strong> and <strong>Lawyers</strong>. Don't miss out to check 
         <strong style={{ color: 'rgb(40, 12, 59)' }}> Other Special Categories</strong>, It's including exclusive gift packs, 
-        stylish fashion items, and much more.
+        stylish fashion items, <strong>Emergency Services</strong> and much more. Utilize the filter or search options to easily find your ideal results and uncover 
+        the hidden gems of {location.locationName}.
         <br />
         <br />
         <strong>
-          Utilize the filter or search options to easily find your ideal results and uncover 
-          the hidden gems of {location.locationName}.
+        Also, If you have any <strong style={{ color: 'rgb(40, 12, 59)' }}>questions or Help or more information</strong> about {location.locationName}, simply <strong style={{ color: 'rgb(40, 12, 59)' }}>click the ? icon</strong>  in the bottom-right corner. Our support agent will assist you and address all your queries promptly. have a Great Journy !
         </strong> 
       </Typography>
 
@@ -1025,7 +1096,7 @@ const handleSavelocation = async (locationName) => {
             fontSize: '1rem',
             padding: '10px',
             borderRadius: '50px',
-            background: 'rgb(27, 108, 114)', // Gradient background for the button
+            background: 'rgb(8, 104, 110)', // Gradient background for the button
             color: '#fff',
             '&:hover': {
               background: 'rgb(19, 89, 94)',
