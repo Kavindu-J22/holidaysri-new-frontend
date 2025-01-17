@@ -313,9 +313,9 @@ const ExploreDestinations = () => {
             borderRadius: "10px",
             overflow: "hidden",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            backgroundColor: "rgba(250, 249, 249, 0.87)",
+            background: 'linear-gradient(135deg, rgb(53, 51, 51) 0%, rgb(26, 25, 25) 100%)',
             backdropFilter: "blur(10px)",
-            color: "#34495E",
+            color: "rgb(160, 168, 184)",
             position: "relative",
           }}
         >
@@ -340,7 +340,7 @@ const ExploreDestinations = () => {
             <p style={{ margin: "5px 0", color: "#7f8c8d" }}>
               <strong>Climate:</strong> {location.climate}
             </p>
-            <p style={{ margin: "10px 0", color: "#34495E" }}>
+            <p style={{ margin: "10px 0", color: "rgb(123, 126, 136)" }}>
               {showMore[location._id]
                 ? location.details
                 : `${location.details.substring(0, 100)}...`}
@@ -388,7 +388,7 @@ const ExploreDestinations = () => {
                       </span>
                     ))}
                 </div>
-                <span style={{ marginLeft: "10px", fontWeight: "bold", color: "#34495E" }}>
+                <span style={{ marginLeft: "10px", fontWeight: "bold", color: "rgb(133, 139, 158)" }}>
                   {calculateAverageRating(location.ratings)} / 5
                 </span>
               </div>

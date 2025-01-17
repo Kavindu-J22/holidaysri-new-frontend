@@ -851,13 +851,13 @@ const handleSavelocation = async (locationName) => {
               mt: 2,
               fontSize: { xs: '0.8rem', sm: '0.9rem' }, // Responsive font size
               padding: { xs: '6px 12px', sm: '10px 15px' }, // Responsive padding
-              background: 'rgb(4, 102, 69)', // Gradient background
+              background: 'rgb(18, 78, 50)', // Gradient background
               color: '#fff', // White text
               borderRadius: '8px', // Rounded corners
               boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)', // Subtle shadow
               textTransform: 'none', // Normal case text
               '&:hover': {
-                background: 'rgb(17, 97, 70)', // Hover gradient
+                background: 'rgb(14, 61, 45)', // Hover gradient
                 boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3)', // Increased shadow on hover
               },
               '&:active': {
