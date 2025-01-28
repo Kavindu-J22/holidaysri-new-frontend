@@ -7,14 +7,11 @@ import {
   List,
   ListItem,
   ListItemText,
-  Toolbar,
   Typography,
   CssBaseline,
   IconButton,
   Collapse,
-  Divider,
   Button,
-  Modal,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
