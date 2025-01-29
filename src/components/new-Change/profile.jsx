@@ -3,6 +3,7 @@ import { Box, Drawer, List, ListItem, ListItemText, ListItemIcon, IconButton } f
 import useMediaQuery from '@mui/material/useMediaQuery';
 import RatesPage from "../../components/Offers/Offers";
 import AddDestinations from "../../pages/alllocations/addLocations";
+import AddHotels from "../../components/hotel/AddHotel/AddHotelAdd";
 import { BiSolidCategory } from 'react-icons/bi';
 import { ImProfile } from "react-icons/im";
 
@@ -27,7 +28,7 @@ const ProfilePage = () => {
         { text: 'Rates', icon: <ImProfile /> },
         { text: 'Advertisements', icon: <ImProfile /> },
         { text: 'Add Destinations', icon: <ImProfile /> },
-        { text: 'Earnings', icon: <ImProfile /> },
+        { text: 'Add Hotels', icon: <ImProfile /> },
         { text: 'Accounts', icon: <ImProfile /> },
         { text: 'Settings', icon: <ImProfile /> },
     ];
@@ -74,8 +75,8 @@ const ProfilePage = () => {
                 return <div>Advertisements Page Content</div>;
             case 'Add Destinations':
                     return <AddDestinations />;
-            case 'Earnings':
-                return <div>Earnings Page Content</div>;
+            case 'Add Hotels':
+                return <AddHotels />;
             case 'Accounts':
                 return <div>Accounts Page Content</div>;
             case 'Settings':
