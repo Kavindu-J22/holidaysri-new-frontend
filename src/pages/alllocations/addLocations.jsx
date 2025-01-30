@@ -59,7 +59,7 @@ const AddLocation = () => {
         setUploading(true);
         const { data } = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
         setUploading(false);
-        return data.secure_url; // Return the URL of the uploaded image in WebP format
+        return data.secure_url; // Return the URL of the uploaded image 
         } catch (error) {
         setUploading(false);
         setError('Error uploading image.');
