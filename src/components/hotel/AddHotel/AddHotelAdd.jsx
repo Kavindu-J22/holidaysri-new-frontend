@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {
+    Container,
+    Typography,
+    TextField,
+    Select,
+    MenuItem,
+    TextareaAutosize,
+    Button,
+    Grid,
+    FormControl,
+    InputLabel,
+    Box,
+  } from '@mui/material';
+  import { ArrowForward, ArrowBack } from '@mui/icons-material';
+
+const provincesAndDistricts = {
+    "Central Province": ["Kandy", "Matale", "Nuwara Eliya"],
+    "Eastern Province": ["Ampara", "Batticaloa", "Trincomalee"],
+    "Northern Province": ["Jaffna", "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya"],
+    "Southern Province": ["Galle", "Hambantota", "Matara"],
+    "Western Province": ["Colombo", "Gampaha", "Kalutara"],
+    "North Western Province": ["Kurunegala", "Puttalam"],
+    "North Central Province": ["Anuradhapura", "Polonnaruwa"],
+    "Uva Province": ["Badulla", "Monaragala"],
+    "Sabaragamuwa Province": ["Kegalle", "Ratnapura"]
+  };
 
 const AddHotel = () => {
   const [step, setStep] = useState(1);
@@ -99,6 +125,8 @@ const AddHotel = () => {
   });
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
+  const [districts, setDistricts] = useState([]);
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
 
@@ -171,20 +199,31 @@ const AddHotel = () => {
         [name]: type === 'checkbox' ? checked : value
       }));
     }
+        // Clear errors when user types
+        setErrors({
+            ...errors,
+            [name]: ''
+          });
   };
 
   const handleRoomChange = (index, e) => {
     const { name, value, type, checked } = e.target;
     const updatedRooms = [...hotelData.rooms];
+
     updatedRooms[index] = {
-      ...updatedRooms[index],
-      [name]: type === 'checkbox' ? checked : value
+        ...updatedRooms[index],
+        ...(name in updatedRooms[index] 
+            ? { [name]: type === 'checkbox' ? checked : value } 
+            : { pricing: { ...updatedRooms[index].pricing, [name]: value } } // Handles nested properties
+        )
     };
+
     setHotelData(prevState => ({
-      ...prevState,
-      rooms: updatedRooms
+        ...prevState,
+        rooms: updatedRooms
     }));
-  };
+};
+
 
   const addRoom = () => {
     setHotelData(prevState => ({
@@ -555,6 +594,130 @@ const AddHotel = () => {
     }));
   };
 
+  const handleFullboardIncludeInputChange = (index, e) => {
+    const value = e.target.value;
+    const updatedRooms = [...hotelData.rooms];
+    updatedRooms[index].pricing.fullboardincludeInput = value;
+    setHotelData(prevState => ({
+      ...prevState,
+      rooms: updatedRooms,
+    }));
+  };
+
+  const addFullboardInclude = (index) => {
+    const value = hotelData.rooms[index].pricing.fullboardincludeInput.trim();
+    if (value) {
+      const updatedRooms = [...hotelData.rooms];
+      updatedRooms[index].pricing.fullboardinclude.push(value);
+      updatedRooms[index].pricing.fullboardincludeInput = ''; // Clear input
+      setHotelData(prevState => ({
+        ...prevState,
+        rooms: updatedRooms,
+      }));
+    }
+  };
+
+  const removeFullboardInclude = (index, itemIndex) => {
+    const updatedRooms = [...hotelData.rooms];
+    updatedRooms[index].pricing.fullboardinclude.splice(itemIndex, 1);
+    setHotelData(prevState => ({
+      ...prevState,
+      rooms: updatedRooms,
+    }));
+  };
+
+  const handleHalfboardIncludeInputChange = (index, e) => {
+    const value = e.target.value;
+    const updatedRooms = [...hotelData.rooms];
+    updatedRooms[index].pricing.halfboardincludeInput = value;
+    setHotelData(prevState => ({
+      ...prevState,
+      rooms: updatedRooms,
+    }));
+  };
+
+  const addHalfboardInclude = (index) => {
+    const value = hotelData.rooms[index].pricing.halfboardincludeInput.trim();
+    if (value) {
+      const updatedRooms = [...hotelData.rooms];
+      updatedRooms[index].pricing.halfboardinclude.push(value);
+      updatedRooms[index].pricing.halfboardincludeInput = ''; // Clear input
+      setHotelData(prevState => ({
+        ...prevState,
+        rooms: updatedRooms,
+      }));
+    }
+  };
+
+  const removeHalfboardInclude = (index, itemIndex) => {
+    const updatedRooms = [...hotelData.rooms];
+    updatedRooms[index].pricing.halfboardinclude.splice(itemIndex, 1);
+    setHotelData(prevState => ({
+      ...prevState,
+      rooms: updatedRooms,
+    }));
+  };
+
+  const handleProvinceChange = (e) => {
+    const selectedProvince = e.target.value;
+    setHotelData({
+      ...hotelData,
+      location: {
+        ...hotelData.location,
+        province: selectedProvince,
+        city: '' // Reset district when province changes
+      }
+    });
+    setDistricts(provincesAndDistricts[selectedProvince] || []);
+  };
+
+  const validateStep1 = () => {
+    const newErrors = {};
+    if (!hotelData.hotelName) newErrors.hotelName = 'Hotel Name is required';
+    if (!hotelData.category) newErrors.category = 'Category is required';
+    if (!hotelData.description) newErrors.description = 'Description is required';
+    if (!hotelData.climate) newErrors.climate = 'Climate is required';
+    if (!hotelData.location.address) newErrors['location.address'] = 'Address is required';
+    if (!hotelData.location.province) newErrors['location.province'] = 'Province is required';
+    if (!hotelData.location.city) newErrors['location.city'] = 'District is required';
+    if (!hotelData.location.mapUrl) newErrors['location.mapUrl'] = 'Map URL is required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep2 = () => {
+    const newErrors = {};
+    if (!hotelData.contactInfo.email) newErrors.email = 'Email is required';
+    if (!hotelData.contactInfo.contactNumber) newErrors.contactNumber = 'Contact Number is required';
+    if (hotelData.contactInfo.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(hotelData.contactInfo.email)) {
+      newErrors.email = 'Invalid email address';
+    }
+    if (hotelData.contactInfo.contactNumber && !/^\d{10}$/.test(hotelData.contactInfo.contactNumber)) {
+      newErrors.contactNumber = 'Contact Number must be 10 digits and All Characters must be numeric';
+    }
+    if (hotelData.contactInfo.whatsappNumber && !/^\d{10}$/.test(hotelData.contactInfo.whatsappNumber)) {
+        newErrors.whatsappNumber = 'Whatsapp Number must be 10 digits and All Characters must be numeric';
+      }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNext = () => {
+    if (step === 1 && !validateStep1()) return;
+    setStep(step + 1);
+  };
+
+  const handleNext2 = () => {
+    if (step === 2 && !validateStep2()) return;
+    setStep(step + 1);
+  };
+
+  const handleBack = () => {
+    setStep(step - 1);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const isOpenForAgents = hotelData.rooms.some(room => room.roomOpenForAgents);
@@ -566,57 +729,439 @@ const AddHotel = () => {
   };
 
   return (
-    <div style={{ backgroundColor: 'white', marginTop: '70px', padding: '20px' }}>
+    <Container sx={{ mt: 8, p: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+        Post Hotel Advertisement
+      </Typography>
       <form onSubmit={handleSubmit}>
-        {step === 1 && (
-          <div>
-            <h2>Primary Details</h2>
-            <input type="text" name="hotelName" value={hotelData.hotelName} onChange={handleChange} placeholder="Hotel Name" required />
-            <input type="text" name="category" value={hotelData.category} onChange={handleChange} placeholder="Category" required />
-            <textarea name="description" value={hotelData.description} onChange={handleChange} placeholder="Description" required />
-            <input type="text" name="climate" value={hotelData.climate} onChange={handleChange} placeholder="Climate" required />
-            <input type="text" name="location.address" value={hotelData.location.address} onChange={handleChange} placeholder="Address" required />
-            <input type="text" name="location.city" value={hotelData.location.city} onChange={handleChange} placeholder="City" required />
-            <input type="text" name="location.province" value={hotelData.location.province} onChange={handleChange} placeholder="Province" required />
-            <input type="text" name="location.mapUrl" value={hotelData.location.mapUrl} onChange={handleChange} placeholder="Map URL" required />
-            <button type="button" onClick={() => setStep(2)}>Next</button>
-          </div>
+      {step === 1 && (
+          <Box>
+            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+              Primary Details
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Hotel Name"
+                  name="hotelName"
+                  value={hotelData.hotelName}
+                  onChange={handleChange}
+                  error={!!errors.hotelName}
+                  helperText={errors.hotelName}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth error={!!errors.category}>
+                  <InputLabel>Category</InputLabel>
+                  <Select
+                    name="category"
+                    value={hotelData.category}
+                    onChange={handleChange}
+                    label="Category"
+                    required
+                  >
+                    <MenuItem value="">Select a category</MenuItem>
+                    <MenuItem value="Hotels">Hotels</MenuItem>
+                    <MenuItem value="Restaurants">Restaurants</MenuItem>
+                    <MenuItem value="Apartments">Apartments</MenuItem>
+                    <MenuItem value="Resorts">Resorts</MenuItem>
+                    <MenuItem value="Villas">Villas</MenuItem>
+                    <MenuItem value="Bungalows">Bungalows</MenuItem>
+                    <MenuItem value="Guesthouses">Guesthouses</MenuItem>
+                    <MenuItem value="Hostels">Hostels</MenuItem>
+                    <MenuItem value="Cottages">Cottages</MenuItem>
+                    <MenuItem value="Cabins">Cabins</MenuItem>
+                    <MenuItem value="Lodges">Lodges</MenuItem>
+                    <MenuItem value="Homestays">Homestays</MenuItem>
+                    <MenuItem value="Bed and Breakfasts">Bed and Breakfasts</MenuItem>
+                    <MenuItem value="Vacation Rentals">Vacation Rentals</MenuItem>
+                    <MenuItem value="Campgrounds">Campgrounds</MenuItem>
+                    <MenuItem value="Motels">Motels</MenuItem>
+                    <MenuItem value="Inns">Inns</MenuItem>
+                    <MenuItem value="Farm Stays">Farm Stays</MenuItem>
+                    <MenuItem value="Houseboats">Houseboats</MenuItem>
+                    <MenuItem value="Treehouses">Treehouses</MenuItem>
+                    <MenuItem value="Luxury Tents">Luxury Tents</MenuItem>
+                    <MenuItem value="Ryokans">Ryokans</MenuItem>
+                    <MenuItem value="Capsule Hotels">Capsule Hotels</MenuItem>
+                    <MenuItem value="Eco Lodges">Eco Lodges</MenuItem>
+                    <MenuItem value="Safari Lodges">Safari Lodges</MenuItem>
+                    <MenuItem value="Ski Resorts">Ski Resorts</MenuItem>
+                    <MenuItem value="Beach Resorts">Beach Resorts</MenuItem>
+                    <MenuItem value="All-Inclusive Resorts">All-Inclusive Resorts</MenuItem>
+                    <MenuItem value="Boutique Hotels">Boutique Hotels</MenuItem>
+                    <MenuItem value="Heritage Hotels">Heritage Hotels</MenuItem>
+                    <MenuItem value="Business Hotels">Business Hotels</MenuItem>
+                    <MenuItem value="Extended Stay Hotels">Extended Stay Hotels</MenuItem>
+                    <MenuItem value="Pet-Friendly Hotels">Pet-Friendly Hotels</MenuItem>
+                    <MenuItem value="Casino Hotels">Casino Hotels</MenuItem>
+                    <MenuItem value="Wellness Retreats">Wellness Retreats</MenuItem>
+                    <MenuItem value="Yurts">Yurts</MenuItem>
+                    <MenuItem value="Castles">Castles</MenuItem>
+                    <MenuItem value="Palaces">Palaces</MenuItem>
+                    <MenuItem value="Holiday Parks">Holiday Parks</MenuItem>
+                    <MenuItem value="Glamping Sites">Glamping Sites</MenuItem>
+                    <MenuItem value="Floating Hotels">Floating Hotels</MenuItem>
+                    <MenuItem value="Caves">Caves</MenuItem>
+                    <MenuItem value="Ice Hotels">Ice Hotels</MenuItem>
+                    <MenuItem value="Underwater Hotels">Underwater Hotels</MenuItem>
+                    {/* Add other categories here */}
+                  </Select>
+                  {errors.category && <Typography color="error">{errors.category}</Typography>}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  name="description"
+                  value={hotelData.description}
+                  onChange={handleChange}
+                  multiline
+                  rows={4}
+                  error={!!errors.description}
+                  helperText={errors.description}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth error={!!errors.climate}>
+                  <InputLabel>Climate Zone</InputLabel>
+                  <Select
+                    name="climate"
+                    value={hotelData.climate}
+                    onChange={handleChange}
+                    label="Climate Zone"
+                    required
+                  >
+                    <MenuItem value="">Select a climate zone</MenuItem>
+                    <MenuItem value="Dry zone">Dry zone</MenuItem>
+                    <MenuItem value="Intermediate zone">Intermediate zone</MenuItem>
+                    <MenuItem value="Montane zone">Montane zone</MenuItem>
+                    <MenuItem value="Semi-Arid zone">Semi-Arid zone</MenuItem>
+                    <MenuItem value="Oceanic zone">Oceanic zone</MenuItem>
+                    <MenuItem value="Tropical Wet zone">Tropical Wet zone</MenuItem>
+                    <MenuItem value="Tropical Submontane">Tropical Submontane</MenuItem>
+                    <MenuItem value="Tropical Dry Zone">Tropical Dry Zone</MenuItem>
+                    <MenuItem value="Tropical Monsoon Climate">Tropical Monsoon Climate</MenuItem>
+                    <MenuItem value="Tropical Savanna Climate">Tropical Savanna Climate</MenuItem>
+                    {/* Add other climate zones here */}
+                  </Select>
+                  {errors.climate && <Typography color="error">{errors.climate}</Typography>}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Address"
+                  name="location.address"
+                  value={hotelData.location.address}
+                  onChange={handleChange}
+                  error={!!errors['location.address']}
+                  helperText={errors['location.address']}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth error={!!errors['location.province']}>
+                  <InputLabel>Province</InputLabel>
+                  <Select
+                    name="location.province"
+                    value={hotelData.location.province}
+                    onChange={handleProvinceChange}
+                    label="Province"
+                    required
+                  >
+                    <MenuItem value="">Select Province</MenuItem>
+                    {Object.keys(provincesAndDistricts).map((province) => (
+                      <MenuItem key={province} value={province}>
+                        {province}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors['location.province'] && <Typography color="error">{errors['location.province']}</Typography>}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth error={!!errors['location.city']}>
+                  <InputLabel>District</InputLabel>
+                  <Select
+                    name="location.city"
+                    value={hotelData.location.city}
+                    onChange={handleChange}
+                    label="District"
+                    required
+                    disabled={!hotelData.location.province}
+                  >
+                    <MenuItem value="">Select District</MenuItem>
+                    {districts.map((district) => (
+                      <MenuItem key={district} value={district}>
+                        {district}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors['location.city'] && <Typography color="error">{errors['location.city']}</Typography>}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Map URL"
+                  name="location.mapUrl"
+                  value={hotelData.location.mapUrl}
+                  onChange={handleChange}
+                  error={!!errors['location.mapUrl']}
+                  helperText={errors['location.mapUrl']}
+                  required
+                />
+              </Grid>
+            </Grid>
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                variant="contained"
+                endIcon={<ArrowForward />}
+                onClick={handleNext}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+              >
+                Next
+              </Button>
+            </Box>
+          </Box>
         )}
 
         {step === 2 && (
-          <div>
-            <h2>Contact Information </h2>
-            <input type="email" name="contactInfo.email" value={hotelData.contactInfo.email} onChange={handleChange} placeholder="Email" required />
-            <input type="text" name="contactInfo.contactNumber" value={hotelData.contactInfo.contactNumber} onChange={handleChange} placeholder="Contact Number" required />
-            <input type="text" name="contactInfo.whatsappNumber" value={hotelData.contactInfo.whatsappNumber} onChange={handleChange} placeholder="WhatsApp Number" />
-            <input type="text" name="contactInfo.facebookUrl" value={hotelData.contactInfo.facebookUrl} onChange={handleChange} placeholder="Facebook URL" />
-            <input type="text" name="contactInfo.websiteUrl" value={hotelData.contactInfo.websiteUrl} onChange={handleChange} placeholder="Website URL" />
-            
-            <button type="button" onClick={() => setStep(1)}>Back</button>
-            <button type="button" onClick={() => setStep(3)}>Next</button>
-          </div>
+          <Box>
+            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+              Contact Information
+            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="contactInfo.email"
+                  value={hotelData.contactInfo.email}
+                  onChange={handleChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Contact Number"
+                  name="contactInfo.contactNumber"
+                  value={hotelData.contactInfo.contactNumber}
+                  onChange={handleChange}
+                  error={!!errors.contactNumber}
+                  helperText={errors.contactNumber}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="WhatsApp Number"
+                  name="contactInfo.whatsappNumber"
+                  value={hotelData.contactInfo.whatsappNumber}
+                  onChange={handleChange}
+                  error={!!errors.whatsappNumber}
+                  helperText={errors.whatsappNumber}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Facebook URL"
+                  name="contactInfo.facebookUrl"
+                  value={hotelData.contactInfo.facebookUrl}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Website URL"
+                  name="contactInfo.websiteUrl"
+                  value={hotelData.contactInfo.websiteUrl}
+                  onChange={handleChange}
+                />
+              </Grid>
+            </Grid>
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
+              <Button
+                variant="outlined"
+                startIcon={<ArrowBack />}
+                onClick={handleBack}
+                sx={{ color: '#1976d2', borderColor: '#1976d2' }}
+              >
+                Back
+              </Button>
+              <Button
+                variant="contained"
+                endIcon={<ArrowForward />}
+                onClick={handleNext2}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+              >
+                Next
+              </Button>
+            </Box>
+          </Box>
         )}
 
         {step === 3 && (
         <div>
-            <h2>Rooms</h2>
+            <h2>Rooms & Pricing</h2>
+
+            {/* Room Fields */}
             {hotelData.rooms.map((room, index) => (
             <div key={index}>
                 <input type="text" name="roomName" value={room.roomName} onChange={(e) => handleRoomChange(index, e)} placeholder="Room Name" required />
                 <input type="text" name="type" value={room.type} onChange={(e) => handleRoomChange(index, e)} placeholder="Type" required />
-                <input type="number" name="beds" value={room.beds} onChange={(e) => handleRoomChange(index, e)} placeholder="beds" required />
+                <input type="number" name="beds" value={room.beds} onChange={(e) => handleRoomChange(index, e)} placeholder="Beds" required />
                 <input type="number" name="capacity" value={room.capacity} onChange={(e) => handleRoomChange(index, e)} placeholder="Capacity" required />
-                <input type="text" name="roomDescription" value={room.roomDescription} onChange={(e) => handleRoomChange(index, e)} placeholder="room Description" required />
-                <input type="number" name="noOfRooms" value={room.noOfRooms} onChange={(e) => handleRoomChange(index, e)} placeholder="Number of Rooms ( This Type )" required />
+                <textarea
+                    name="roomDescription"
+                    value={room.roomDescription}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    placeholder="Room Description"
+                    required
+                    rows={4} // Adjust rows as needed
+                    style={{ width: '100%' }} // Optional styling
+                    />
 
+                <input type="number" name="noOfRooms" value={room.noOfRooms} onChange={(e) => handleRoomChange(index, e)} placeholder="Number of Rooms (This Type)" required />
                 <input type="number" name="pricePerNight" value={room.pricePerNight} onChange={(e) => handleRoomChange(index, e)} placeholder="Price Per Night" required />
-                <input type="number" name="pricePerFullDay" value={room.pricePerFullDay} onChange={(e) => handleRoomChange(index, e)} placeholder="Price Per FullDay" required />
+                <input type="number" name="pricePerFullDay" value={room.pricePerFullDay} onChange={(e) => handleRoomChange(index, e)} placeholder="Price Per Full Day" required />
 
-                <input type="number" name="fullboardPrice" value={room.pricing.fullboardPrice} onChange={(e) => handleRoomChange(index, e)} placeholder="fullboard Price" required />
-                <input type="text" name="fullboardinclude" value={room.pricing.fullboardinclude} onChange={(e) => handleRoomChange(index, e)} placeholder="fullboard Includes" required />
-                <input type="number" name="halfboardPrice" value={room.pricing.halfboardPrice} onChange={(e) => handleRoomChange(index, e)} placeholder="halfboard Price" required />
-                <input type="text" name="halfboardinclude" value={room.pricing.halfboardinclude} onChange={(e) => handleRoomChange(index, e)} placeholder="halfboard Includes Includes" required />
-                
+                {/* Fullboard Section */}
+                <div style={{ marginBottom: '20px' }}>
+                <input type="number" name="fullboardPrice" value={room.pricing.fullboardPrice} onChange={(e) => handleRoomChange(index, e)} placeholder="Fullboard Price" required />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input
+                    type="text"
+                    value={room.pricing.fullboardincludeInput || ''} // Temporary input value
+                    onChange={(e) => handleFullboardIncludeInputChange(index, e)}
+                    placeholder="Fullboard Includes"
+                    />
+                    {/* Add Button */}
+                    {room.pricing.fullboardincludeInput && (
+                    <button
+                        type="button"
+                        onClick={() => addFullboardInclude(index)}
+                        style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#007bff',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        }}
+                    >
+                        Add
+                    </button>
+                    )}
+                </div>
+                {/* Display Added Fullboard Includes */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+                    {room.pricing.fullboardinclude.map((item, itemIndex) => (
+                    <div
+                        key={itemIndex}
+                        style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#e0e0e0',
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        fontSize: '14px',
+                        }}
+                    >
+                        {item}
+                        <button
+                        type="button"
+                        onClick={() => removeFullboardInclude(index, itemIndex)}
+                        style={{
+                            marginLeft: '8px',
+                            background: 'none',
+                            border: 'none',
+                            color: '#666',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                        }}
+                        >
+                        X
+                        </button>
+                    </div>
+                    ))}
+                </div>
+                </div>
+
+                {/* Halfboard Section */}
+                <div style={{ marginBottom: '20px' }}>
+                <input type="number" name="halfboardPrice" value={room.pricing.halfboardPrice} onChange={(e) => handleRoomChange(index, e)} placeholder="Halfboard Price" required />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input
+                    type="text"
+                    value={room.pricing.halfboardincludeInput || ''} // Temporary input value
+                    onChange={(e) => handleHalfboardIncludeInputChange(index, e)}
+                    placeholder="Halfboard Includes"
+                    />
+                    {/* Add Button */}
+                    {room.pricing.halfboardincludeInput && (
+                    <button
+                        type="button"
+                        onClick={() => addHalfboardInclude(index)}
+                        style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#007bff',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        }}
+                    >
+                        Add
+                    </button>
+                    )}
+                </div>
+                {/* Display Added Halfboard Includes */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+                    {room.pricing.halfboardinclude.map((item, itemIndex) => (
+                    <div
+                        key={itemIndex}
+                        style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#e0e0e0',
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        fontSize: '14px',
+                        }}
+                    >
+                        {item}
+                        <button
+                        type="button"
+                        onClick={() => removeHalfboardInclude(index, itemIndex)}
+                        style={{
+                            marginLeft: '8px',
+                            background: 'none',
+                            border: 'none',
+                            color: '#666',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                        }}
+                        >
+                        X
+                        </button>
+                    </div>
+                    ))}
+                </div>
+                </div>
+
+                {/* Room Open for Agents */}
                 <label>
                 <input type="checkbox" name="roomOpenForAgents" checked={room.roomOpenForAgents} onChange={(e) => handleRoomChange(index, e)} />
                 Room Open For Agents
@@ -628,79 +1173,80 @@ const AddHotel = () => {
                 </>
                 )}
 
-                {/* Amenities Input with Suggestions */}
+                {/* Amenities Section */}
+                <div style={{ marginBottom: '20px' }}>
                 <div style={{ position: 'relative' }}>
-                        <input
-                            type="text"
-                            value={room.amenitiesInput || ''} // Temporary input value
-                            onChange={(e) => handleAmenityInputChange(index, e)}
-                            placeholder="Type to add amenities"
-                        />
-                        {/* Suggestions Dropdown */}
-                        {room.showSuggestions && (
-                            <div style={{
-                            position: 'absolute',
-                            top: '100%',
-                            left: 0,
-                            right: 0,
-                            backgroundColor: '#fff',
-                            border: '1px solid #ccc',
-                            borderRadius: '4px',
-                            zIndex: 1000,
-                            maxHeight: '150px',
-                            overflowY: 'auto',
-                            }}>
-                            {filteredAmenities(room.amenitiesInput).map((amenity, i) => (
-                                <div
-                                key={i}
-                                onClick={() => addAmenity(index, amenity)}
-                                style={{
-                                    padding: '8px',
-                                    cursor: 'pointer',
-                                    borderBottom: '1px solid #eee',
-                                    backgroundColor: '#f9f9f9',
-                                }}
-                                >
-                                {amenity}
-                                </div>
-                            ))}
-                            </div>
-                        )}
-                        </div>
-
-                        {/* Display Added Amenities */}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
-                        {room.amenities.map((amenity, amenityIndex) => (
-                            <div
-                            key={amenityIndex}
+                    <input
+                    type="text"
+                    value={room.amenitiesInput || ''} // Temporary input value
+                    onChange={(e) => handleAmenityInputChange(index, e)}
+                    placeholder="Type to add amenities"
+                    />
+                    {/* Suggestions Dropdown */}
+                    {room.showSuggestions && (
+                    <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        backgroundColor: '#fff',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                        zIndex: 1000,
+                        maxHeight: '150px',
+                        overflowY: 'auto',
+                    }}>
+                        {filteredAmenities(room.amenitiesInput).map((amenity, i) => (
+                        <div
+                            key={i}
+                            onClick={() => addAmenity(index, amenity)}
                             style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                backgroundColor: '#e0e0e0',
-                                padding: '4px 8px',
-                                borderRadius: '12px',
-                                fontSize: '14px',
+                            padding: '8px',
+                            cursor: 'pointer',
+                            borderBottom: '1px solid #eee',
+                            backgroundColor: '#f9f9f9',
                             }}
-                            >
+                        >
                             {amenity}
-                            <button
-                                type="button"
-                                onClick={() => removeAmenity(index, amenityIndex)}
-                                style={{
-                                marginLeft: '8px',
-                                background: 'none',
-                                border: 'none',
-                                color: '#666',
-                                cursor: 'pointer',
-                                fontSize: '12px',
-                                }}
-                            >
-                                X
-                            </button>
-                            </div>
-                        ))}
                         </div>
-                
+                        ))}
+                    </div>
+                    )}
+                </div>
+                {/* Display Added Amenities */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+                    {room.amenities.map((amenity, amenityIndex) => (
+                    <div
+                        key={amenityIndex}
+                        style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#e0e0e0',
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        fontSize: '14px',
+                        }}
+                    >
+                        {amenity}
+                        <button
+                        type="button"
+                        onClick={() => removeAmenity(index, amenityIndex)}
+                        style={{
+                            marginLeft: '8px',
+                            background: 'none',
+                            border: 'none',
+                            color: '#666',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                        }}
+                        >
+                        X
+                        </button>
+                    </div>
+                    ))}
+                </div>
+                </div>
+
                 {/* Image Upload Section */}
                 <input type="file" multiple onChange={(e) => handleRoomImageUpload(index, e)} />
 
@@ -738,11 +1284,33 @@ const AddHotel = () => {
                     </div>
                 ))}
                 </div>
-                
+
+                {/* Remove Room Button */}
                 <button type="button" onClick={() => removeRoom(index)}>Remove Room</button>
             </div>
             ))}
+
+            {/* Add Room Button */}
             <button type="button" onClick={addRoom}>Add Room</button>
+
+             {/* Display Price Main (Not related to rooms) */}
+             <div style={{ marginBottom: '20px' }}>
+            <label>
+                Display Price Main:
+                <input
+                type="number"
+                name="displayPriceMain"
+                value={hotelData.displayPriceMain}
+                onChange={(e) => setHotelData(prevState => ({
+                    ...prevState,
+                    displayPriceMain: e.target.value,
+                }))}
+                placeholder="Display Price Main"
+                />
+            </label>
+            </div>
+
+            {/* Navigation Buttons */}
             <button type="button" onClick={() => setStep(2)}>Back</button>
             <button type="button" onClick={() => setStep(4)}>Next</button>
         </div>
@@ -1206,29 +1774,42 @@ const AddHotel = () => {
                 No Stars
             </label>
 
-            {/* howManyStars (Conditional Field) */}
             {hotelData.isHaveStars && (
                 <div style={{ marginTop: '10px' }}>
-                <label>
-                    How Many Stars (1-10):
-                    <input
-                    type="number"
-                    name="howManyStars"
-                    value={hotelData.howManyStars}
-                    onChange={(e) => {
-                        const value = Math.min(Math.max(Number(e.target.value), 1), 10); // Ensure value is between 1 and 10
-                        setHotelData(prevState => ({
-                        ...prevState,
-                        howManyStars: value,
-                        }));
-                    }}
-                    min="1"
-                    max="10"
-                    style={{ marginLeft: '10px' }}
-                    />
-                </label>
+                    <label>
+                        How Many Stars (1-10):
+                        <input
+                            type="number"
+                            name="howManyStars"
+                            value={hotelData.howManyStars}
+                            onChange={(e) => {
+                                let value = e.target.value;
+                                
+                                // Allow empty input to let the user type freely
+                                if (value === "") {
+                                    setHotelData(prevState => ({
+                                        ...prevState,
+                                        howManyStars: value
+                                    }));
+                                    return;
+                                }
+
+                                // Convert to number and enforce min-max
+                                value = Math.min(Math.max(Number(value), 1), 10);
+
+                                setHotelData(prevState => ({
+                                    ...prevState,
+                                    howManyStars: value
+                                }));
+                            }}
+                            min="1"
+                            max="10"
+                            style={{ marginLeft: '10px' }}
+                        />
+                    </label>
                 </div>
             )}
+
             </div>
 
             {/* Radio Buttons for Other Fields */}
@@ -1346,7 +1927,7 @@ const AddHotel = () => {
         </div>
         )}
       </form>
-    </div>
+    </Container>
   );
 };
 
