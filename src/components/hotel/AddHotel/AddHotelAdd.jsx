@@ -23,6 +23,7 @@ import {
     CircularProgress,
   } from '@mui/material';
   import { ArrowForward, ArrowBack, Add, Close } from '@mui/icons-material';
+  import { IoIosImages } from "react-icons/io";
 
 const provincesAndDistricts = {
     "Central Province": ["Kandy", "Matale", "Nuwara Eliya"],
@@ -218,20 +219,66 @@ const AddHotel = () => {
   const handleRoomChange = (index, e) => {
     const { name, value, type, checked } = e.target;
     const updatedRooms = [...hotelData.rooms];
-
+  
+    // Step 1: Update the room data
     updatedRooms[index] = {
-        ...updatedRooms[index],
-        ...(name in updatedRooms[index] 
-            ? { [name]: type === 'checkbox' ? checked : value } 
-            : { pricing: { ...updatedRooms[index].pricing, [name]: value } } // Handles nested properties
-        )
+      ...updatedRooms[index],
+      ...(name in updatedRooms[index]
+        ? { [name]: type === 'checkbox' ? checked : value } // Handle non-nested properties
+        : { pricing: { ...updatedRooms[index].pricing, [name]: value } } // Handle nested properties
+      ),
     };
-
-    setHotelData(prevState => ({
-        ...prevState,
-        rooms: updatedRooms
+  
+    // Update the hotelData state
+    setHotelData((prevState) => ({
+      ...prevState,
+      rooms: updatedRooms,
     }));
-};
+  
+    // Step 2: Revalidate the specific field and update errors
+    const fieldErrorKey = `room${index}_${name}`; // Construct the error key (e.g., "room0_roomName")
+    if (value.trim()) {
+      // If the field is no longer empty, remove the error
+      setErrors((prevErrors) => {
+        const newErrors = { ...prevErrors };
+        delete newErrors[fieldErrorKey]; // Remove the error for this field
+        return newErrors;
+      });
+    } else {
+      // If the field is empty, add the error
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [fieldErrorKey]: `${name} is required`, // Add the error for this field
+      }));
+    }
+  
+    // Step 3: Revalidate discountForPromo and EarnRateForPromo if roomOpenForAgents is true
+    if (name === 'roomOpenForAgents') {
+      const room = updatedRooms[index];
+      if (room.roomOpenForAgents) {
+        if (!room.discountForPromo) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [`room${index}_discountForPromo`]: 'Discount for Promo is required',
+          }));
+        }
+        if (!room.EarnRateForPromo) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [`room${index}_EarnRateForPromo`]: 'Earn Rate for Promo is required',
+          }));
+        }
+      } else {
+        // If roomOpenForAgents is false, remove discountForPromo and EarnRateForPromo errors
+        setErrors((prevErrors) => {
+          const newErrors = { ...prevErrors };
+          delete newErrors[`room${index}_discountForPromo`];
+          delete newErrors[`room${index}_EarnRateForPromo`];
+          return newErrors;
+        });
+      }
+    }
+  };
 
 
   const addRoom = () => {
@@ -350,7 +397,7 @@ const AddHotel = () => {
 
   const commonAmenities = [
     'TV',
-    'Air Conditioning',
+    'Air Conditioning (AC)',
     'Free Wi-Fi',
     'Mini Bar',
     'Mini Fridge',
@@ -711,15 +758,15 @@ const AddHotel = () => {
   const validateStep2 = () => {
     const newErrors = {};
     if (!hotelData.contactInfo.email) newErrors['contactInfo.email'] = 'Email is required';
-    if (!hotelData.contactInfo.contactNumber) newErrors.contactNumber = 'Contact Number is required';
+    if (!hotelData.contactInfo.contactNumber) newErrors['contactInfo.contactNumber'] = 'Contact Number is required';
     if (hotelData.contactInfo.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(hotelData.contactInfo.email)) {
         newErrors['contactInfo.email'] = 'Invalid email address';
     }
     if (hotelData.contactInfo.contactNumber && !/^\d{10}$/.test(hotelData.contactInfo.contactNumber)) {
-      newErrors.contactNumber = 'Contact Number must be 10 digits and All Characters must be numeric';
+        newErrors['contactInfo.contactNumber'] = 'Contact Number must be 10 digits and All Characters must be numeric';
     }
     if (hotelData.contactInfo.whatsappNumber && !/^\d{10}$/.test(hotelData.contactInfo.whatsappNumber)) {
-        newErrors.whatsappNumber = 'Whatsapp Number must be 10 digits and All Characters must be numeric';
+        newErrors['contactInfo.whatsappNumber'] = 'Whatsapp Number must be 10 digits and All Characters must be numeric';
       }
 
     setErrors(newErrors);
@@ -729,15 +776,16 @@ const AddHotel = () => {
   // Validation function for Step 3
   const validateStep3 = () => {
     const newErrors = {};
-
-        // Check if rooms array is empty
-        if (hotelData.rooms.length === 0) {
-            newErrors.rooms = '💢 Minimum 1 Room Required';
-        } else {
-            // Clear the rooms error if the array is no longer empty
-            delete newErrors.rooms;
-        }
-
+  
+    // Check if rooms array is empty
+    if (hotelData.rooms.length === 0) {
+      newErrors.rooms = '💢 Minimum 1 Room Required';
+    } else {
+      // Clear the rooms error if the array is no longer empty
+      delete newErrors.rooms;
+    }
+  
+    // Validate each room's fields
     hotelData.rooms.forEach((room, index) => {
       if (!room.roomName) newErrors[`room${index}_roomName`] = 'Room Name is required';
       if (!room.type) newErrors[`room${index}_type`] = 'Type is required';
@@ -747,11 +795,21 @@ const AddHotel = () => {
       if (!room.noOfRooms) newErrors[`room${index}_noOfRooms`] = 'Number of Rooms is required';
       if (!room.pricePerNight) newErrors[`room${index}_pricePerNight`] = 'Price Per Night is required';
       if (!room.pricePerFullDay) newErrors[`room${index}_pricePerFullDay`] = 'Price Per Full Day is required';
-      if (!room.pricing.fullboardPrice) newErrors[`room${index}_fullboardPrice`] = 'Fullboard Price is required';
-      if (!room.pricing.halfboardPrice) newErrors[`room${index}_halfboardPrice`] = 'Halfboard Price is required';
-      if (!hotelData.displayPriceMain) newErrors.displayPriceMain = 'display Price is required';
+  
+      // Validate discountForPromo and EarnRateForPromo if roomOpenForAgents is true
+      if (room.roomOpenForAgents) {
+        if (!room.discountForPromo) newErrors[`room${index}_discountForPromo`] = 'Discount for Promo is required';
+        if (!room.EarnRateForPromo) newErrors[`room${index}_EarnRateForPromo`] = 'Earn Rate for Promo is required';
+      }
     });
+  
+    // Validate displayPriceMain
+    if (!hotelData.displayPriceMain) newErrors.displayPriceMain = 'Display Price is required';
+  
+    // Update the errors state
     setErrors(newErrors);
+  
+    // Return true if there are no errors
     return Object.keys(newErrors).length === 0;
   };
 
@@ -1027,8 +1085,8 @@ const AddHotel = () => {
                   name="contactInfo.contactNumber"
                   value={hotelData.contactInfo.contactNumber}
                   onChange={handleChange}
-                  error={!!errors.contactNumber}
-                  helperText={errors.contactNumber}
+                  error={!!errors['contactInfo.contactNumber']}
+                  helperText={errors['contactInfo.contactNumber']}
                   required
                 />
               </Grid>
@@ -1039,8 +1097,8 @@ const AddHotel = () => {
                   name="contactInfo.whatsappNumber"
                   value={hotelData.contactInfo.whatsappNumber}
                   onChange={handleChange}
-                  error={!!errors.whatsappNumber}
-                  helperText={errors.whatsappNumber}
+                  error={!!errors['contactInfo.whatsappNumber']}
+                  helperText={errors['contactInfo.whatsappNumber']}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -1327,26 +1385,32 @@ const AddHotel = () => {
                 </Grid>
 
                 {room.roomOpenForAgents && (
-                    <>
+                <>
                     <Grid item xs={12} sm={6}>
-                        <TextField
+                    <TextField
                         fullWidth
                         label="Discount for Promo"
                         name="discountForPromo"
                         value={room.discountForPromo}
                         onChange={(e) => handleRoomChange(index, e)}
-                        />
+                        error={!!errors[`room${index}_discountForPromo`]} // Show error if the field has an error
+                        helperText={errors[`room${index}_discountForPromo`]} // Display the error message
+                        required
+                    />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField
+                    <TextField
                         fullWidth
                         label="Earn Rate for Promo"
                         name="EarnRateForPromo"
                         value={room.EarnRateForPromo}
                         onChange={(e) => handleRoomChange(index, e)}
-                        />
+                        error={!!errors[`room${index}_EarnRateForPromo`]} // Show error if the field has an error
+                        helperText={errors[`room${index}_EarnRateForPromo`]} // Display the error message
+                        required
+                    />
                     </Grid>
-                    </>
+                </>
                 )}
 
                 {/* Amenities */}
@@ -1394,8 +1458,8 @@ const AddHotel = () => {
                         id={`room-image-upload-${index}`}
                         />
                         <label htmlFor={`room-image-upload-${index}`}>
-                        <Button variant="contained" component="span" startIcon={<Add />}>
-                            Upload Images
+                        <Button variant="contained" component="span" startIcon={<IoIosImages />}>
+                            Upload Room Images
                         </Button>
                         </label>
                     </Grid>
