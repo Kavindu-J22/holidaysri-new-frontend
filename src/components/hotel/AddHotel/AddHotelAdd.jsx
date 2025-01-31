@@ -7,14 +7,22 @@ import {
     TextField,
     Select,
     MenuItem,
-    TextareaAutosize,
     Button,
     Grid,
     FormControl,
     InputLabel,
     Box,
+    Checkbox,
+    FormControlLabel,
+    Chip,
+    IconButton,
+    Paper, 
+    List, 
+    ListItem, 
+    ListItemText,
+    CircularProgress,
   } from '@mui/material';
-  import { ArrowForward, ArrowBack } from '@mui/icons-material';
+  import { ArrowForward, ArrowBack, Add, Close } from '@mui/icons-material';
 
 const provincesAndDistricts = {
     "Central Province": ["Kandy", "Matale", "Nuwara Eliya"],
@@ -121,7 +129,7 @@ const AddHotel = () => {
     isHaveCertificate: false,
     isHaveLicense: false,
     acceptTeams: false,
-    displayPriceMain: 0,
+    displayPriceMain: null,
   });
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
@@ -129,6 +137,7 @@ const AddHotel = () => {
   const [districts, setDistricts] = useState([]);
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -231,24 +240,24 @@ const AddHotel = () => {
       rooms: [...prevState.rooms, {
         roomName: '',
         type: '',
-        capacity: 0,
-        beds: 0,
+        capacity: null,
+        beds: null,
         roomDescription: '',
-        pricePerNight: 0,
-        pricePerFullDay: 0,
+        pricePerNight: null,
+        pricePerFullDay: null,
         pricing: {
-            fullboardPrice: 0,
+            fullboardPrice: null,
             fullboardinclude: [], 
-            halfboardPrice: 0,
+            halfboardPrice: null,
             halfboardinclude: [], 
           },
         isAvailable: true,
         amenities: [],
         images: [],
-        noOfRooms: 0,
+        noOfRooms: null,
         roomOpenForAgents: false,
-        discountForPromo: 0,
-        EarnRateForPromo: 0,
+        discountForPromo: null,
+        EarnRateForPromo: null,
       }]
     }));
   };
@@ -276,7 +285,7 @@ const AddHotel = () => {
       setError('Error uploading image.');
       return null;
     }
-  };
+  };   
 
   const handleImageUpload = async (e) => {
     const files = e.target.files;
@@ -303,6 +312,17 @@ const AddHotel = () => {
 
   const handleRoomImageUpload = async (index, e) => {
     const files = e.target.files;
+    const currentImages = hotelData.rooms[index].images.length;
+
+    // Check if adding new images will exceed the limit
+    if (currentImages + files.length > 10) {
+      setError('You can only upload a maximum of 10 images.');
+      return;
+    }
+
+    // Clear any previous error message
+    setError('');
+
     const uploadedImages = [];
     for (let file of files) {
       const imageUrl = await uploadImage(file);
@@ -310,13 +330,14 @@ const AddHotel = () => {
         uploadedImages.push(imageUrl);
       }
     }
+
     const updatedRooms = [...hotelData.rooms];
     updatedRooms[index].images = [...updatedRooms[index].images, ...uploadedImages];
     setHotelData(prevState => ({
       ...prevState,
       rooms: updatedRooms
     }));
-  };
+};
 
   const removeImage = (roomIndex, imageIndex) => {
     const updatedRooms = [...hotelData.rooms];
@@ -332,6 +353,7 @@ const AddHotel = () => {
     'Air Conditioning',
     'Free Wi-Fi',
     'Mini Bar',
+    'Mini Fridge',
     'Balcony',
     'Room Service',
     'Safe',
@@ -688,10 +710,10 @@ const AddHotel = () => {
 
   const validateStep2 = () => {
     const newErrors = {};
-    if (!hotelData.contactInfo.email) newErrors.email = 'Email is required';
+    if (!hotelData.contactInfo.email) newErrors['contactInfo.email'] = 'Email is required';
     if (!hotelData.contactInfo.contactNumber) newErrors.contactNumber = 'Contact Number is required';
     if (hotelData.contactInfo.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(hotelData.contactInfo.email)) {
-      newErrors.email = 'Invalid email address';
+        newErrors['contactInfo.email'] = 'Invalid email address';
     }
     if (hotelData.contactInfo.contactNumber && !/^\d{10}$/.test(hotelData.contactInfo.contactNumber)) {
       newErrors.contactNumber = 'Contact Number must be 10 digits and All Characters must be numeric';
@@ -704,6 +726,49 @@ const AddHotel = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Validation function for Step 3
+  const validateStep3 = () => {
+    const newErrors = {};
+
+        // Check if rooms array is empty
+        if (hotelData.rooms.length === 0) {
+            newErrors.rooms = '💢 Minimum 1 Room Required';
+        } else {
+            // Clear the rooms error if the array is no longer empty
+            delete newErrors.rooms;
+        }
+
+    hotelData.rooms.forEach((room, index) => {
+      if (!room.roomName) newErrors[`room${index}_roomName`] = 'Room Name is required';
+      if (!room.type) newErrors[`room${index}_type`] = 'Type is required';
+      if (!room.beds) newErrors[`room${index}_beds`] = 'Beds is required';
+      if (!room.capacity) newErrors[`room${index}_capacity`] = 'Capacity is required';
+      if (!room.roomDescription) newErrors[`room${index}_roomDescription`] = 'Room Description is required';
+      if (!room.noOfRooms) newErrors[`room${index}_noOfRooms`] = 'Number of Rooms is required';
+      if (!room.pricePerNight) newErrors[`room${index}_pricePerNight`] = 'Price Per Night is required';
+      if (!room.pricePerFullDay) newErrors[`room${index}_pricePerFullDay`] = 'Price Per Full Day is required';
+      if (!room.pricing.fullboardPrice) newErrors[`room${index}_fullboardPrice`] = 'Fullboard Price is required';
+      if (!room.pricing.halfboardPrice) newErrors[`room${index}_halfboardPrice`] = 'Halfboard Price is required';
+      if (!hotelData.displayPriceMain) newErrors.displayPriceMain = 'display Price is required';
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  useEffect(() => {
+    if (errors.rooms) {
+        setIsVisible(true); // Show the error message
+        const timer = setTimeout(() => {
+            setIsVisible(false); // Trigger fade-out
+            setTimeout(() => {
+                setErrors({ ...errors, rooms: '' }); // Clear the error after fade-out
+            }, 500); // Wait for the fade-out animation to complete
+        }, 1500); // Wait 1.5 seconds before starting fade-out
+
+        return () => clearTimeout(timer); // Cleanup the timer on unmount
+    }
+}, [errors.rooms]);
+
   const handleNext = () => {
     if (step === 1 && !validateStep1()) return;
     setStep(step + 1);
@@ -713,6 +778,12 @@ const AddHotel = () => {
     if (step === 2 && !validateStep2()) return;
     setStep(step + 1);
   };
+
+    // Handle next step
+    const handleNext3 = () => {
+        if (step === 3 && !validateStep3()) return;
+        setStep(step + 1);
+      };
 
   const handleBack = () => {
     setStep(step - 1);
@@ -944,8 +1015,8 @@ const AddHotel = () => {
                   name="contactInfo.email"
                   value={hotelData.contactInfo.email}
                   onChange={handleChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
+                  error={!!errors['contactInfo.email']}
+                  helperText={errors['contactInfo.email']}
                   required
                 />
               </Grid>
@@ -1013,307 +1084,438 @@ const AddHotel = () => {
         )}
 
         {step === 3 && (
-        <div>
-            <h2>Rooms & Pricing</h2>
+        <Box>
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', mb: 3 }}>
+            Rooms & Pricing
+            </Typography>
 
-            {/* Room Fields */}
             {hotelData.rooms.map((room, index) => (
-            <div key={index}>
-                <input type="text" name="roomName" value={room.roomName} onChange={(e) => handleRoomChange(index, e)} placeholder="Room Name" required />
-                <input type="text" name="type" value={room.type} onChange={(e) => handleRoomChange(index, e)} placeholder="Type" required />
-                <input type="number" name="beds" value={room.beds} onChange={(e) => handleRoomChange(index, e)} placeholder="Beds" required />
-                <input type="number" name="capacity" value={room.capacity} onChange={(e) => handleRoomChange(index, e)} placeholder="Capacity" required />
-                <textarea
+            <Box
+                key={index}
+                sx={{
+                mb: 4,
+                p: 3,
+                border: '1px solid #ddd',
+                borderRadius: 2,
+                backgroundColor: '#fff',
+                }}
+            >
+                <Grid container spacing={3}>
+                
+                {/* Display Room Number */}
+                <Grid item xs={12}>
+                    <Typography variant="h6" sx={{ mb: 2 }}>
+                        Room No: {index + 1}
+                    </Typography>
+                </Grid>
+
+                {/* Room Fields */}
+                <Grid item xs={12}>
+                    <TextField
+                    fullWidth
+                    label="Room Name"
+                    name="roomName"
+                    value={room.roomName}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    error={!!errors[`room${index}_roomName`]}
+                    helperText={errors[`room${index}_roomName`]}
+                    required
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    fullWidth
+                    label="Type"
+                    name="type"
+                    value={room.type}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    error={!!errors[`room${index}_type`]}
+                    helperText={errors[`room${index}_type`]}
+                    required
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    fullWidth
+                    label="Beds"
+                    name="beds"
+                    value={room.beds}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    error={!!errors[`room${index}_beds`]}
+                    helperText={errors[`room${index}_beds`]}
+                    required
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    fullWidth
+                    label="Capacity"
+                    name="capacity"
+                    value={room.capacity}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    error={!!errors[`room${index}_capacity`]}
+                    helperText={errors[`room${index}_capacity`]}
+                    required
+                    />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <TextField
+                    fullWidth
+                    label="Room Description"
                     name="roomDescription"
                     value={room.roomDescription}
                     onChange={(e) => handleRoomChange(index, e)}
-                    placeholder="Room Description"
+                    multiline
+                    rows={4}
+                    error={!!errors[`room${index}_roomDescription`]}
+                    helperText={errors[`room${index}_roomDescription`]}
                     required
-                    rows={4} // Adjust rows as needed
-                    style={{ width: '100%' }} // Optional styling
                     />
+                </Grid>
 
-                <input type="number" name="noOfRooms" value={room.noOfRooms} onChange={(e) => handleRoomChange(index, e)} placeholder="Number of Rooms (This Type)" required />
-                <input type="number" name="pricePerNight" value={room.pricePerNight} onChange={(e) => handleRoomChange(index, e)} placeholder="Price Per Night" required />
-                <input type="number" name="pricePerFullDay" value={room.pricePerFullDay} onChange={(e) => handleRoomChange(index, e)} placeholder="Price Per Full Day" required />
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    fullWidth
+                    label="Number of Rooms (This Type)"
+                    name="noOfRooms"
+                    value={room.noOfRooms}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    error={!!errors[`room${index}_noOfRooms`]}
+                    helperText={errors[`room${index}_noOfRooms`]}
+                    required
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    fullWidth
+                    label="Price Per Night"
+                    name="pricePerNight"
+                    value={room.pricePerNight}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    error={!!errors[`room${index}_pricePerNight`]}
+                    helperText={errors[`room${index}_pricePerNight`]}
+                    required
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    fullWidth
+                    label="Price Per Full Day"
+                    name="pricePerFullDay"
+                    value={room.pricePerFullDay}
+                    onChange={(e) => handleRoomChange(index, e)}
+                    error={!!errors[`room${index}_pricePerFullDay`]}
+                    helperText={errors[`room${index}_pricePerFullDay`]}
+                    required
+                    />
+                </Grid>
 
                 {/* Fullboard Section */}
-                <div style={{ marginBottom: '20px' }}>
-                <input type="number" name="fullboardPrice" value={room.pricing.fullboardPrice} onChange={(e) => handleRoomChange(index, e)} placeholder="Fullboard Price" required />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <input
-                    type="text"
-                    value={room.pricing.fullboardincludeInput || ''} // Temporary input value
-                    onChange={(e) => handleFullboardIncludeInputChange(index, e)}
-                    placeholder="Fullboard Includes"
+                <Grid item xs={12}>
+                    <Box mb={3}>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        label="Fullboard Price"
+                        name="fullboardPrice"
+                        value={room.pricing.fullboardPrice}
+                        onChange={(e) => handleRoomChange(index, e)}
+                        required
+                        variant="outlined"
+                        margin="normal"
                     />
-                    {/* Add Button */}
-                    {room.pricing.fullboardincludeInput && (
-                    <button
-                        type="button"
-                        onClick={() => addFullboardInclude(index)}
-                        style={{
-                        padding: '8px 16px',
-                        backgroundColor: '#007bff',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        }}
-                    >
-                        Add
-                    </button>
-                    )}
-                </div>
-                {/* Display Added Fullboard Includes */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
-                    {room.pricing.fullboardinclude.map((item, itemIndex) => (
-                    <div
-                        key={itemIndex}
-                        style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        backgroundColor: '#e0e0e0',
-                        padding: '4px 8px',
-                        borderRadius: '12px',
-                        fontSize: '14px',
-                        }}
-                    >
-                        {item}
-                        <button
-                        type="button"
-                        onClick={() => removeFullboardInclude(index, itemIndex)}
-                        style={{
-                            marginLeft: '8px',
-                            background: 'none',
-                            border: 'none',
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                        }}
+                    <Box display="flex" alignItems="center" gap={2} mb={2}>
+                        <TextField
+                        fullWidth
+                        type="text"
+                        label="Fullboard Includes"
+                        value={room.pricing.fullboardincludeInput || ''}
+                        onChange={(e) => handleFullboardIncludeInputChange(index, e)}
+                        variant="outlined"
+                        margin="normal"
+                        />
+                        {room.pricing.fullboardincludeInput && (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => addFullboardInclude(index)}
+                            sx={{ height: '56px', mt: 2 }}
                         >
-                        X
-                        </button>
-                    </div>
-                    ))}
-                </div>
-                </div>
+                            Add
+                        </Button>
+                        )}
+                    </Box>
+                    <Box display="flex" flexWrap="wrap" gap={1}>
+                        {room.pricing.fullboardinclude.map((item, itemIndex) => (
+                        <Chip
+                            key={itemIndex}
+                            label={item}
+                            onDelete={() => removeFullboardInclude(index, itemIndex)}
+                            sx={{ backgroundColor: '#f0f0f0', color: '#333' }}
+                        />
+                        ))}
+                    </Box>
+                    </Box>
+                </Grid>
 
                 {/* Halfboard Section */}
-                <div style={{ marginBottom: '20px' }}>
-                <input type="number" name="halfboardPrice" value={room.pricing.halfboardPrice} onChange={(e) => handleRoomChange(index, e)} placeholder="Halfboard Price" required />
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <input
-                    type="text"
-                    value={room.pricing.halfboardincludeInput || ''} // Temporary input value
-                    onChange={(e) => handleHalfboardIncludeInputChange(index, e)}
-                    placeholder="Halfboard Includes"
+                <Grid item xs={12}>
+                    <Box mb={3}>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        label="Halfboard Price"
+                        name="halfboardPrice"
+                        value={room.pricing.halfboardPrice}
+                        onChange={(e) => handleRoomChange(index, e)}
+                        required
+                        variant="outlined"
+                        margin="normal"
                     />
-                    {/* Add Button */}
-                    {room.pricing.halfboardincludeInput && (
-                    <button
-                        type="button"
-                        onClick={() => addHalfboardInclude(index)}
-                        style={{
-                        padding: '8px 16px',
-                        backgroundColor: '#007bff',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        }}
-                    >
-                        Add
-                    </button>
-                    )}
-                </div>
-                {/* Display Added Halfboard Includes */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
-                    {room.pricing.halfboardinclude.map((item, itemIndex) => (
-                    <div
-                        key={itemIndex}
-                        style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        backgroundColor: '#e0e0e0',
-                        padding: '4px 8px',
-                        borderRadius: '12px',
-                        fontSize: '14px',
-                        }}
-                    >
-                        {item}
-                        <button
-                        type="button"
-                        onClick={() => removeHalfboardInclude(index, itemIndex)}
-                        style={{
-                            marginLeft: '8px',
-                            background: 'none',
-                            border: 'none',
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                        }}
+                    <Box display="flex" alignItems="center" gap={2} mb={2}>
+                        <TextField
+                        fullWidth
+                        type="text"
+                        label="Halfboard Includes"
+                        value={room.pricing.halfboardincludeInput || ''}
+                        onChange={(e) => handleHalfboardIncludeInputChange(index, e)}
+                        variant="outlined"
+                        margin="normal"
+                        />
+                        {room.pricing.halfboardincludeInput && (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => addHalfboardInclude(index)}
+                            sx={{ height: '56px', mt: 2 }}
                         >
-                        X
-                        </button>
-                    </div>
-                    ))}
-                </div>
-                </div>
+                            Add
+                        </Button>
+                        )}
+                    </Box>
+                    <Box display="flex" flexWrap="wrap" gap={1}>
+                        {room.pricing.halfboardinclude.map((item, itemIndex) => (
+                        <Chip
+                            key={itemIndex}
+                            label={item}
+                            onDelete={() => removeHalfboardInclude(index, itemIndex)}
+                            sx={{ backgroundColor: '#f0f0f0', color: '#333' }}
+                        />
+                        ))}
+                    </Box>
+                    </Box>
+                </Grid>
 
                 {/* Room Open for Agents */}
-                <label>
-                <input type="checkbox" name="roomOpenForAgents" checked={room.roomOpenForAgents} onChange={(e) => handleRoomChange(index, e)} />
-                Room Open For Agents
-                </label>
+                <Grid item xs={12}>
+                    <FormControlLabel
+                    control={
+                        <Checkbox
+                        name="roomOpenForAgents"
+                        checked={room.roomOpenForAgents}
+                        onChange={(e) => handleRoomChange(index, e)}
+                        />
+                    }
+                    label="Room Open For Agents"
+                    />
+                </Grid>
+
                 {room.roomOpenForAgents && (
-                <>
-                    <input type="number" name="discountForPromo" value={room.discountForPromo} onChange={(e) => handleRoomChange(index, e)} placeholder="Discount for Promo" />
-                    <input type="number" name="EarnRateForPromo" value={room.EarnRateForPromo} onChange={(e) => handleRoomChange(index, e)} placeholder="Earn Rate for Promo" />
-                </>
+                    <>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                        fullWidth
+                        label="Discount for Promo"
+                        name="discountForPromo"
+                        value={room.discountForPromo}
+                        onChange={(e) => handleRoomChange(index, e)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                        fullWidth
+                        label="Earn Rate for Promo"
+                        name="EarnRateForPromo"
+                        value={room.EarnRateForPromo}
+                        onChange={(e) => handleRoomChange(index, e)}
+                        />
+                    </Grid>
+                    </>
                 )}
 
-                {/* Amenities Section */}
-                <div style={{ marginBottom: '20px' }}>
-                <div style={{ position: 'relative' }}>
-                    <input
-                    type="text"
-                    value={room.amenitiesInput || ''} // Temporary input value
-                    onChange={(e) => handleAmenityInputChange(index, e)}
-                    placeholder="Type to add amenities"
+                {/* Amenities */}
+                <Grid item xs={12}>
+                    <Box mb={3}>
+                    <TextField
+                        fullWidth
+                        label="Type to add amenities"
+                        value={room.amenitiesInput || ''}
+                        onChange={(e) => handleAmenityInputChange(index, e)}
+                        variant="outlined"
                     />
-                    {/* Suggestions Dropdown */}
                     {room.showSuggestions && (
-                    <div style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        right: 0,
-                        backgroundColor: '#fff',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        zIndex: 1000,
-                        maxHeight: '150px',
-                        overflowY: 'auto',
-                    }}>
-                        {filteredAmenities(room.amenitiesInput).map((amenity, i) => (
-                        <div
-                            key={i}
-                            onClick={() => addAmenity(index, amenity)}
-                            style={{
-                            padding: '8px',
-                            cursor: 'pointer',
-                            borderBottom: '1px solid #eee',
-                            backgroundColor: '#f9f9f9',
-                            }}
-                        >
-                            {amenity}
-                        </div>
-                        ))}
-                    </div>
+                        <Paper sx={{ mt: 1, maxHeight: '230px', overflowY: 'auto' }}>
+                        <List>
+                            {filteredAmenities(room.amenitiesInput).map((amenity, i) => (
+                            <ListItem button key={i} onClick={() => addAmenity(index, amenity)}>
+                                <ListItemText primary={amenity} />
+                            </ListItem>
+                            ))}
+                        </List>
+                        </Paper>
                     )}
-                </div>
-                {/* Display Added Amenities */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
-                    {room.amenities.map((amenity, amenityIndex) => (
-                    <div
-                        key={amenityIndex}
-                        style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        backgroundColor: '#e0e0e0',
-                        padding: '4px 8px',
-                        borderRadius: '12px',
-                        fontSize: '14px',
-                        }}
-                    >
-                        {amenity}
-                        <button
-                        type="button"
-                        onClick={() => removeAmenity(index, amenityIndex)}
-                        style={{
-                            marginLeft: '8px',
-                            background: 'none',
-                            border: 'none',
-                            color: '#666',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                        }}
-                        >
-                        X
-                        </button>
-                    </div>
-                    ))}
-                </div>
-                </div>
+                    <Box display="flex" flexWrap="wrap" gap={1} mt={2}>
+                        {room.amenities.map((amenity, amenityIndex) => (
+                        <Chip
+                            key={amenityIndex}
+                            label={amenity}
+                            onDelete={() => removeAmenity(index, amenityIndex)}
+                            variant="outlined"
+                            color="primary"
+                        />
+                        ))}
+                    </Box>
+                    </Box>
+                </Grid>
 
-                {/* Image Upload Section */}
-                <input type="file" multiple onChange={(e) => handleRoomImageUpload(index, e)} />
+                {/* Image Upload */}
+                <Grid item xs={12}>
+                        <input
+                        type="file"
+                        multiple
+                        onChange={(e) => handleRoomImageUpload(index, e)}
+                        style={{ display: 'none' }}
+                        id={`room-image-upload-${index}`}
+                        />
+                        <label htmlFor={`room-image-upload-${index}`}>
+                        <Button variant="contained" component="span" startIcon={<Add />}>
+                            Upload Images
+                        </Button>
+                        </label>
+                    </Grid>
 
-                {/* Display Uploaded Images with Close Button */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
-                {room.images.map((imageUrl, imgIndex) => (
-                    <div key={imgIndex} style={{ position: 'relative', display: 'inline-block' }}>
-                    <img
-                        src={imageUrl}
-                        alt={`Room ${index + 1} Image ${imgIndex + 1}`}
-                        style={{ width: '100px', height: 'auto', borderRadius: '5px' }}
-                    />
-                    <button
-                        type="button"
-                        onClick={() => removeImage(index, imgIndex)}
-                        style={{
-                        position: 'absolute',
-                        top: '0',
-                        right: '0',
-                        background: 'red',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '50%',
-                        width: '20px',
-                        height: '20px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '12px',
-                        }}
-                    >
-                        X
-                    </button>
-                    </div>
-                ))}
-                </div>
+                    {uploading && (
+                        <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                            <CircularProgress />
+                        </Box>
+                        </Grid>
+                    )}
+
+                    {error && (
+                        <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, color: 'red' }}>
+                            {error}
+                        </Box>
+                        </Grid>
+                    )}
+
+                    <Grid item xs={12}>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
+                        {room.images.map((imageUrl, imgIndex) => (
+                            <Box key={imgIndex} sx={{ position: 'relative' }}>
+                            <img
+                                src={imageUrl}
+                                alt={`Room ${index + 1} Image ${imgIndex + 1}`}
+                                style={{ width: '100px', height: 'auto', borderRadius: '5px' }}
+                            />
+                            <IconButton
+                                size="small"
+                                sx={{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                backgroundColor: 'red',
+                                color: 'white',
+                                '&:hover': { backgroundColor: 'darkred' },
+                                }}
+                                onClick={() => removeImage(index, imgIndex)}
+                            >
+                                <Close fontSize="small" />
+                            </IconButton>
+                            </Box>
+                        ))}
+                        </Box>
+                    </Grid>
 
                 {/* Remove Room Button */}
-                <button type="button" onClick={() => removeRoom(index)}>Remove Room</button>
-            </div>
+                <Grid item xs={12}>
+                    <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => removeRoom(index)}
+                    startIcon={<Close />}
+                    sx={{ mt: 2 }}
+                    >
+                    Remove Room
+                    </Button>
+                </Grid>
+                </Grid>
+            </Box>
             ))}
 
-            {/* Add Room Button */}
-            <button type="button" onClick={addRoom}>Add Room</button>
-
-             {/* Display Price Main (Not related to rooms) */}
-             <div style={{ marginBottom: '20px' }}>
-            <label>
-                Display Price Main:
-                <input
-                type="number"
-                name="displayPriceMain"
-                value={hotelData.displayPriceMain}
-                onChange={(e) => setHotelData(prevState => ({
-                    ...prevState,
-                    displayPriceMain: e.target.value,
-                }))}
-                placeholder="Display Price Main"
-                />
-            </label>
+            <div>
+                {errors.rooms && (
+                    <div 
+                        style={{ 
+                            color: 'red', 
+                            marginBottom: '10px', 
+                            opacity: isVisible ? 1 : 0, // Control opacity
+                            transition: 'opacity 0.5s ease-out' // Smooth transition
+                        }}
+                    >
+                        {errors.rooms}
+                    </div>
+                )}
             </div>
 
+            {/* Add Room Button */}
+            <Box sx={{ mt: 2 }}>
+            <Button variant="contained" onClick={addRoom} startIcon={<Add />}>
+                Add Room
+            </Button>
+            </Box>
+
+            {/* Display Price Main */}
+            <Box sx={{ mt: 4 }}>
+            <TextField
+                fullWidth
+                label="Display Price Main"
+                name="displayPriceMain"
+                value={hotelData.displayPriceMain}
+                onChange={(e) => setHotelData({ ...hotelData, displayPriceMain: e.target.value })}
+                error={!!errors.displayPriceMain}
+                helperText={errors.displayPriceMain}
+                required
+            />
+            </Box>
+
             {/* Navigation Buttons */}
-            <button type="button" onClick={() => setStep(2)}>Back</button>
-            <button type="button" onClick={() => setStep(4)}>Next</button>
-        </div>
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
+            <Button
+                variant="outlined"
+                startIcon={<ArrowBack />}
+                onClick={handleBack}
+                sx={{ color: '#1976d2', borderColor: '#1976d2' }}
+            >
+                Back
+            </Button>
+            <Button
+                variant="contained"
+                endIcon={<ArrowForward />}
+                onClick={handleNext3}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+            >
+                Next
+            </Button>
+            </Box>
+        </Box>
         )}
 
 
