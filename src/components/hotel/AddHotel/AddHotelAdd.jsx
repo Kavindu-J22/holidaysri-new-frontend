@@ -162,6 +162,7 @@ const AddHotel = () => {
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedActivities, setSelectedActivities] = useState([]);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -584,46 +585,27 @@ const AddHotel = () => {
     'Exclusive VIP Lounges',
   ];
   
-
-  const filteredOnsiteActivities = (input) => {
-    return commonOnsiteActivities.filter(activity =>
-      activity.toLowerCase().includes(input.toLowerCase())
-    );
-  };
-
-  const handleOnsiteActivitiesInputChange = (e) => {
-    const value = e.target.value;
-    setHotelData(prevState => ({
-      ...prevState,
-      activities: {
-        ...prevState.activities,
-        onsiteActivitiesInput: value,
-        showOnsiteSuggestions: value.length > 0,
-      },
-    }));
-  };
-
   const addOnsiteActivity = (activity) => {
     setHotelData(prevState => ({
-      ...prevState,
-      activities: {
-        ...prevState.activities,
-        onsiteActivities: [...prevState.activities.onsiteActivities, activity],
-        onsiteActivitiesInput: '', // Clear input
-        showOnsiteSuggestions: false, // Hide suggestions
-      },
+        ...prevState,
+        activities: {
+            ...prevState.activities,
+            onsiteActivities: prevState.activities.onsiteActivities.includes(activity)
+                ? prevState.activities.onsiteActivities
+                : [...prevState.activities.onsiteActivities, activity],
+        },
     }));
-  };
+};
 
-  const removeOnsiteActivity = (index) => {
+const removeOnsiteActivity = (activity) => {
     setHotelData(prevState => ({
-      ...prevState,
-      activities: {
-        ...prevState.activities,
-        onsiteActivities: prevState.activities.onsiteActivities.filter((_, i) => i !== index),
-      },
+        ...prevState,
+        activities: {
+            ...prevState.activities,
+            onsiteActivities: prevState.activities.onsiteActivities.filter(a => a !== activity),
+        },
     }));
-  };
+};
 
   const handleNearbyActivitiesInputChange = (e) => {
     const value = e.target.value;
@@ -2236,228 +2218,121 @@ const validateStep5 = () => {
         )}
 
         {step === 7 && (
-        <div>
-            <h2>Activities</h2>
-
-            {/* Onsite Activities */}
-            <div style={{ marginBottom: '20px' }}>
-            <h3>Onsite Activities</h3>
-            <div style={{ position: 'relative' }}>
-                <input
-                type="text"
-                value={hotelData.activities.onsiteActivitiesInput || ''} // Temporary input value
-                onChange={(e) => handleOnsiteActivitiesInputChange(e)}
-                placeholder="Type to add onsite activities"
+            <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
+            
+            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+                Activities
+            </Typography>
+      
+        {/* Onsite Activities */}
+        <Box sx={{ marginBottom: 4 }}>
+            <Typography variant="h7" gutterBottom>Onsite Activities</Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+                {commonOnsiteActivities.map((activity, index) => {
+                    const isSelected = hotelData.activities.onsiteActivities.includes(activity);
+                    return (
+                        <Chip
+                            key={index}
+                            label={activity}
+                            onClick={() => addOnsiteActivity(activity)}
+                            onDelete={isSelected ? () => removeOnsiteActivity(activity) : null}
+                            deleteIcon={isSelected ? <Close /> : null}
+                            color={isSelected ? 'primary' : 'default'}
+                            variant={isSelected ? 'filled' : 'outlined'}
+                        />
+                    );
+                })}
+            </Box>
+        </Box>
+      
+            {/* Nearby Locations */}
+            <Box sx={{ marginBottom: 4 }}>
+              <Typography variant="h7" gutterBottom>Nearby Locations</Typography>
+              <Box sx={{ position: 'relative' }}>
+                <TextField
+                  fullWidth
+                  value={hotelData.activities.nearbyAttractionsInput || ''}
+                  onChange={handleNearbyAttractionsInputChange}
+                  placeholder="Type to add nearby locations"
+                  variant="outlined"
                 />
-                {/* Suggestions Dropdown */}
-                {hotelData.activities.showOnsiteSuggestions && (
-                <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    right: 0,
-                    backgroundColor: '#fff',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    zIndex: 1000,
-                    maxHeight: '150px',
-                    overflowY: 'auto',
-                }}>
-                    {filteredOnsiteActivities(hotelData.activities.onsiteActivitiesInput).map((activity, i) => (
-                    <div
-                        key={i}
-                        onClick={() => addOnsiteActivity(activity)}
-                        style={{
-                        padding: '8px',
-                        cursor: 'pointer',
-                        borderBottom: '1px solid #eee',
-                        backgroundColor: '#f9f9f9',
-                        }}
-                    >
-                        {activity}
-                    </div>
-                    ))}
-                </div>
-                )}
-            </div>
-
-            {/* Display Added Onsite Activities */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
-                {hotelData.activities.onsiteActivities.map((activity, index) => (
-                <div
-                    key={index}
-                    style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: '#e0e0e0',
-                    padding: '4px 8px',
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    }}
-                >
-                    {activity}
-                    <button
-                    type="button"
-                    onClick={() => removeOnsiteActivity(index)}
-                    style={{
-                        marginLeft: '8px',
-                        background: 'none',
-                        border: 'none',
-                        color: '#666',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                    }}
-                    >
-                    X
-                    </button>
-                </div>
-                ))}
-            </div>
-            </div>
-
-            {/* Nearby Location */}
-            <div style={{ marginBottom: '20px' }}>
-            <h3>Nearby Locations</h3>
-            <div style={{ position: 'relative' }}>
-                <input
-                type="text"
-                value={hotelData.activities.nearbyAttractionsInput || ''} // Temporary input value
-                onChange={(e) => handleNearbyAttractionsInputChange(e)}
-                placeholder="Type to add nearby Locations"
-                />
-                {/* Suggestions Dropdown */}
                 {hotelData.activities.showNearbySuggestions && (
-                <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    right: 0,
-                    backgroundColor: '#fff',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    zIndex: 1000,
-                    maxHeight: '150px',
-                    overflowY: 'auto',
-                }}>
-                    {filteredNearbyAttractions(hotelData.activities.nearbyAttractionsInput).map((attraction, i) => (
-                    <div
-                        key={i}
-                        onClick={() => addNearbyAttraction(attraction)}
-                        style={{
-                        padding: '8px',
-                        cursor: 'pointer',
-                        borderBottom: '1px solid #eee',
-                        backgroundColor: '#f9f9f9',
-                        }}
-                    >
-                        {attraction.locationName}
-                    </div>
-                    ))}
-                </div>
+                  <Paper sx={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 1, maxHeight: 150, overflowY: 'auto', mt: 1 }}>
+                    <List>
+                      {filteredNearbyAttractions(hotelData.activities.nearbyAttractionsInput).map((attraction, i) => (
+                        <ListItem button key={i} onClick={() => addNearbyAttraction(attraction)}>
+                          <ListItemText primary={attraction.locationName} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Paper>
                 )}
-            </div>
-
-            {/* Display Added Nearby Location */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+              </Box>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                 {hotelData.activities.nearbyAttractions.map((attraction, index) => (
-                <div
+                  <Chip
                     key={index}
-                    style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: '#e0e0e0',
-                    padding: '4px 8px',
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    }}
-                >
-                    {attraction}
-                    <button
-                    type="button"
-                    onClick={() => removeNearbyAttraction(index)}
-                    style={{
-                        marginLeft: '8px',
-                        background: 'none',
-                        border: 'none',
-                        color: '#666',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                    }}
-                    >
-                    X
-                    </button>
-                </div>
+                    label={attraction}
+                    onDelete={() => removeNearbyAttraction(index)}
+                    deleteIcon={<Close />}
+                  />
                 ))}
-            </div>
-            </div>
-
-        {/* Nearby Activities */}
-            <div style={{ marginBottom: '20px' }}>
-            <h3>Nearby Attractions & Activities</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <input
-                type="text"
-                value={hotelData.activities.nearbyActivitiesInput || ''} // Temporary input value
-                onChange={(e) => handleNearbyActivitiesInputChange(e)}
-                placeholder="Type to add nearby activities"
+              </Box>
+            </Box>
+      
+            {/* Nearby Activities */}
+            <Box sx={{ marginBottom: 4 }}>
+              <Typography variant="h7" gutterBottom>Nearby Attractions & Activities</Typography>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                <TextField
+                  fullWidth
+                  value={hotelData.activities.nearbyActivitiesInput || ''}
+                  onChange={handleNearbyActivitiesInputChange}
+                  placeholder="Type to add nearby activities"
+                  variant="outlined"
                 />
-                {/* Add Button */}
                 {hotelData.activities.nearbyActivitiesInput && (
-                <button
-                    type="button"
-                    onClick={addNearbyActivity}
-                    style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#007bff',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    }}
-                >
+                  <Button variant="contained" onClick={addNearbyActivity}>
                     Add
-                </button>
+                  </Button>
                 )}
-            </div>
-
-            {/* Display Added Nearby Activities */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
+              </Box>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                 {hotelData.activities.nearbyActivities.map((activity, index) => (
-                <div
+                  <Chip
                     key={index}
-                    style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: '#e0e0e0',
-                    padding: '4px 8px',
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    }}
-                >
-                    {activity}
-                    <button
-                    type="button"
-                    onClick={() => removeNearbyActivity(index)}
-                    style={{
-                        marginLeft: '8px',
-                        background: 'none',
-                        border: 'none',
-                        color: '#666',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                    }}
-                    >
-                    X
-                    </button>
-                </div>
+                    label={activity}
+                    onDelete={() => removeNearbyActivity(index)}
+                    deleteIcon={<Close />}
+                    sx={{
+                        backgroundColor: 'rgba(78, 197, 167, 0.555)', // Background color (green in this case)
+                        color: '#333', // Text color (white)
+                        '& .MuiChip-deleteIcon': {
+                          color: '#555', // Delete icon color (white)
+                          '&:hover': {
+                            color: '#e0e0e0', // Delete icon hover color (light gray)
+                          },
+                        },
+                        '&:hover': {
+                          backgroundColor: 'rgba(19, 146, 114, 0.91)', // Hover background color (darker green)
+                          color: '#e0e0e0',
+                        },
+                      }}
+                  />
                 ))}
-            </div>
-            </div>
-
+              </Box>
+            </Box>
+      
             {/* Navigation Buttons */}
-            <button type="button" onClick={() => setStep(6)}>Back</button>
-            <button type="button" onClick={() => setStep(8)}>Next</button>
-        </div>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+              <Button variant="outlined" startIcon={<ArrowBack />} onClick={() => setStep(6)}>
+                Back
+              </Button>
+              <Button variant="contained" endIcon={<ArrowForward />} onClick={() => setStep(8)}>
+                Next
+              </Button>
+            </Box>
+          </Paper>
         )}
 
         {step === 8 && (
