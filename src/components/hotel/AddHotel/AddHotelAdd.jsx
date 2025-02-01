@@ -21,6 +21,8 @@ import {
     ListItem, 
     ListItemText,
     CircularProgress,
+    Avatar,
+    Snackbar,
   } from '@mui/material';
   import { ArrowForward, ArrowBack, Add, Close } from '@mui/icons-material';
   import { IoIosImages } from "react-icons/io";
@@ -114,6 +116,7 @@ const AddHotel = () => {
       breakfastInfo: '',
       breakfastCharge: null,
       restaurantOnSite: false,
+      restaurantInfo: '',
     },
     policies: {
       allowsLiquor: false,
@@ -158,11 +161,12 @@ const AddHotel = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
+  const [warnings, setWarnings] = useState({});
   const [districts, setDistricts] = useState([]);
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -360,17 +364,25 @@ const AddHotel = () => {
 
   const handleImageUpload = async (e) => {
     const files = e.target.files;
+    if (files.length + hotelData.images.length > 6) {
+      setWarnings('You can only upload a maximum of 6 images.');
+      setSnackbarOpen(true);
+      return;
+    }
+
+    setUploading(true);
     const uploadedImages = [];
     for (let file of files) {
-      const imageUrl = await uploadImage(file);
+      const imageUrl = await uploadImage(file); // Replace with your image upload logic
       if (imageUrl) {
         uploadedImages.push(imageUrl);
       }
     }
-    setHotelData(prevState => ({
+    setHotelData((prevState) => ({
       ...prevState,
-      images: [...prevState.images, ...uploadedImages]
+      images: [...prevState.images, ...uploadedImages],
     }));
+    setUploading(false);
   };
 
   const removeImageMain = (index) => {
@@ -919,6 +931,19 @@ const validateStep5 = () => {
         if (validateStep6()) {
           setStep(7);
         }
+      };
+
+      const handleNext8 = () => {
+        if (hotelData.images.length < 6) {
+          setWarnings('Please upload exactly 6 images.');
+          setSnackbarOpen(true);
+          return;
+        }
+        setStep(9);
+      };
+
+      const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
       };
 
   const handleBack = () => {
@@ -1707,26 +1732,26 @@ const validateStep5 = () => {
         )}
 
         {step === 5 && (
-            <Container>
-            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+        <Container>
+        <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
             Dining Options
-            </Typography>
-            <Grid container spacing={3}>
+        </Typography>
+        <Grid container spacing={3}>
             <Grid item xs={12}>
-                <FormControlLabel
+            <FormControlLabel
                 control={
-                    <Checkbox
+                <Checkbox
                     checked={hotelData.diningOptions.breakfastIncluded}
                     onChange={handleChange}
                     name="diningOptions.breakfastIncluded"
                     color="primary"
-                    />
+                />
                 }
                 label="Breakfast Included"
-                />
+            />
             </Grid>
             {hotelData.diningOptions.breakfastIncluded && (
-                <>
+            <>
                 <Grid item xs={12} sm={6}>
                 <TextField
                     fullWidth
@@ -1739,15 +1764,15 @@ const validateStep5 = () => {
                     errors.breakfastInfo ||
                     `${hotelData.diningOptions.breakfastInfo.length}/200 characters`
                     }
-                    multiline // Allows multiple lines for a description field
-                    rows={4} // Adjust the number of rows to make it look like a description field
+                    multiline
+                    rows={4}
                     inputProps={{
-                    maxLength: 200, // Sets the maximum character limit
+                    maxLength: 200,
                     }}
                 />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                <TextField
                     fullWidth
                     label="Breakfast Charge"
                     name="diningOptions.breakfastCharge"
@@ -1756,24 +1781,45 @@ const validateStep5 = () => {
                     onChange={handleChange}
                     error={!!errors.breakfastCharge}
                     helperText={errors.breakfastCharge}
-                    />
+                />
                 </Grid>
-                </>
+            </>
             )}
             <Grid item xs={12}>
-                <FormControlLabel
+            <FormControlLabel
                 control={
-                    <Checkbox
+                <Checkbox
                     checked={hotelData.diningOptions.restaurantOnSite}
                     onChange={handleChange}
                     name="diningOptions.restaurantOnSite"
                     color="primary"
-                    />
+                />
                 }
                 label="Restaurant On Site"
+            />
+            </Grid>
+            {hotelData.diningOptions.restaurantOnSite && (
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Restaurant Info"
+                name="diningOptions.restaurantInfo"
+                value={hotelData.diningOptions.restaurantInfo}
+                onChange={handleChange}
+                error={!!errors.restaurantInfo}
+                helperText={
+                    errors.restaurantInfo ||
+                    `${hotelData.diningOptions.restaurantInfo.length}/200 characters`
+                }
+                multiline
+                rows={4}
+                inputProps={{
+                    maxLength: 200,
+                }}
                 />
             </Grid>
-            </Grid>
+            )}
+        </Grid>
             <Grid container justifyContent="space-between" mt={4}>
             {/* Back Button */}
             <Button
@@ -2184,7 +2230,7 @@ const validateStep5 = () => {
             <Grid item xs={12}>
                 <TextField
                 fullWidth
-                label="Details About Additional policies or Charges/tax (Optional)"
+                label="Details About Additional policies and Charges/tax (Optional)"
                 name="policies.additionalCharges"
                 value={hotelData.policies.additionalCharges}
                 onChange={handleChange}
@@ -2336,58 +2382,113 @@ const validateStep5 = () => {
         )}
 
         {step === 8 && (
-        <div>
-            <h2>Images</h2>
-
+            <Grid container spacing={3}>
+            <Grid item xs={12}>
+                
+            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+            Images
+            </Typography>
+            
+            <Typography variant="body1" color="textSecondary" gutterBottom>
+                Please upload exactly 6 images. Maximum of 6 images allowed.
+            </Typography>
+            </Grid>
+    
             {/* Image Upload Input */}
+            <Grid item xs={12}>
             <input
-            type="file"
-            multiple
-            onChange={handleImageUpload}
+                type="file"
+                multiple
+                onChange={handleImageUpload}
+                accept="image/*"
+                style={{ display: 'none' }}
+                id="image-upload"
             />
-            {uploading && <p>Uploading...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            {/* Display Uploaded Images */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
-            {hotelData.images.map((imageUrl, index) => (
-                <div key={index} style={{ position: 'relative', display: 'inline-block' }}>
-                <img
-                    src={imageUrl}
-                    alt={`Uploaded Image ${index + 1}`}
-                    style={{ width: '150px', height: 'auto', borderRadius: '8px' }}
-                />
-                {/* Remove Button */}
-                <button
-                    type="button"
-                    onClick={() => removeImageMain(index)}
-                    style={{
-                    position: 'absolute',
-                    top: '5px',
-                    right: '5px',
-                    background: 'red',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '24px',
-                    height: '24px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    }}
-                >
-                    X
-                </button>
+            <label htmlFor="image-upload">
+                <Button variant="contained" component="span">
+                Upload Images
+                </Button>
+            </label>
+            {uploading && (
+                <div style={{ marginTop: '10px' }}>
+                <CircularProgress size={24} />
+                <Typography variant="body2" color="textSecondary">
+                    Uploading...
+                </Typography>
                 </div>
-            ))}
-            </div>
-
+            )}
+            </Grid>
+    
+            {/* Display Uploaded Images */}
+            <Grid item xs={12}>
+            <Grid container spacing={2}>
+                {hotelData.images.map((imageUrl, index) => (
+                <Grid item key={index}>
+                    <Box
+                    sx={{
+                        position: 'relative',
+                        width: '150px',
+                        height: '100px',
+                    }}
+                    >
+                    <Avatar
+                        src={imageUrl}
+                        variant="rounded"
+                        sx={{
+                        width: '100%',
+                        height: '100%',
+                        }}
+                    />
+                    <IconButton
+                        sx={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        color: 'red',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: Add background for better visibility
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 0, 0, 0.1)', // Optional: Hover effect
+                        },
+                        }}
+                        onClick={() => removeImageMain(index)}
+                    >
+                        <Close />
+                    </IconButton>
+                    </Box>
+                </Grid>
+                ))}
+            </Grid>
+            </Grid>
+    
             {/* Navigation Buttons */}
-            <button type="button" onClick={() => setStep(7)}>Back</button>
-            <button type="button" onClick={() => setStep(9)}>Next</button>
-        </div>
+            <Grid item xs={12}>
+            <Grid container spacing={2} justifyContent="space-between">
+                <Grid item>
+                <Button variant="contained" onClick={() => setStep(7)}>
+                    Back
+                </Button>
+                </Grid>
+                <Grid item>
+                <Button variant="contained" color="primary" onClick={handleNext8}>
+                    Next
+                </Button>
+                </Grid>
+            </Grid>
+            </Grid>
+    
+            {/* Snackbar for Error Messages */}
+            <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            message={warnings}
+            action={
+                <IconButton size="small" color="inherit" onClick={handleSnackbarClose}>
+                <Close fontSize="small" />
+                </IconButton>
+            }
+            />
+        </Grid>
         )}
 
         {step === 9 && (
