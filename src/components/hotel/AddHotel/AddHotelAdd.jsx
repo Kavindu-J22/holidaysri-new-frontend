@@ -88,11 +88,31 @@ const AddHotel = () => {
       electricVehicleCharging: false,
       firepit: false,
       hikingTrails: false,
+      bikeRental: false,          // For guests who want to explore the area on bicycles
+      rooftopTerrace: false,      // A scenic outdoor space for relaxation or events
+      wineCellar: false,          // For wine enthusiasts or private tastings
+      movieTheater: false,        // An in-house theater for entertainment
+      coworkingSpace: false,      // For remote workers or business travelers
+      picnicArea: false,          // Outdoor space for picnics and gatherings
+      fishingPond: false,         // For recreational fishing
+      tennisCourt: false,         // For sports enthusiasts
+      golfCourse: false,          // For guests interested in golfing
+      skiStorage: false,          // For winter sports enthusiasts
+      babysittingService: false,  // For families traveling with young children
+      meditationRoom: false,      // A quiet space for mindfulness and relaxation
+      rooftopPool: false,         // A pool with a view, often on the rooftop
+      artGallery: false,          // For cultural or artistic experiences
+      farmToTableDining: false,   // Featuring locally sourced meals
+      outdoorJacuzzi: false,      // A hot tub for relaxation outdoors
+      birdWatchingArea: false,    // For nature enthusiasts
+      EVChargingStation: false,   // For electric vehicle owners (alternative to electricVehicleCharging)
+      rooftopBar: false,          // A bar with a view, often on the rooftop
+      karaokeRoom: false,         // For entertainment and group activities      
     },
     diningOptions: {
       breakfastIncluded: false,
       breakfastInfo: '',
-      breakfastCharge: 0,
+      breakfastCharge: null,
       restaurantOnSite: false,
     },
     policies: {
@@ -107,15 +127,18 @@ const AddHotel = () => {
       partyPolicyDetails: '',
       childPolicy: '',
       ageRestriction: false,
-      minimumCheckInAge: 18,
+      minimumCheckInAge: null,
       damageDeposit: false,
-      damageDepositAmount: 0,
+      damageDepositAmount: null,
       refundPolicy: '',
       noShowPolicy: '',
       lateCheckOutPolicy: '',
       earlyCheckInPolicy: '',
       quietHours: '',
       additionalCharges: '',
+      taxAndCharges: false,
+      taxAndChargesAmount: null,
+      acceptedpaymentmethods: [],
     },
     activities: {
       onsiteActivities: [],
@@ -125,7 +148,7 @@ const AddHotel = () => {
     images: [],
     otherInfo: [],
     isHaveStars: false,
-    howManyStars: 0,
+    howManyStars: null,
     isVerified: false,
     isHaveCertificate: false,
     isHaveLicense: false,
@@ -740,6 +763,23 @@ const AddHotel = () => {
     setDistricts(provincesAndDistricts[selectedProvince] || []);
   };
 
+   // Common payment methods
+   const paymentMethods = ['Credit Card', 'Debit Card', 'PayPal', 'Cash', 'Bank Transfer'];
+
+  // Handle adding/removing payment methods
+  const handlePaymentMethodClick = (method) => {
+    const updatedMethods = hotelData.policies.acceptedpaymentmethods.includes(method)
+      ? hotelData.policies.acceptedpaymentmethods.filter((m) => m !== method) // Remove if already selected
+      : [...hotelData.policies.acceptedpaymentmethods, method]; // Add if not selected
+
+    handleChange({
+      target: {
+        name: 'policies.acceptedpaymentmethods',
+        value: updatedMethods,
+      },
+    });
+  };
+
   const validateStep1 = () => {
     const newErrors = {};
     if (!hotelData.hotelName) newErrors.hotelName = 'Hotel Name is required';
@@ -827,6 +867,51 @@ const AddHotel = () => {
     }
 }, [errors.rooms]);
 
+const validateStep5 = () => {
+    const newErrors = {};
+    if (hotelData.diningOptions.breakfastIncluded) {
+      if (!hotelData.diningOptions.breakfastInfo) {
+        newErrors.breakfastInfo = 'Breakfast Info is required';
+      }
+      if (!hotelData.diningOptions.breakfastCharge) {
+        newErrors.breakfastCharge = 'Breakfast Charge is required';
+      }
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateStep6 = () => {
+    const newErrors = {};
+
+    // Check-In Time and Check-Out Time are required
+    if (!hotelData.policies.checkInTime) {
+      newErrors.checkInTime = 'Check-In Time is required';
+    }
+    if (!hotelData.policies.checkOutTime) {
+      newErrors.checkOutTime = 'Check-Out Time is required';
+    }
+
+    // If Age Restriction is checked, Minimum Check-In Age is required
+    if (hotelData.policies.ageRestriction && !hotelData.policies.minimumCheckInAge) {
+      newErrors.minimumCheckInAge = 'Minimum Check-In Age is required';
+    }
+
+    // If Damage Deposit is checked, Damage Deposit Amount is required
+    if (hotelData.policies.damageDeposit && !hotelData.policies.damageDepositAmount) {
+      newErrors.damageDepositAmount = 'Damage Deposit Amount is required';
+    }
+
+    // If Tax and Charges is checked, Tax and Charges Amount is required
+    if (hotelData.policies.taxAndCharges && !hotelData.policies.taxAndChargesAmount) {
+      newErrors.taxAndChargesAmount = 'Tax and Charges Amount is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+
   const handleNext = () => {
     if (step === 1 && !validateStep1()) return;
     setStep(step + 1);
@@ -837,10 +922,21 @@ const AddHotel = () => {
     setStep(step + 1);
   };
 
-    // Handle next step
     const handleNext3 = () => {
         if (step === 3 && !validateStep3()) return;
         setStep(step + 1);
+      };
+
+      const handleNext5 = () => {
+        if (validateStep5()) {
+          setStep(6);
+        }
+      };
+
+      const handleNext6 = () => {
+        if (validateStep6()) {
+          setStep(7);
+        }
       };
 
   const handleBack = () => {
@@ -1584,86 +1680,559 @@ const AddHotel = () => {
 
 
         {step === 4 && (
-          <div>
-            <h2>Facilities</h2>
-            {Object.keys(hotelData.facilities).map(facility => (
-              <label key={facility}>
-                <input
-                  type="checkbox"
-                  name={`facilities.${facility}`}
-                  checked={hotelData.facilities[facility]}
-                  onChange={handleChange}
-                />
-                {facility}
-              </label>
-            ))}
-            <button type="button" onClick={() => setStep(3)}>Back</button>
-            <button type="button" onClick={() => setStep(5)}>Next</button>
-          </div>
+        <Container>
+            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+              Facilities
+            </Typography>
+              <Grid container spacing={2}>
+                {Object.keys(hotelData.facilities).map((facility) => (
+                  <Grid item xs={12} sm={6} md={4} key={facility}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={hotelData.facilities[facility]}
+                          onChange={handleChange}
+                          name={`facilities.${facility}`}
+                          color="primary"
+                        />
+                      }
+                      label={facility}
+                    />
+                  </Grid>
+                ))}
+              </Grid>    
+        {/* Navigation Buttons */}
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
+            <Button
+                variant="outlined"
+                startIcon={<ArrowBack />}
+                onClick={() => setStep(3)}
+                sx={{ color: '#1976d2', borderColor: '#1976d2' }}
+            >
+                Back
+            </Button>
+            <Button
+                variant="contained"
+                endIcon={<ArrowForward />}
+                onClick={() => setStep(5)}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+            >
+                Next
+            </Button>
+            </Box>
+
+        </Container>
         )}
 
         {step === 5 && (
-          <div>
-            <h2>Dining Options</h2>
-            <label>
-              <input type="checkbox" name="diningOptions.breakfastIncluded" checked={hotelData.diningOptions.breakfastIncluded} onChange={handleChange} />
-              Breakfast Included
-            </label>
-            <input type="text" name="diningOptions.breakfastInfo" value={hotelData.diningOptions.breakfastInfo} onChange={handleChange} placeholder="Breakfast Info" />
-            <input type="number" name="diningOptions.breakfastCharge" value={hotelData.diningOptions.breakfastCharge} onChange={handleChange} placeholder="charge For breakfast" />
-            <label>
-              <input type="checkbox" name="diningOptions.restaurantOnSite" checked={hotelData.diningOptions.restaurantOnSite} onChange={handleChange} />
-              Restaurant On Site
-            </label>
-            <button type="button" onClick={() => setStep(4)}>Back</button>
-            <button type="button" onClick={() => setStep(6)}>Next</button>
-          </div>
+            <Container>
+            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+            Dining Options
+            </Typography>
+            <Grid container spacing={3}>
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.diningOptions.breakfastIncluded}
+                    onChange={handleChange}
+                    name="diningOptions.breakfastIncluded"
+                    color="primary"
+                    />
+                }
+                label="Breakfast Included"
+                />
+            </Grid>
+            {hotelData.diningOptions.breakfastIncluded && (
+                <>
+                <Grid item xs={12} sm={6}>
+                <TextField
+                    fullWidth
+                    label="Breakfast Info"
+                    name="diningOptions.breakfastInfo"
+                    value={hotelData.diningOptions.breakfastInfo}
+                    onChange={handleChange}
+                    error={!!errors.breakfastInfo}
+                    helperText={
+                    errors.breakfastInfo ||
+                    `${hotelData.diningOptions.breakfastInfo.length}/200 characters`
+                    }
+                    multiline // Allows multiple lines for a description field
+                    rows={4} // Adjust the number of rows to make it look like a description field
+                    inputProps={{
+                    maxLength: 200, // Sets the maximum character limit
+                    }}
+                />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    fullWidth
+                    label="Breakfast Charge"
+                    name="diningOptions.breakfastCharge"
+                    type="number"
+                    value={hotelData.diningOptions.breakfastCharge}
+                    onChange={handleChange}
+                    error={!!errors.breakfastCharge}
+                    helperText={errors.breakfastCharge}
+                    />
+                </Grid>
+                </>
+            )}
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.diningOptions.restaurantOnSite}
+                    onChange={handleChange}
+                    name="diningOptions.restaurantOnSite"
+                    color="primary"
+                    />
+                }
+                label="Restaurant On Site"
+                />
+            </Grid>
+            </Grid>
+            <Grid container justifyContent="space-between" mt={4}>
+            {/* Back Button */}
+            <Button
+                variant="outlined"
+                startIcon={<ArrowBack />} // Add the back arrow icon
+                onClick={() => setStep(4)} // Your existing onClick handler
+                sx={{ 
+                color: '#1976d2', // Text color
+                borderColor: '#1976d2', // Border color
+                '&:hover': { 
+                    borderColor: '#1565c0', // Hover border color
+                    backgroundColor: 'rgba(25, 118, 210, 0.04)', // Light hover background
+                },
+                }}
+            >
+                Back
+            </Button>
+
+            {/* Next Button */}
+            <Button
+                variant="contained"
+                endIcon={<ArrowForward />} // Add the forward arrow icon
+                onClick={handleNext5} // Your existing onClick handler
+                disabled={
+                hotelData.diningOptions.breakfastIncluded &&
+                (!hotelData.diningOptions.breakfastInfo || !hotelData.diningOptions.breakfastCharge)
+                }
+                sx={{ 
+                backgroundColor: '#1976d2', // Background color
+                '&:hover': { 
+                    backgroundColor: '#1565c0', // Hover background color
+                },
+                '&:disabled': {
+                    backgroundColor: '#b0b0b0', // Disabled background color
+                    color: '#ffffff', // Disabled text color
+                },
+                }}
+            >
+                Next
+            </Button>
+            </Grid>
+        </Container>
         )}
 
         {step === 6 && (
-          <div>
-            <h2>Policies</h2>
-            <label>
-              <input type="checkbox" name="policies.allowsLiquor" checked={hotelData.policies.allowsLiquor} onChange={handleChange} />
-              Allows Liquor
-            </label>
-            <label>
-              <input type="checkbox" name="policies.allowsSmoking" checked={hotelData.policies.allowsSmoking} onChange={handleChange} />
-              Allows Smoking
-            </label>
-            <textarea name="policies.cancellationPolicy" value={hotelData.policies.cancellationPolicy} onChange={handleChange} placeholder="Cancellation Policy" required />
-            <input type="text" name="policies.checkInTime" value={hotelData.policies.checkInTime} onChange={handleChange} placeholder="Check-In Time" required />
-            <input type="text" name="policies.checkOutTime" value={hotelData.policies.checkOutTime} onChange={handleChange} placeholder="Check-Out Time" required />
-            <label>
-              <input type="checkbox" name="policies.pets" checked={hotelData.policies.pets} onChange={handleChange} />
-              Pets Allowed
-            </label>
-            <textarea name="policies.petPolicyDetails" value={hotelData.policies.petPolicyDetails} onChange={handleChange} placeholder="Pet Policy Details" />
-            <label>
-              <input type="checkbox" name="policies.parties" checked={hotelData.policies.parties} onChange={handleChange} />
-              Parties Allowed
-            </label>
-            <textarea name="policies.partyPolicyDetails" value={hotelData.policies.partyPolicyDetails} onChange={handleChange} placeholder="Party Policy Details" />
-            <textarea name="policies.childPolicy" value={hotelData.policies.childPolicy} onChange={handleChange} placeholder="Child Policy" required />
-            <label>
-              <input type="checkbox" name="policies.ageRestriction" checked={hotelData.policies.ageRestriction} onChange={handleChange} />
-              Age Restriction
-            </label>
-            <input type="number" name="policies.minimumCheckInAge" value={hotelData.policies.minimumCheckInAge} onChange={handleChange} placeholder="Minimum Check-In Age" required />
-            <label>
-              <input type="checkbox" name="policies.damageDeposit" checked={hotelData.policies.damageDeposit} onChange={handleChange} />
-              Damage Deposit
-            </label>
-            <input type="number" name="policies.damageDepositAmount" value={hotelData.policies.damageDepositAmount} onChange={handleChange} placeholder="Damage Deposit Amount" />
-            <textarea name="policies.refundPolicy" value={hotelData.policies.refundPolicy} onChange={handleChange} placeholder="Refund Policy" required />
-            <textarea name="policies.noShowPolicy" value={hotelData.policies.noShowPolicy} onChange={handleChange} placeholder="No Show Policy" required />
-            <textarea name="policies.lateCheckOutPolicy" value={hotelData.policies.lateCheckOutPolicy} onChange={handleChange} placeholder="Late Check-Out Policy" required />
-            <textarea name="policies.earlyCheckInPolicy" value={hotelData.policies.earlyCheckInPolicy} onChange={handleChange} placeholder="Early Check-In Policy" required />
-            <input type="text" name="policies.quietHours" value={hotelData.policies.quietHours} onChange={handleChange} placeholder="Quiet Hours" required />
-            <textarea name="policies.additionalCharges" value={hotelData.policies.additionalCharges} onChange={handleChange} placeholder="Additional Charges" required />
-            <button type="button" onClick={() => setStep(5)}>Back</button>
-            <button type="button" onClick={() => setStep(7)}>Next</button>
-          </div>
+            <Container>
+
+            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+                Policies
+            </Typography>
+            
+            <Grid container spacing={3}>
+            {/* Allows Liquor */}
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.policies.allowsLiquor}
+                    onChange={handleChange}
+                    name="policies.allowsLiquor"
+                    color="primary"
+                    />
+                }
+                label="Allows Liquor"
+                />
+            </Grid>
+
+            {/* Allows Smoking */}
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.policies.allowsSmoking}
+                    onChange={handleChange}
+                    name="policies.allowsSmoking"
+                    color="primary"
+                    />
+                }
+                label="Allows Smoking"
+                />
+            </Grid>
+
+            {/* Cancellation Policy */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Cancellation Policy"
+                name="policies.cancellationPolicy"
+                value={hotelData.policies.cancellationPolicy}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+                />
+            </Grid>
+
+            {/* Check-In Time */}
+            <Grid item xs={12} sm={6}>
+                <TextField
+                fullWidth
+                label="Check-In Time"
+                name="policies.checkInTime"
+                value={hotelData.policies.checkInTime}
+                onChange={handleChange}
+                error={!!errors.checkInTime}
+                helperText={errors.checkInTime}
+                required
+                />
+            </Grid>
+
+            {/* Check-Out Time */}
+            <Grid item xs={12} sm={6}>
+                <TextField
+                fullWidth
+                label="Check-Out Time"
+                name="policies.checkOutTime"
+                value={hotelData.policies.checkOutTime}
+                onChange={handleChange}
+                error={!!errors.checkOutTime}
+                helperText={errors.checkOutTime}
+                required
+                />
+            </Grid>
+
+            {/* Pets Allowed */}
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.policies.pets}
+                    onChange={handleChange}
+                    name="policies.pets"
+                    color="primary"
+                    />
+                }
+                label="Pets Allowed"
+                />
+            </Grid>
+
+            {/* Pet Policy Details */}
+            {hotelData.policies.pets && (
+                <Grid item xs={12}>
+                <TextField
+                    fullWidth
+                    label="Pet Policy Details"
+                    name="policies.petPolicyDetails"
+                    value={hotelData.policies.petPolicyDetails}
+                    onChange={handleChange}
+                    multiline
+                    rows={4}
+                />
+                </Grid>
+            )}
+
+            {/* Parties Allowed */}
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.policies.parties}
+                    onChange={handleChange}
+                    name="policies.parties"
+                    color="primary"
+                    />
+                }
+                label="Parties Allowed"
+                />
+            </Grid>
+
+            {/* Party Policy Details */}
+            {hotelData.policies.parties && (
+                <Grid item xs={12}>
+                <TextField
+                    fullWidth
+                    label="Party Policy Details"
+                    name="policies.partyPolicyDetails"
+                    value={hotelData.policies.partyPolicyDetails}
+                    onChange={handleChange}
+                    multiline
+                    rows={4}
+                />
+                </Grid>
+            )}
+
+            {/* Child Policy */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Child Policy"
+                name="policies.childPolicy"
+                value={hotelData.policies.childPolicy}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+                />
+            </Grid>
+
+            {/* Age Restriction */}
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.policies.ageRestriction}
+                    onChange={handleChange}
+                    name="policies.ageRestriction"
+                    color="primary"
+                    />
+                }
+                label="Age Restriction"
+                />
+            </Grid>
+
+            {/* Minimum Check-In Age */}
+            {hotelData.policies.ageRestriction && (
+                <Grid item xs={12} sm={6}>
+                <TextField
+                    fullWidth
+                    label="Minimum Check-In Age"
+                    name="policies.minimumCheckInAge"
+                    type="number"
+                    value={hotelData.policies.minimumCheckInAge}
+                    onChange={handleChange}
+                    error={!!errors.minimumCheckInAge}
+                    helperText={errors.minimumCheckInAge}
+                    required
+                />
+                </Grid>
+            )}
+
+            {/* Damage Deposit */}
+            <Grid item xs={12}>
+                <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={hotelData.policies.damageDeposit}
+                    onChange={handleChange}
+                    name="policies.damageDeposit"
+                    color="primary"
+                    />
+                }
+                label="Damage Deposit"
+                />
+            </Grid>
+
+            {/* Damage Deposit Amount */}
+            {hotelData.policies.damageDeposit && (
+                <Grid item xs={12} sm={6}>
+                <TextField
+                    fullWidth
+                    label="Damage Deposit Amount"
+                    name="policies.damageDepositAmount"
+                    type="number"
+                    value={hotelData.policies.damageDepositAmount}
+                    onChange={handleChange}
+                    error={!!errors.damageDepositAmount}
+                    helperText={errors.damageDepositAmount}
+                    required
+                />
+                </Grid>
+            )}
+
+            {/* Refund Policy */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Refund Policy"
+                name="policies.refundPolicy"
+                value={hotelData.policies.refundPolicy}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+                />
+            </Grid>
+
+            {/* No Show Policy */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="No Show Policy"
+                name="policies.noShowPolicy"
+                value={hotelData.policies.noShowPolicy}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+                />
+            </Grid>
+
+            {/* Late Check-Out Policy */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Late Check-Out Policy"
+                name="policies.lateCheckOutPolicy"
+                value={hotelData.policies.lateCheckOutPolicy}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+                />
+            </Grid>
+
+            {/* Early Check-In Policy */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Early Check-In Policy"
+                name="policies.earlyCheckInPolicy"
+                value={hotelData.policies.earlyCheckInPolicy}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+                />
+            </Grid>
+
+            {/* Quiet Hours */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Quiet Hours"
+                name="policies.quietHours"
+                value={hotelData.policies.quietHours}
+                onChange={handleChange}
+                required
+                />
+            </Grid>
+
+            {/* Accepted Payment Methods */}
+            <Grid item xs={12}>
+            <Typography variant="subtitle1" gutterBottom>
+                Accepted Payment Methods
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {paymentMethods.map((method) => (
+                <Chip
+                    key={method}
+                    label={method}
+                    onClick={() => handlePaymentMethodClick(method)}
+                    color={
+                    hotelData.policies.acceptedpaymentmethods.includes(method)
+                        ? 'primary'
+                        : 'default'
+                    }
+                />
+                ))}
+            </Box>
+            <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {hotelData.policies.acceptedpaymentmethods.map((method) => (
+                <Chip
+                    key={method}
+                    label={method}
+                    onDelete={() => handlePaymentMethodClick(method)}
+                    sx={{
+                        backgroundColor: '#4caf50', // Background color (green in this case)
+                        color: '#ffffff', // Text color (white)
+                        '& .MuiChip-deleteIcon': {
+                          color: '#ffffff', // Delete icon color (white)
+                          '&:hover': {
+                            color: '#e0e0e0', // Delete icon hover color (light gray)
+                          },
+                        },
+                        '&:hover': {
+                          backgroundColor: '#388e3c', // Hover background color (darker green)
+                        },
+                      }}
+                />
+                ))}
+            </Box>
+            </Grid>
+      
+
+            {/* Tax and Charges */}
+            <Grid item xs={12}>
+            <FormControlLabel
+                control={
+                <Checkbox
+                    checked={hotelData.policies.taxAndCharges}
+                    onChange={handleChange}
+                    name="policies.taxAndCharges"
+                    color="primary"
+                />
+                }
+                label="Tax and Charges"
+            />
+            </Grid>
+
+            {/* Tax and Charges Amount */}
+            {hotelData.policies.taxAndCharges && (
+            <Grid item xs={12} sm={6}>
+                <TextField
+                fullWidth
+                label="Tax and Charges Amount"
+                name="policies.taxAndChargesAmount"
+                type="number"
+                value={hotelData.policies.taxAndChargesAmount}
+                onChange={handleChange}
+                error={!!errors.taxAndChargesAmount}
+                helperText={errors.taxAndChargesAmount}
+                required
+                />
+            </Grid>
+            )}
+
+            {/* Additional Charges */}
+            <Grid item xs={12}>
+                <TextField
+                fullWidth
+                label="Details About Additional policies or Charges/tax (Optional)"
+                name="policies.additionalCharges"
+                value={hotelData.policies.additionalCharges}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+                />
+            </Grid>
+            </Grid>
+
+            {/* Navigation Buttons */}
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
+            <Button
+                variant="outlined"
+                startIcon={<ArrowBack />}
+                onClick={() => setStep(5)}
+                sx={{ color: '#1976d2', borderColor: '#1976d2' }}
+            >
+                Back
+            </Button>
+            <Button
+                variant="contained"
+                endIcon={<ArrowForward />}
+                onClick={handleNext6}
+                sx={{ backgroundColor: '#1976d2', '&:hover': { backgroundColor: '#1565c0' } }}
+            >
+                Next
+            </Button>
+            </Box>
+        </Container>
         )}
 
         {step === 7 && (
