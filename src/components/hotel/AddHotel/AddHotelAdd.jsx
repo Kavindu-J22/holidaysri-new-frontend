@@ -1014,6 +1014,9 @@ const validateStep5 = () => {
     const finalData = {
       ...hotelData,
       isOpenForAgents,
+      hotelAdvertiseRate,
+      totalAdditionalCost,
+      totalHotelAddValue,
     };
     navigate('/paymentsPage', { state: finalData });
   };
