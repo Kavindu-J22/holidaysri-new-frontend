@@ -87,7 +87,8 @@ const TextPage = () => {
             </Grid>
             {[
               { label: 'Hotel Rate ( Hottel Price : LKR )', name: 'hotelAdvertiseRate' },
-              { label: 'Hotel Discount : LKR', name: 'discounthotelPercentage' }
+              { label: 'Hotel Discount : LKR', name: 'discounthotelPercentage' },
+              { label: 'Aditional Room Rate : LKR', name: 'hotelRoomAditionalRoomRate' }
             ].map((field) => (
               <Grid item xs={12} sm={6} key={field.name}>
                 <TextField

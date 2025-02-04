@@ -23,6 +23,10 @@ import {
     CircularProgress,
     Avatar,
     Snackbar,
+    Alert,
+    Radio,
+    RadioGroup,
+    FormLabel,
   } from '@mui/material';
   import { ArrowForward, ArrowBack, Add, Close } from '@mui/icons-material';
   import { IoIosImages } from "react-icons/io";
@@ -161,12 +165,18 @@ const AddHotel = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [errors, setErrors] = useState({});
+  const [errorAlert, setErrorAlert] = useState('');
   const [warnings, setWarnings] = useState({});
   const [districts, setDistricts] = useState([]);
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const id = "677c3cf4d1f1323d5ca309a4";
+  const [hotelAdvertiseRate, setHotelAdvertiseRate] = useState(null);
+  const [hotelRoomAditionalRoomRate, setHotelRoomAditionalRoomRate] = useState(null);
+  const [totalAdditionalCost, setTotalAdditionalCost] = useState(0); // State to track total additional cost
+  const [data, setData] = useState({});
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -179,6 +189,23 @@ const AddHotel = () => {
     };
     fetchLocations();
     }, []);
+
+    useEffect(() => {
+      async function fetchRateData() {
+        try {
+          // Fetch rate data based on the id
+          const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
+          setData(response.data.rate);
+          setHotelAdvertiseRate(response.data.rate.hotelAdvertiseRate / response.data.rate.HSCRate);
+          setHotelRoomAditionalRoomRate(response.data.rate.hotelRoomAditionalRoomRate / response.data.rate.HSCRate);
+
+        } catch (error) {
+          console.error('Error fetching rate data:', error);
+        }
+      }
+    
+      fetchRateData();
+    }, [id]); // Dependency array includes only id
 
   const filteredNearbyAttractions = (input) => {
         return locations.filter(location =>
@@ -310,6 +337,16 @@ const AddHotel = () => {
 
 
   const addRoom = () => {
+    // Check if the number of rooms exceeds 3
+    if (hotelData.rooms.length >= 3) {
+      // Alert the user about the additional cost
+      alert(`You can add 3 rooms free. If you add more rooms, each room will cost an additional ${hotelRoomAditionalRoomRate} HSC.`);
+
+      // Calculate the additional cost and update the total additional cost
+      setTotalAdditionalCost(prevCost => prevCost + hotelRoomAditionalRoomRate);
+    }
+
+    // Add the new room to the rooms array
     setHotelData(prevState => ({
       ...prevState,
       rooms: [...prevState.rooms, {
@@ -321,11 +358,11 @@ const AddHotel = () => {
         pricePerNight: null,
         pricePerFullDay: null,
         pricing: {
-            fullboardPrice: null,
-            fullboardinclude: [], 
-            halfboardPrice: null,
-            halfboardinclude: [], 
-          },
+          fullboardPrice: null,
+          fullboardinclude: [],
+          halfboardPrice: null,
+          halfboardinclude: [],
+        },
         isAvailable: true,
         amenities: [],
         images: [],
@@ -338,11 +375,16 @@ const AddHotel = () => {
   };
 
   const removeRoom = (index) => {
+    // Remove the room from the rooms array
     const updatedRooms = hotelData.rooms.filter((_, i) => i !== index);
     setHotelData(prevState => ({
       ...prevState,
       rooms: updatedRooms
     }));
+  
+    // Recalculate the total additional cost based on the updated rooms array
+    const roomsExceedingLimit = Math.max(updatedRooms.length - 3, 0); // Calculate how many rooms exceed the limit
+    setTotalAdditionalCost(roomsExceedingLimit * hotelRoomAditionalRoomRate);
   };
 
   const uploadImage = async (file) => {
@@ -950,21 +992,50 @@ const validateStep5 = () => {
     setStep(step - 1);
   };
 
+  const totalHotelAddValue = hotelAdvertiseRate + totalAdditionalCost;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isOpenForAgents = hotelData.rooms.some(room => room.roomOpenForAgents);
+    setErrorAlert(''); // Reset error message
+
+    // Validation: Check if "How Many Stars" is required
+    if (hotelData.isHaveStars && !hotelData.howManyStars) {
+      setErrorAlert('Please specify how many stars the hotel has.');
+      return;
+    }
+
+    // Validation: Check if "Accepts Teams" is not allowed
+    if (hotelData.acceptTeams === false) {
+      setErrorAlert('Submission is not allowed if teams are not accepted.');
+      return;
+    }
+
+    const isOpenForAgents = hotelData.rooms.some((room) => room.roomOpenForAgents);
     const finalData = {
       ...hotelData,
-      isOpenForAgents
+      isOpenForAgents,
     };
     navigate('/paymentsPage', { state: finalData });
   };
 
   return (
     <Container sx={{ mt: 8, p: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
-      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-        Post Hotel Advertisement
-      </Typography>
+      <Grid container justifyContent="space-between" alignItems="center">
+      <Grid item>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+          Post Hotel Advertisement
+        </Typography>
+      </Grid>
+      <Grid item>
+      <Typography variant="body1">Hotel Advertisement Amount: {hotelAdvertiseRate} HSC</Typography>
+      <Typography variant="body1">Total Additional Cost: {totalAdditionalCost} HSC</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333', mt:1 }}>
+          Total: {totalHotelAddValue} HSC
+        </Typography>
+        </Grid>
+      </Grid>
+
+
       <form onSubmit={handleSubmit}>
       {step === 1 && (
           <Box>
@@ -1263,11 +1334,23 @@ const validateStep5 = () => {
             >
                 <Grid container spacing={3}>
                 
-                {/* Display Room Number */}
-                <Grid item xs={12}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>
-                        Room No: {index + 1}
-                    </Typography>
+                {/* Display Room Number - Left Side */}
+                <Grid item xs={6}>
+                  <Typography variant="h6">
+                    Room No: {index + 1}
+                  </Typography>
+                </Grid>
+
+                {/* Remove Room Button - Right Side */}
+                <Grid item xs={6} textAlign="right">
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => removeRoom(index)}
+                    startIcon={<Close />}
+                  >
+                    Remove Room
+                  </Button>
                 </Grid>
 
                 {/* Room Fields */}
@@ -1611,18 +1694,6 @@ const validateStep5 = () => {
                         </Box>
                     </Grid>
 
-                {/* Remove Room Button */}
-                <Grid item xs={12}>
-                    <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => removeRoom(index)}
-                    startIcon={<Close />}
-                    sx={{ mt: 2 }}
-                    >
-                    Remove Room
-                    </Button>
-                </Grid>
                 </Grid>
             </Box>
             ))}
@@ -2462,18 +2533,15 @@ const validateStep5 = () => {
     
             {/* Navigation Buttons */}
             <Grid item xs={12}>
-            <Grid container spacing={2} justifyContent="space-between">
-                <Grid item>
-                <Button variant="contained" onClick={() => setStep(7)}>
-                    Back
-                </Button>
-                </Grid>
-                <Grid item>
-                <Button variant="contained" color="primary" onClick={handleNext8}>
-                    Next
-                </Button>
-                </Grid>
-            </Grid>
+            
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+              <Button variant="outlined" startIcon={<ArrowBack />} onClick={() => setStep(7)}>
+                Back
+              </Button>
+              <Button variant="contained" endIcon={<ArrowForward />} onClick={handleNext8}>
+                Next
+              </Button>
+            </Box>
             </Grid>
     
             {/* Snackbar for Error Messages */}
@@ -2492,250 +2560,126 @@ const validateStep5 = () => {
         )}
 
         {step === 9 && (
-        <div>
-            <h2>Other Info</h2>
+        <Container >
+        <Box sx={{ mt: 4 }}>
 
-            {/* Other Info Input Field */}
-            <div style={{ marginBottom: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <input
-                type="text"
-                value={hotelData.otherInfoInput || ''} // Temporary input value
-                onChange={(e) => handleOtherInfoInputChange(e)}
+        <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
+            Other Info
+        </Typography>
+          
+          {/* Other Info Input Field */}
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                value={hotelData.otherInfoInput}
+                onChange={handleOtherInfoInputChange}
                 placeholder="Type to add other info"
-                />
-                {/* Add Button */}
-                {hotelData.otherInfoInput && (
-                <button
-                    type="button"
-                    onClick={addOtherInfo}
-                    style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#007bff',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    }}
-                >
-                    Add
-                </button>
-                )}
-            </div>
-
+              />
+              {hotelData.otherInfoInput && (
+                <Button variant="contained" onClick={addOtherInfo}>
+                  Add
+                </Button>
+              )}
+            </Box>
+  
             {/* Display Added Other Info */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '10px' }}>
-                {hotelData.otherInfo.map((info, index) => (
-                <div
-                    key={index}
-                    style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: '#e0e0e0',
-                    padding: '4px 8px',
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    }}
-                >
-                    {info}
-                    <button
-                    type="button"
-                    onClick={() => removeOtherInfo(index)}
-                    style={{
-                        marginLeft: '8px',
-                        background: 'none',
-                        border: 'none',
-                        color: '#666',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                    }}
-                    >
-                    X
-                    </button>
-                </div>
-                ))}
-            </div>
-            </div>
-
-            {/* New Fields */}
-            <div style={{ marginBottom: '20px' }}>
-            {/* isHaveStars (Radio Button) */}
-            <label>
-                <input
-                type="radio"
-                name="isHaveStars"
-                checked={hotelData.isHaveStars === true}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isHaveStars: true,
-                }))}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+              {hotelData.otherInfo.map((info, index) => (
+                <Chip
+                  key={index}
+                  label={info}
+                  onDelete={() => removeOtherInfo(index)}
+                  sx={{ backgroundColor: '#e0e0e0' }}
                 />
-                Has Stars
-            </label>
-            <label>
-                <input
-                type="radio"
+              ))}
+            </Box>
+          </Box>
+  
+          {/* New Fields */}
+          <Box sx={{ mb: 3 }}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Does the hotel have stars?</FormLabel>
+              <RadioGroup
+                row
                 name="isHaveStars"
-                checked={hotelData.isHaveStars === false}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isHaveStars: false,
-                }))}
-                />
-                No Stars
-            </label>
-
+                value={hotelData.isHaveStars}
+                onChange={(e) =>
+                  setHotelData({ ...hotelData, isHaveStars: e.target.value === 'true' })
+                }
+              >
+                <FormControlLabel value={true} control={<Radio />} label="Has Stars" />
+                <FormControlLabel value={false} control={<Radio />} label="No Stars" />
+              </RadioGroup>
+            </FormControl>
+  
             {hotelData.isHaveStars && (
-                <div style={{ marginTop: '10px' }}>
-                    <label>
-                        How Many Stars (1-10):
-                        <input
-                            type="number"
-                            name="howManyStars"
-                            value={hotelData.howManyStars}
-                            onChange={(e) => {
-                                let value = e.target.value;
-                                
-                                // Allow empty input to let the user type freely
-                                if (value === "") {
-                                    setHotelData(prevState => ({
-                                        ...prevState,
-                                        howManyStars: value
-                                    }));
-                                    return;
-                                }
-
-                                // Convert to number and enforce min-max
-                                value = Math.min(Math.max(Number(value), 1), 10);
-
-                                setHotelData(prevState => ({
-                                    ...prevState,
-                                    howManyStars: value
-                                }));
-                            }}
-                            min="1"
-                            max="10"
-                            style={{ marginLeft: '10px' }}
-                        />
-                    </label>
-                </div>
+              <Box sx={{ mt: 2 }}>
+                <TextField
+                  type="number"
+                  label="How Many Stars (1-10)"
+                  name="howManyStars"
+                  value={hotelData.howManyStars}
+                  onChange={(e) => {
+                    let value = e.target.value;
+                    if (value === '') {
+                      setHotelData({ ...hotelData, howManyStars: value });
+                      return;
+                    }
+                    value = Math.min(Math.max(Number(value), 1), 10);
+                    setHotelData({ ...hotelData, howManyStars: value });
+                  }}
+                  inputProps={{ min: 1, max: 10 }}
+                  fullWidth
+                />
+              </Box>
             )}
-
-            </div>
-
-            {/* Radio Buttons for Other Fields */}
-            <div style={{ marginBottom: '20px' }}>
-            <label>
-                <input
-                type="radio"
-                name="isVerified"
-                checked={hotelData.isVerified === true}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isVerified: true,
-                }))}
-                />
-                Verified
-            </label>
-            <label>
-                <input
-                type="radio"
-                name="isVerified"
-                checked={hotelData.isVerified === false}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isVerified: false,
-                }))}
-                />
-                Not Verified
-            </label>
-            </div>
-
-            <div style={{ marginBottom: '20px' }}>
-            <label>
-                <input
-                type="radio"
-                name="isHaveCertificate"
-                checked={hotelData.isHaveCertificate === true}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isHaveCertificate: true,
-                }))}
-                />
-                Has Certificate
-            </label>
-            <label>
-                <input
-                type="radio"
-                name="isHaveCertificate"
-                checked={hotelData.isHaveCertificate === false}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isHaveCertificate: false,
-                }))}
-                />
-                No Certificate
-            </label>
-            </div>
-
-            <div style={{ marginBottom: '20px' }}>
-            <label>
-                <input
-                type="radio"
-                name="isHaveLicense"
-                checked={hotelData.isHaveLicense === true}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isHaveLicense: true,
-                }))}
-                />
-                Has License
-            </label>
-            <label>
-                <input
-                type="radio"
-                name="isHaveLicense"
-                checked={hotelData.isHaveLicense === false}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    isHaveLicense: false,
-                }))}
-                />
-                No License
-            </label>
-            </div>
-
-            <div style={{ marginBottom: '20px' }}>
-            <label>
-                <input
-                type="radio"
-                name="acceptTeams"
-                checked={hotelData.acceptTeams === true}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    acceptTeams: true,
-                }))}
-                />
-                Accepts Teams
-            </label>
-            <label>
-                <input
-                type="radio"
-                name="acceptTeams"
-                checked={hotelData.acceptTeams === false}
-                onChange={() => setHotelData(prevState => ({
-                    ...prevState,
-                    acceptTeams: false,
-                }))}
-                />
-                Does Not Accept Teams
-            </label>
-            </div>
-
-            {/* Navigation Buttons */}
-            <button type="button" onClick={() => setStep(8)}>Back</button>
-            <button type="submit">Submit</button>
-        </div>
+          </Box>
+  
+          {/* Other Radio Button Fields */}
+          {[
+            { label: 'Is Verified?', name: 'isVerified' },
+            { label: 'Has Certificate?', name: 'isHaveCertificate' },
+            { label: 'Has License?', name: 'isHaveLicense' },
+            { label: 'Accepts Teams?', name: 'acceptTeams' },
+          ].map((field) => (
+            <Box key={field.name} sx={{ mb: 3 }}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">{field.label}</FormLabel>
+                <RadioGroup
+                  row
+                  name={field.name}
+                  value={hotelData[field.name]}
+                  onChange={(e) =>
+                    setHotelData({ ...hotelData, [field.name]: e.target.value === 'true' })
+                  }
+                >
+                  <FormControlLabel value={true} control={<Radio />} label="Yes" />
+                  <FormControlLabel value={false} control={<Radio />} label="No" />
+                </RadioGroup>
+              </FormControl>
+            </Box>
+          ))}
+  
+          {/* Error Alert */}
+          {errorAlert && (
+            <Box sx={{ mb: 3 }}>
+              <Alert severity="error">{errorAlert}</Alert>
+            </Box>
+          )}
+  
+          {/* Navigation Buttons */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+            <Button variant="outlined" startIcon={<ArrowBack />} onClick={() => setStep(8)}>
+                Back
+              </Button>
+            <Button variant="contained" type="submit" onClick={handleSubmit}>
+              Publish Add
+            </Button>
+          </Box>
+        </Box>
+      </Container>
         )}
       </form>
     </Container>
