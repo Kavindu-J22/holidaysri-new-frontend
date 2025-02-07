@@ -340,7 +340,7 @@ const AddHotel = () => {
     // Check if the number of rooms exceeds 3
     if (hotelData.rooms.length >= 3) {
       // Alert the user about the additional cost
-      alert(`You can add 3 rooms free. If you add more rooms, each room will cost an additional ${hotelRoomAditionalRoomRate} HSC.`);
+      alert(`You can add 3 room Units free. If you add more room Units, each Unit will cost an additional ${hotelRoomAditionalRoomRate} HSC.`);
 
       // Calculate the additional cost and update the total additional cost
       setTotalAdditionalCost(prevCost => prevCost + hotelRoomAditionalRoomRate);
@@ -880,7 +880,7 @@ const removeOnsiteActivity = (activity) => {
     });
   
     // Validate displayPriceMain
-    if (!hotelData.displayPriceMain) newErrors.displayPriceMain = 'Display Price is required';
+    if (!hotelData.displayPriceMain) newErrors.displayPriceMain = 'Advertisement Front Price is required';
   
     // Update the errors state
     setErrors(newErrors);
@@ -1025,31 +1025,34 @@ const validateStep5 = () => {
     <Container sx={{ mt: 8, p: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
       <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-          Post Hotel Advertisement
-        </Typography>
+      <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2', display: 'flex', alignItems: 'center' }}>
+      Post Hotel Advertisement
+      </Typography>
       </Grid>
-      <Grid item>
-      <Typography variant="body1">Hotel Advertisement Amount: {hotelAdvertiseRate} HSC</Typography>
-      <Typography variant="body1">Total Additional Cost: {totalAdditionalCost} HSC</Typography>
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333', mt:1 }}>
+      <Grid item sx={{ backgroundColor: 'rgb(255, 246, 227)', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', p: 2, borderRadius: 1, mb: 2 }}>
+        <Typography variant="body1">Hotel Advertisement Amount: {hotelAdvertiseRate} HSC</Typography>
+        <Typography variant="body1">Total Additional Cost: {totalAdditionalCost} HSC</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#333', mt: 1 }}>
           Total: {totalHotelAddValue} HSC
         </Typography>
-        </Grid>
       </Grid>
-
+      </Grid>
 
       <form onSubmit={handleSubmit}>
       {step === 1 && (
           <Box>
-            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-              Primary Details
+            <Typography variant="body1" gutterBottom sx={{ color: '#333', mb: 2,fontStyle: 'italic', textAlign: 'justify' }}>
+            🎗️ Welcome to the Hotel Advertisement Form. This form is designed to help you showcase your hotel effectively by providing all necessary details in a structured manner. To ensure your advertisement is complete and accurate, please follow the <strong>9 steps</strong> below. Each step must be filled out with valid and up-to-date information to ensure the best experience for your potential guests.
+            </Typography>
+
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+              Step 01 - Primary Details
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Hotel Name"
+                  label="Your Hotel Name"
                   name="hotelName"
                   value={hotelData.hotelName}
                   onChange={handleChange}
@@ -1121,7 +1124,7 @@ const validateStep5 = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Description"
+                  label="Hotel Description"
                   name="description"
                   value={hotelData.description}
                   onChange={handleChange}
@@ -1212,6 +1215,9 @@ const validateStep5 = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+              To provide your hotel's location, please open <strong>Google Maps,</strong> search for your hotel's address, click the "Share" button, and <strong>copy</strong> the link. <strong>Paste the link</strong> in the field below.
+            </Typography>
                 <TextField
                   fullWidth
                   label="Map URL"
@@ -1239,11 +1245,14 @@ const validateStep5 = () => {
 
         {step === 2 && (
           <Box>
-            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-              Contact Information
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+              Step 02 - Contact Information
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12}>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+              Please provide your <strong>official business email</strong> address. This will be used for <strong>important communications</strong> and updates.
+            </Typography>
                 <TextField
                   fullWidth
                   label="Email"
@@ -1268,9 +1277,12 @@ const validateStep5 = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+              Please provide your <strong>active WhatsApp number</strong> associated with your business. This will be used for <strong>quick communication</strong> and updates.
+              </Typography>
                 <TextField
                   fullWidth
-                  label="WhatsApp Number"
+                  label="WhatsApp Number (optional)"
                   name="contactInfo.whatsappNumber"
                   value={hotelData.contactInfo.whatsappNumber}
                   onChange={handleChange}
@@ -1281,7 +1293,7 @@ const validateStep5 = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Facebook URL"
+                  label="Facebook URL (optional)"
                   name="contactInfo.facebookUrl"
                   value={hotelData.contactInfo.facebookUrl}
                   onChange={handleChange}
@@ -1290,7 +1302,7 @@ const validateStep5 = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Website URL"
+                  label="Website URL (optional)"
                   name="contactInfo.websiteUrl"
                   value={hotelData.contactInfo.websiteUrl}
                   onChange={handleChange}
@@ -1320,8 +1332,8 @@ const validateStep5 = () => {
 
         {step === 3 && (
         <Box>
-            <Typography variant="h6" gutterBottom sx={{ color: '#555', mb: 3 }}>
-            Rooms & Pricing
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+            Step 03 - Rooms & Pricing
             </Typography>
 
             {hotelData.rooms.map((room, index) => (
@@ -1339,8 +1351,8 @@ const validateStep5 = () => {
                 
                 {/* Display Room Number - Left Side */}
                 <Grid item xs={6}>
-                  <Typography variant="h6">
-                    Room No: {index + 1}
+                  <Typography variant="h7">
+                  🛏️ Unit No: {index + 1}
                   </Typography>
                 </Grid>
 
@@ -1356,120 +1368,172 @@ const validateStep5 = () => {
                   </Button>
                 </Grid>
 
-                {/* Room Fields */}
-                <Grid item xs={12}>
-                    <TextField
-                    fullWidth
-                    label="Room Name"
-                    name="roomName"
-                    value={room.roomName}
-                    onChange={(e) => handleRoomChange(index, e)}
-                    error={!!errors[`room${index}_roomName`]}
-                    helperText={errors[`room${index}_roomName`]}
-                    required
-                    />
+              {/* Room Fields */}
+              <Grid item xs={12}>
+                  <FormControl fullWidth required error={!!errors[`room${index}_roomName`]}>
+                      <InputLabel>Room Luxury Level</InputLabel>
+                      <Select
+                          name="roomName"
+                          value={room.roomName}
+                          onChange={(e) => handleRoomChange(index, e)}
+                      >
+                          <MenuItem value="Premium Suite">Premium Suite ✨</MenuItem>
+                          <MenuItem value="Luxury Suite">Luxury Suite 🏵️</MenuItem>
+                          <MenuItem value="Presidential Suite">Presidential Suite 🏛️</MenuItem>
+                          <MenuItem value="Junior Suite">Junior Suite 🌟</MenuItem>
+                          <MenuItem value="Grand Suite">Grand Suite 🏆</MenuItem>
+                          <MenuItem value="Normal">Normal ( this For Norma Type Rooms ) 😊</MenuItem>
+                      </Select>
+                  </FormControl>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth required error={!!errors[`room${index}_type`]}>
+                    <InputLabel>Room Type</InputLabel>
+                    <Select
+                        name="type"
+                        value={room.type}
+                        onChange={(e) => handleRoomChange(index, e)}
+                    >
+                        <MenuItem value="Deluxe Room">Deluxe Room 🌟</MenuItem>
+                        <MenuItem value="Standard Room">Standard Room 🏨</MenuItem>
+                        <MenuItem value="Executive Suite">Executive Suite 💼</MenuItem>
+                        <MenuItem value="Family Room">Family Room 👨‍👩‍👧‍👦</MenuItem>
+                        <MenuItem value="Twin Room">Twin Room 🛏️🛏️✨</MenuItem>
+                        <MenuItem value="Single Room">Single Room 🛏️</MenuItem>
+                        <MenuItem value="Double Room">Double Room 🛏️🛏️</MenuItem>
+                        <MenuItem value="King Room">King Room 👑</MenuItem>
+                        <MenuItem value="Queen Room">Queen Room 👸</MenuItem>
+                        <MenuItem value="Studio Room">Studio Room 🎨</MenuItem>
+                    </Select>
+                </FormControl>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <TextField
                     fullWidth
-                    label="Type"
-                    name="type"
-                    value={room.type}
-                    onChange={(e) => handleRoomChange(index, e)}
-                    error={!!errors[`room${index}_type`]}
-                    helperText={errors[`room${index}_type`]}
-                    required
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                    fullWidth
-                    label="Beds"
+                    label="How many Beds Are There ?"
                     name="beds"
                     value={room.beds}
                     onChange={(e) => handleRoomChange(index, e)}
                     error={!!errors[`room${index}_beds`]}
                     helperText={errors[`room${index}_beds`]}
                     required
+                    inputProps={{
+                      type: 'number', // Restricts input to numbers
+                      inputMode: 'numeric', // Ensures numeric keyboard on mobile devices
+                      pattern: '[0-9]*', // Ensures only numbers are allowed
+                  }}
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <TextField
                     fullWidth
-                    label="Capacity"
+                    label="Room Capacity"
                     name="capacity"
                     value={room.capacity}
                     onChange={(e) => handleRoomChange(index, e)}
                     error={!!errors[`room${index}_capacity`]}
                     helperText={errors[`room${index}_capacity`]}
                     required
+                    inputProps={{
+                      type: 'number', // Restricts input to numbers
+                      inputMode: 'numeric', // Ensures numeric keyboard on mobile devices
+                      pattern: '[0-9]*', // Ensures only numbers are allowed
+                  }}
                     />
                 </Grid>
 
                 <Grid item xs={12}>
-                    <TextField
-                    fullWidth
-                    label="Room Description"
-                    name="roomDescription"
-                    value={room.roomDescription}
-                    onChange={(e) => handleRoomChange(index, e)}
-                    multiline
-                    rows={4}
-                    error={!!errors[`room${index}_roomDescription`]}
-                    helperText={errors[`room${index}_roomDescription`]}
-                    required
-                    />
-                </Grid>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                  Provide a <strong>brief and polished description</strong> of your room. For example: 
+                  <em>"This room features 3 beds: 2 large king-size beds and 1 single bed. It comfortably accommodates up to 5 people (4 adults and 1 child)."</em> 
+                  Ensure the description is clear, concise, and highlights key features. <strong>Maximum 250 characters allowed.</strong>
+                </Typography>
+                <TextField
+                  fullWidth
+                  label="Room Description"
+                  name="roomDescription"
+                  value={room.roomDescription}
+                  onChange={(e) => handleRoomChange(index, e)}
+                  multiline
+                  rows={4}
+                  inputProps={{ maxLength: 250 }} // Enforce maximum 250 characters
+                  error={!!errors[`room${index}_roomDescription`]}
+                  helperText={errors[`room${index}_roomDescription`]}
+                  required
+                />
+                {/* Character counter */}
+                <Typography variant="body2" sx={{ textAlign: 'right', mt: 1, color: '#333' }}>
+                  {room.roomDescription ? room.roomDescription.length : 0}/250
+                </Typography>
+              </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <TextField
                     fullWidth
-                    label="Number of Rooms (This Type)"
+                    label="How many Rooms do you have in this Particular type ?"
                     name="noOfRooms"
                     value={room.noOfRooms}
                     onChange={(e) => handleRoomChange(index, e)}
                     error={!!errors[`room${index}_noOfRooms`]}
                     helperText={errors[`room${index}_noOfRooms`]}
                     required
+                    inputProps={{
+                      type: 'number', // Restricts input to numbers
+                      inputMode: 'numeric', // Ensures numeric keyboard on mobile devices
+                      pattern: '[0-9]*', // Ensures only numbers are allowed
+                  }}
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <TextField
                     fullWidth
-                    label="Price Per Night"
+                    label="Price Per one Night ( LKR )"
                     name="pricePerNight"
                     value={room.pricePerNight}
                     onChange={(e) => handleRoomChange(index, e)}
                     error={!!errors[`room${index}_pricePerNight`]}
                     helperText={errors[`room${index}_pricePerNight`]}
                     required
+                    inputProps={{
+                      type: 'number', // Restricts input to numbers
+                      inputMode: 'numeric', // Ensures numeric keyboard on mobile devices
+                      pattern: '[0-9]*', // Ensures only numbers are allowed
+                  }}
                     />
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                     <TextField
                     fullWidth
-                    label="Price Per Full Day"
+                    label="Price Per Full Day ( LKR )"
                     name="pricePerFullDay"
                     value={room.pricePerFullDay}
                     onChange={(e) => handleRoomChange(index, e)}
                     error={!!errors[`room${index}_pricePerFullDay`]}
                     helperText={errors[`room${index}_pricePerFullDay`]}
                     required
+                    inputProps={{
+                      type: 'number', // Restricts input to numbers
+                      inputMode: 'numeric', // Ensures numeric keyboard on mobile devices
+                      pattern: '[0-9]*', // Ensures only numbers are allowed
+                  }}
                     />
                 </Grid>
 
                 {/* Fullboard Section */}
                 <Grid item xs={12}>
-                    <Box mb={3}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                The Fullboard section is optional. If this <strong>room includes a Fullboard</strong> package, you can specify the <strong>Fullboard amount in LKR</strong>. Additionally, use the <strong>'Fullboard Includes' field</strong> to list the items or services covered in the package (e.g., breakfast, lunch, dinner, beverages). <strong>You can add multiple inclusions using the 'Add' button</strong>.
+                </Typography>
+                    <Box mb={2}>
                     <TextField
                         fullWidth
                         type="number"
-                        label="Fullboard Price"
+                        label="Fullboard Amount - LKR ( Optional )"
                         name="fullboardPrice"
                         value={room.pricing.fullboardPrice}
                         onChange={(e) => handleRoomChange(index, e)}
@@ -1481,7 +1545,7 @@ const validateStep5 = () => {
                         <TextField
                         fullWidth
                         type="text"
-                        label="Fullboard Includes"
+                        label="Fullboard Includes ( Optional )"
                         value={room.pricing.fullboardincludeInput || ''}
                         onChange={(e) => handleFullboardIncludeInputChange(index, e)}
                         variant="outlined"
@@ -1513,11 +1577,14 @@ const validateStep5 = () => {
 
                 {/* Halfboard Section */}
                 <Grid item xs={12}>
-                    <Box mb={3}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                The Halfboard section is optional. If this <strong>room includes a Halfboard</strong> package, you can specify the <strong>Halfboard amount in LKR</strong>. Additionally, use the <strong>'Halfboard Includes' field</strong> to list the items or services covered in the package . <strong>You can add multiple inclusions using the 'Add' button</strong>.
+                </Typography>
+                    <Box mb={2}>
                     <TextField
                         fullWidth
                         type="number"
-                        label="Halfboard Price"
+                        label="Halfboard Amount - LKR ( Optional )"
                         name="halfboardPrice"
                         value={room.pricing.halfboardPrice}
                         onChange={(e) => handleRoomChange(index, e)}
@@ -1529,7 +1596,7 @@ const validateStep5 = () => {
                         <TextField
                         fullWidth
                         type="text"
-                        label="Halfboard Includes"
+                        label="Halfboard Includes ( Optional )"
                         value={room.pricing.halfboardincludeInput || ''}
                         onChange={(e) => handleHalfboardIncludeInputChange(index, e)}
                         variant="outlined"
@@ -1561,6 +1628,9 @@ const validateStep5 = () => {
 
                 {/* Room Open for Agents */}
                 <Grid item xs={12}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                When enabled, this <strong>room will be available for promotion</strong> by Our Holidaysri agents. Agents will <strong>immediately be informed</strong> about its availability and can actively promote it to <strong>potential customers, helping increase your bookings</strong>. Additionally, you will need to specify a <strong>discount for agent code users</strong> and define the <strong>earn rate for agents</strong> ( Specify the commission amount paid to the agent for each booking made using an agent code ). This allows to <strong>grow your business</strong> while driving more visibility and revenue for your property. <strong>No additional charges apply.</strong>
+                </Typography>
                     <FormControlLabel
                     control={
                         <Checkbox
@@ -1569,7 +1639,7 @@ const validateStep5 = () => {
                         onChange={(e) => handleRoomChange(index, e)}
                         />
                     }
-                    label="Room Open For Agents"
+                    label="Enable Agent Promotions for This Room / Rooms."
                     />
                 </Grid>
 
@@ -1578,7 +1648,7 @@ const validateStep5 = () => {
                     <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth
-                        label="Discount for Promo"
+                        label="Discount for Agent Code Users : LKR ( Ex: 1200 )"
                         name="discountForPromo"
                         value={room.discountForPromo}
                         onChange={(e) => handleRoomChange(index, e)}
@@ -1590,7 +1660,7 @@ const validateStep5 = () => {
                     <Grid item xs={12} sm={6}>
                     <TextField
                         fullWidth
-                        label="Earn Rate for Promo"
+                        label="Earn Rate of Agents : LKR ( Ex: 350 )"
                         name="EarnRateForPromo"
                         value={room.EarnRateForPromo}
                         onChange={(e) => handleRoomChange(index, e)}
@@ -1604,10 +1674,13 @@ const validateStep5 = () => {
 
                 {/* Amenities */}
                 <Grid item xs={12}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                Specify the <strong>amenities available in this room</strong> type to enhance guest experience. Add features <strong>like TV, AC, Wi-Fi, minibar,</strong> and more. Use the field to type each amenity and click 'Add' to include multiple options, ensuring guests know what’s provided.
+                </Typography>
                     <Box mb={3}>
                     <TextField
                         fullWidth
-                        label="Type to add amenities"
+                        label="Type to add amenities ( Optional )"
                         value={room.amenitiesInput || ''}
                         onChange={(e) => handleAmenityInputChange(index, e)}
                         variant="outlined"
@@ -1639,6 +1712,9 @@ const validateStep5 = () => {
 
                 {/* Image Upload */}
                 <Grid item xs={12}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                You can upload up to 10 images for this room / Rooms.
+                </Typography>
                         <input
                         type="file"
                         multiple
@@ -1725,15 +1801,23 @@ const validateStep5 = () => {
 
             {/* Display Price Main */}
             <Box sx={{ mt: 4 }}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+            Set an <strong>attractive price</strong> for showcasing your hotel <strong>advertisement prominently</strong>. This amount should reflect the value of your offering and be <strong>competitive to attract potential customers</strong>. Consider using an <strong>average room rate or a strategic amount</strong> that highlights the appeal of your property. ( Set the Value in LKR )
+            </Typography>
             <TextField
                 fullWidth
-                label="Display Price Main"
+                label="Advertisement Front Price ( LKR )"
                 name="displayPriceMain"
                 value={hotelData.displayPriceMain}
                 onChange={(e) => setHotelData({ ...hotelData, displayPriceMain: e.target.value })}
                 error={!!errors.displayPriceMain}
                 helperText={errors.displayPriceMain}
                 required
+                inputProps={{
+                  type: 'number', // Restricts input to numbers
+                  inputMode: 'numeric', // Ensures numeric keyboard on mobile devices
+                  pattern: '[0-9]*', // Ensures only numbers are allowed
+              }}
             />
             </Box>
 
@@ -1762,8 +1846,8 @@ const validateStep5 = () => {
 
         {step === 4 && (
         <Container>
-            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-              Facilities
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+              Step 04 - Facilities
             </Typography>
               <Grid container spacing={2}>
                 {Object.keys(hotelData.facilities).map((facility) => (
@@ -1807,8 +1891,8 @@ const validateStep5 = () => {
 
         {step === 5 && (
         <Container>
-        <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-            Dining Options
+        <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+            Step 05 - Dining Options
         </Typography>
         <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -1941,8 +2025,8 @@ const validateStep5 = () => {
         {step === 6 && (
             <Container>
 
-            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-                Policies
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+                Step 06 - Policies
             </Typography>
             
             <Grid container spacing={3}>
@@ -2340,8 +2424,8 @@ const validateStep5 = () => {
         {step === 7 && (
             <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
             
-            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-                Activities
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+                Step 07 - Activities
             </Typography>
       
         {/* Onsite Activities */}
@@ -2459,8 +2543,8 @@ const validateStep5 = () => {
             <Grid container spacing={3}>
             <Grid item xs={12}>
                 
-            <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-            Images
+            <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+            Step 08 - Hotel Images
             </Typography>
             
             <Typography variant="body1" color="textSecondary" gutterBottom>
@@ -2566,8 +2650,8 @@ const validateStep5 = () => {
         <Container >
         <Box sx={{ mt: 4 }}>
 
-        <Typography variant="h6" gutterBottom sx={{ color: '#555' }}>
-            Other Info
+        <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
+            Step 09 - Other Info & Publish 
         </Typography>
           
           {/* Other Info Input Field */}
