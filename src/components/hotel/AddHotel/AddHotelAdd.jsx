@@ -27,9 +27,13 @@ import {
     Radio,
     RadioGroup,
     FormLabel,
+    Modal,
+    useMediaQuery,
   } from '@mui/material';
   import { ArrowForward, ArrowBack, Add, Close } from '@mui/icons-material';
   import { IoIosImages } from "react-icons/io";
+  import { useTheme } from "@mui/material/styles";
+  import Swal from "sweetalert2";
 
 const provincesAndDistricts = {
     "Central Province": ["Kandy", "Matale", "Nuwara Eliya"],
@@ -176,6 +180,9 @@ const AddHotel = () => {
   const [hotelAdvertiseRate, setHotelAdvertiseRate] = useState(null);
   const [hotelRoomAditionalRoomRate, setHotelRoomAditionalRoomRate] = useState(null);
   const [totalAdditionalCost, setTotalAdditionalCost] = useState(0); // State to track total additional cost
+  const [openTerms, setOpenTerms] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -800,7 +807,7 @@ const removeOnsiteActivity = (activity) => {
   };
 
    // Common payment methods
-   const paymentMethods = ['Credit Card', 'Debit Card', 'PayPal', 'Cash', 'Bank Transfer'];
+   const paymentMethods = ['Credit Card', 'Debit Card', 'PayPal', 'Cash', 'Bank Transfer', 'KOKO Pay', 'MINT Pay', 'TAP IT'];
 
   // Handle adding/removing payment methods
   const handlePaymentMethodClick = (method) => {
@@ -996,20 +1003,20 @@ const validateStep5 = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorAlert(''); // Reset error message
-
+    setErrorAlert(""); // Reset error message
+  
     // Validation: Check if "How Many Stars" is required
     if (hotelData.isHaveStars && !hotelData.howManyStars) {
-      setErrorAlert('Please specify how many stars the hotel has.');
+      setErrorAlert("Please specify how many stars the hotel has.");
       return;
     }
-
+  
     // Validation: Check if "Accepts Teams" is not allowed
     if (hotelData.acceptTeams === false) {
-      setErrorAlert('Submission is not allowed if teams are not accepted.');
+      setErrorAlert("Submission is not allowed if terms and conditions are not accepted.");
       return;
     }
-
+  
     const isOpenForAgents = hotelData.rooms.some((room) => room.roomOpenForAgents);
     const finalData = {
       ...hotelData,
@@ -1018,7 +1025,22 @@ const validateStep5 = () => {
       totalAdditionalCost,
       totalHotelAddValue,
     };
-    navigate('/paymentsPage', { state: finalData });
+  
+    // Show Confirmation Alert Before Navigating
+    Swal.fire({
+      title: "All Done..Double Check Your Advertisement Details",
+      text: "Before submitting, please review all details carefully. You can still edit your advertisement after publication. If you're sure, proceed to the payment page.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Proceed to Payment",
+      cancelButtonText: "Check Again",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/paymentsPage", { state: finalData });
+      }
+    });
   };
 
   return (
@@ -1041,8 +1063,8 @@ const validateStep5 = () => {
       <form onSubmit={handleSubmit}>
       {step === 1 && (
           <Box>
-            <Typography variant="body1" gutterBottom sx={{ color: '#333', mb: 2,fontStyle: 'italic', textAlign: 'justify' }}>
-            🎗️ Welcome to the Hotel Advertisement Form. This form is designed to help you showcase your hotel effectively by providing all necessary details in a structured manner. To ensure your advertisement is complete and accurate, please follow the <strong>9 steps</strong> below. Each step must be filled out with valid and up-to-date information to ensure the best experience for your potential guests.
+            <Typography variant="body1" gutterBottom sx={{ color: '#333', mb: 2, textAlign: 'justify' }}>
+            🎗️ Welcome to the <strong>Hotel Advertisement Form</strong>. This form is designed to help you showcase your hotel effectively by providing all necessary details in a structured manner. To ensure your advertisement is complete and accurate, please follow the <strong>9 steps</strong> below. Each step must be filled out with valid and up-to-date information to ensure the best experience for your potential guests.
             </Typography>
 
             <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
@@ -1146,16 +1168,16 @@ const validateStep5 = () => {
                     required
                   >
                     <MenuItem value="">Select a climate zone</MenuItem>
-                    <MenuItem value="Dry zone">Dry zone</MenuItem>
-                    <MenuItem value="Intermediate zone">Intermediate zone</MenuItem>
-                    <MenuItem value="Montane zone">Montane zone</MenuItem>
-                    <MenuItem value="Semi-Arid zone">Semi-Arid zone</MenuItem>
-                    <MenuItem value="Oceanic zone">Oceanic zone</MenuItem>
-                    <MenuItem value="Tropical Wet zone">Tropical Wet zone</MenuItem>
-                    <MenuItem value="Tropical Submontane">Tropical Submontane</MenuItem>
-                    <MenuItem value="Tropical Dry Zone">Tropical Dry Zone</MenuItem>
-                    <MenuItem value="Tropical Monsoon Climate">Tropical Monsoon Climate</MenuItem>
-                    <MenuItem value="Tropical Savanna Climate">Tropical Savanna Climate</MenuItem>
+                    <MenuItem value="Dry zone">Dry zone 🌵</MenuItem>
+                    <MenuItem value="Intermediate zone">Intermediate zone 🍃</MenuItem>
+                    <MenuItem value="Montane zone">Montane zone 🥶</MenuItem>
+                    <MenuItem value="Semi-Arid zone">Semi-Arid zone 🌾</MenuItem>
+                    <MenuItem value="Oceanic zone">Oceanic zone 🌊</MenuItem>
+                    <MenuItem value="Tropical Wet zone">Tropical Wet zone 🌴</MenuItem>
+                    <MenuItem value="Tropical Submontane">Tropical Submontane 🌿</MenuItem>
+                    <MenuItem value="Tropical Dry Zone">Tropical Dry Zone 🍂</MenuItem>
+                    <MenuItem value="Tropical Monsoon Climate">Tropical Monsoon Climate 🌧️</MenuItem>
+                    <MenuItem value="Tropical Savanna Climate">Tropical Savanna Climate 🌞</MenuItem>
                     {/* Add other climate zones here */}
                   </Select>
                   {errors.climate && <Typography color="error">{errors.climate}</Typography>}
@@ -1215,7 +1237,7 @@ const validateStep5 = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
               To provide your hotel's location, please open <strong>Google Maps,</strong> search for your hotel's address, click the "Share" button, and <strong>copy</strong> the link. <strong>Paste the link</strong> in the field below.
             </Typography>
                 <TextField
@@ -1250,7 +1272,7 @@ const validateStep5 = () => {
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
               Please provide your <strong>official business email</strong> address. This will be used for <strong>important communications</strong> and updates.
             </Typography>
                 <TextField
@@ -1277,7 +1299,7 @@ const validateStep5 = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
               Please provide your <strong>active WhatsApp number</strong> associated with your business. This will be used for <strong>quick communication</strong> and updates.
               </Typography>
                 <TextField
@@ -1446,10 +1468,9 @@ const validateStep5 = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
-                  Provide a <strong>brief and polished description</strong> of your room. For example: 
-                  <em>"This room features 3 beds: 2 large king-size beds and 1 single bed. It comfortably accommodates up to 5 people (4 adults and 1 child)."</em> 
-                  Ensure the description is clear, concise, and highlights key features. <strong>Maximum 250 characters allowed.</strong>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+                  Provide a <strong>brief and polished description</strong> of your room. For <strong>example: 
+                  <em>"This room features 3 beds: 2 large king-size beds and 1 single bed. It comfortably accommodates up to 5 people (4 adults and 1 child)."</em></strong> Ensure the description is clear, concise, and highlights key features. <strong>Maximum 250 characters allowed.</strong>
                 </Typography>
                 <TextField
                   fullWidth
@@ -1465,8 +1486,8 @@ const validateStep5 = () => {
                   required
                 />
                 {/* Character counter */}
-                <Typography variant="body2" sx={{ textAlign: 'right', mt: 1, color: '#333' }}>
-                  {room.roomDescription ? room.roomDescription.length : 0}/250
+                <Typography variant="body2" sx={{ textAlign: 'right', mt: 1, color: '#666' }}>
+                  {room.roomDescription ? room.roomDescription.length : 0}/250 characters
                 </Typography>
               </Grid>
 
@@ -1526,7 +1547,7 @@ const validateStep5 = () => {
 
                 {/* Fullboard Section */}
                 <Grid item xs={12}>
-                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
                 The Fullboard section is optional. If this <strong>room includes a Fullboard</strong> package, you can specify the <strong>Fullboard amount in LKR</strong>. Additionally, use the <strong>'Fullboard Includes' field</strong> to list the items or services covered in the package (e.g., breakfast, lunch, dinner, beverages). <strong>You can add multiple inclusions using the 'Add' button</strong>.
                 </Typography>
                     <Box mb={2}>
@@ -1577,7 +1598,7 @@ const validateStep5 = () => {
 
                 {/* Halfboard Section */}
                 <Grid item xs={12}>
-                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
                 The Halfboard section is optional. If this <strong>room includes a Halfboard</strong> package, you can specify the <strong>Halfboard amount in LKR</strong>. Additionally, use the <strong>'Halfboard Includes' field</strong> to list the items or services covered in the package . <strong>You can add multiple inclusions using the 'Add' button</strong>.
                 </Typography>
                     <Box mb={2}>
@@ -1628,7 +1649,7 @@ const validateStep5 = () => {
 
                 {/* Room Open for Agents */}
                 <Grid item xs={12}>
-                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
                 When enabled, this <strong>room will be available for promotion</strong> by Our Holidaysri agents. Agents will <strong>immediately be informed</strong> about its availability and can actively promote it to <strong>potential customers, helping increase your bookings</strong>. Additionally, you will need to specify a <strong>discount for agent code users</strong> and define the <strong>earn rate for agents</strong> ( Specify the commission amount paid to the agent for each booking made using an agent code ). This allows to <strong>grow your business</strong> while driving more visibility and revenue for your property. <strong>No additional charges apply.</strong>
                 </Typography>
                     <FormControlLabel
@@ -1674,7 +1695,7 @@ const validateStep5 = () => {
 
                 {/* Amenities */}
                 <Grid item xs={12}>
-                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+                <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
                 Specify the <strong>amenities available in this room</strong> type to enhance guest experience. Add features <strong>like TV, AC, Wi-Fi, minibar,</strong> and more. Use the field to type each amenity and click 'Add' to include multiple options, ensuring guests know what’s provided.
                 </Typography>
                     <Box mb={3}>
@@ -1801,7 +1822,7 @@ const validateStep5 = () => {
 
             {/* Display Price Main */}
             <Box sx={{ mt: 4 }}>
-            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic' }}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
             Set an <strong>attractive price</strong> for showcasing your hotel <strong>advertisement prominently</strong>. This amount should reflect the value of your offering and be <strong>competitive to attract potential customers</strong>. Consider using an <strong>average room rate or a strategic amount</strong> that highlights the appeal of your property. ( Set the Value in LKR )
             </Typography>
             <TextField
@@ -1847,11 +1868,20 @@ const validateStep5 = () => {
         {step === 4 && (
         <Container>
             <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
-              Step 04 - Facilities
+            Step 04 - Accommodation Amenities & Facilities
             </Typography>
               <Grid container spacing={2}>
                 {Object.keys(hotelData.facilities).map((facility) => (
                   <Grid item xs={12} sm={6} md={4} key={facility}>
+              <Box
+                sx={{
+                  border: "1px solid #ccc", // Optional border for better visibility
+                  borderRadius: "10px",
+                  padding: "8px", // Adds some spacing inside the box
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -1863,6 +1893,7 @@ const validateStep5 = () => {
                       }
                       label={facility}
                     />
+                    </Box>
                   </Grid>
                 ))}
               </Grid>    
@@ -1896,6 +1927,9 @@ const validateStep5 = () => {
         </Typography>
         <Grid container spacing={3}>
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Provide details about your <strong>breakfast offerings</strong>, including available varieties, pricing for additional guests, serving hours, and any special dietary options.
+            </Typography>
             <FormControlLabel
                 control={
                 <Checkbox
@@ -1905,7 +1939,7 @@ const validateStep5 = () => {
                     color="primary"
                 />
                 }
-                label="Breakfast Included"
+                label="Does Your Property Have an Breakfast Option ?"
             />
             </Grid>
             {hotelData.diningOptions.breakfastIncluded && (
@@ -1913,7 +1947,7 @@ const validateStep5 = () => {
                 <Grid item xs={12} sm={6}>
                 <TextField
                     fullWidth
-                    label="Breakfast Info"
+                    label="Breakfast Details & Pricing ( info )"
                     name="diningOptions.breakfastInfo"
                     value={hotelData.diningOptions.breakfastInfo}
                     onChange={handleChange}
@@ -1932,7 +1966,7 @@ const validateStep5 = () => {
                 <Grid item xs={12} sm={6}>
                 <TextField
                     fullWidth
-                    label="Breakfast Charge"
+                    label="Standard Breakfast Charge (LKR)"
                     name="diningOptions.breakfastCharge"
                     type="number"
                     value={hotelData.diningOptions.breakfastCharge}
@@ -1944,6 +1978,9 @@ const validateStep5 = () => {
             </>
             )}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Provide a brief description of <strong>our on-site restaurant</strong>y, including cuisine type, operating hours, special menu offerings, and any notable features such as outdoor dining or live music.
+            </Typography>
             <FormControlLabel
                 control={
                 <Checkbox
@@ -1953,14 +1990,14 @@ const validateStep5 = () => {
                     color="primary"
                 />
                 }
-                label="Restaurant On Site"
+                label="Does Your Property Have an On-Site Restaurant?"
             />
             </Grid>
             {hotelData.diningOptions.restaurantOnSite && (
             <Grid item xs={12}>
                 <TextField
                 fullWidth
-                label="Restaurant Info"
+                label=" Description for Restaurant Info"
                 name="diningOptions.restaurantInfo"
                 value={hotelData.diningOptions.restaurantInfo}
                 onChange={handleChange}
@@ -2026,7 +2063,7 @@ const validateStep5 = () => {
             <Container>
 
             <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
-                Step 06 - Policies
+                Step 06 - Privacy Policies & Other Policies
             </Typography>
             
             <Grid container spacing={3}>
@@ -2041,7 +2078,7 @@ const validateStep5 = () => {
                     color="primary"
                     />
                 }
-                label="Allows Liquor"
+                label="Allows Liquor 🍺"
                 />
             </Grid>
 
@@ -2056,15 +2093,18 @@ const validateStep5 = () => {
                     color="primary"
                     />
                 }
-                label="Allows Smoking"
+                label="Allows Smoking 💨"
                 />
             </Grid>
 
             {/* Cancellation Policy */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the cancellation policy for your accommodation, including any conditions, deadlines, or applicable charges. <strong>This field is optional</strong>. If left blank, the default policy will be set as: <strong>' Free cancellation within 24 hours of booking. Charges may apply beyond this period.'</strong>
+            </Typography>
                 <TextField
                 fullWidth
-                label="Cancellation Policy"
+                label="Cancellation Policy ( Optional )"
                 name="policies.cancellationPolicy"
                 value={hotelData.policies.cancellationPolicy}
                 onChange={handleChange}
@@ -2074,33 +2114,36 @@ const validateStep5 = () => {
                 />
             </Grid>
 
-            {/* Check-In Time */}
             <Grid item xs={12} sm={6}>
-                <TextField
-                fullWidth
-                label="Check-In Time"
-                name="policies.checkInTime"
-                value={hotelData.policies.checkInTime}
-                onChange={handleChange}
-                error={!!errors.checkInTime}
-                helperText={errors.checkInTime}
-                required
-                />
-            </Grid>
+              <TextField
+                  fullWidth
+                  type="time"
+                  label="Check-In Time"
+                  name="policies.checkInTime"
+                  value={hotelData.policies.checkInTime || ""}
+                  onChange={handleChange}
+                  error={!!errors.checkInTime}
+                  helperText={errors.checkInTime || "Select the official check-in time for your hotel."}
+                  required
+                  InputLabelProps={{ shrink: true }}
+              />
+          </Grid>
 
-            {/* Check-Out Time */}
-            <Grid item xs={12} sm={6}>
-                <TextField
-                fullWidth
-                label="Check-Out Time"
-                name="policies.checkOutTime"
-                value={hotelData.policies.checkOutTime}
-                onChange={handleChange}
-                error={!!errors.checkOutTime}
-                helperText={errors.checkOutTime}
-                required
-                />
-            </Grid>
+          <Grid item xs={12} sm={6}>
+              <TextField
+                  fullWidth
+                  type="time"
+                  label="Check-Out Time"
+                  name="policies.checkOutTime"
+                  value={hotelData.policies.checkOutTime || ""}
+                  onChange={handleChange}
+                  error={!!errors.checkOutTime}
+                  helperText={errors.checkOutTime || "Select the official check-out time for your hotel."}
+                  required
+                  InputLabelProps={{ shrink: true }}
+              />
+          </Grid>
+
 
             {/* Pets Allowed */}
             <Grid item xs={12}>
@@ -2113,7 +2156,7 @@ const validateStep5 = () => {
                     color="primary"
                     />
                 }
-                label="Pets Allowed"
+                label="Pets Allowed 🐶"
                 />
             </Grid>
 
@@ -2122,7 +2165,7 @@ const validateStep5 = () => {
                 <Grid item xs={12}>
                 <TextField
                     fullWidth
-                    label="Pet Policy Details"
+                    label="Pet Policy Details ( Optional )"
                     name="policies.petPolicyDetails"
                     value={hotelData.policies.petPolicyDetails}
                     onChange={handleChange}
@@ -2143,7 +2186,7 @@ const validateStep5 = () => {
                     color="primary"
                     />
                 }
-                label="Parties Allowed"
+                label="Parties Allowed 🍾🥂"
                 />
             </Grid>
 
@@ -2152,7 +2195,7 @@ const validateStep5 = () => {
                 <Grid item xs={12}>
                 <TextField
                     fullWidth
-                    label="Party Policy Details"
+                    label="Party Policy Details ( Optional )"
                     name="policies.partyPolicyDetails"
                     value={hotelData.policies.partyPolicyDetails}
                     onChange={handleChange}
@@ -2164,9 +2207,12 @@ const validateStep5 = () => {
 
             {/* Child Policy */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the Child Policy for your accommodation. <strong>This field is optional</strong>. If left blank, the default policy will be set as: <strong>' Children of all ages are welcome. Additional charges may apply for extra bedding.'</strong>
+            </Typography>
                 <TextField
                 fullWidth
-                label="Child Policy"
+                label="Child Policy ( Optional )"
                 name="policies.childPolicy"
                 value={hotelData.policies.childPolicy}
                 onChange={handleChange}
@@ -2187,7 +2233,7 @@ const validateStep5 = () => {
                     color="primary"
                     />
                 }
-                label="Age Restriction"
+                label="have any Age Restriction ?"
                 />
             </Grid>
 
@@ -2203,7 +2249,7 @@ const validateStep5 = () => {
                     onChange={handleChange}
                     error={!!errors.minimumCheckInAge}
                     helperText={errors.minimumCheckInAge}
-                    required
+                    required                  
                 />
                 </Grid>
             )}
@@ -2219,7 +2265,7 @@ const validateStep5 = () => {
                     color="primary"
                     />
                 }
-                label="Damage Deposit"
+                label="have any Damage Deposit requir ?"
                 />
             </Grid>
 
@@ -2228,7 +2274,7 @@ const validateStep5 = () => {
                 <Grid item xs={12} sm={6}>
                 <TextField
                     fullWidth
-                    label="Damage Deposit Amount"
+                    label="Damage Deposit Amount ( LKR )"
                     name="policies.damageDepositAmount"
                     type="number"
                     value={hotelData.policies.damageDepositAmount}
@@ -2242,9 +2288,12 @@ const validateStep5 = () => {
 
             {/* Refund Policy */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the Refund Policy for your accommodation, including any refund conditions, deadlines, or applicable charges. <strong>This field is optional</strong>. If left blank, the default policy will be set as: <strong>' Refunds are processed within 7 business days of cancellation.'</strong>
+            </Typography>
                 <TextField
                 fullWidth
-                label="Refund Policy"
+                label="Refund Policy ( Optional )"
                 name="policies.refundPolicy"
                 value={hotelData.policies.refundPolicy}
                 onChange={handleChange}
@@ -2256,9 +2305,12 @@ const validateStep5 = () => {
 
             {/* No Show Policy */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the No Show Policy for your accommodation, including any conditions or applicable charges. <strong>This field is optional</strong>. If left blank, the default policy will be set as: <strong>' No-shows are charged 100% of the booking amount.'</strong>
+            </Typography>
                 <TextField
                 fullWidth
-                label="No Show Policy"
+                label="No Show Policy ( Optional )"
                 name="policies.noShowPolicy"
                 value={hotelData.policies.noShowPolicy}
                 onChange={handleChange}
@@ -2270,9 +2322,12 @@ const validateStep5 = () => {
 
             {/* Late Check-Out Policy */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the Late Check-Out Policy for your accommodation, including any conditions or applicable charges. <strong>This field is optional</strong>. If left blank, the default policy will be set as: <strong>' Late check-out is subject to availability and may incur additional charges.'</strong>
+            </Typography>
                 <TextField
                 fullWidth
-                label="Late Check-Out Policy"
+                label="Late Check-Out Policy ( Optional )"
                 name="policies.lateCheckOutPolicy"
                 value={hotelData.policies.lateCheckOutPolicy}
                 onChange={handleChange}
@@ -2284,9 +2339,12 @@ const validateStep5 = () => {
 
             {/* Early Check-In Policy */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the Early Check-In Policy for your accommodation, including any conditions or applicable charges. <strong>This field is optional</strong>. If left blank, the default policy will be set as: <strong>' Early check-in is subject to availability and may incur additional charges.'</strong>
+            </Typography>
                 <TextField
                 fullWidth
-                label="Early Check-In Policy"
+                label="Early Check-In Policy ( Optional )"
                 name="policies.earlyCheckInPolicy"
                 value={hotelData.policies.earlyCheckInPolicy}
                 onChange={handleChange}
@@ -2298,9 +2356,12 @@ const validateStep5 = () => {
 
             {/* Quiet Hours */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the designated quiet hours for your accommodation ( Ex : 10:00 PM to 7:00 AM (may vary by property) ) to ensure a peaceful environment for all guests. During this period, guests are expected to minimize noise levels in rooms, hallways, and common areas. If left blank, no specific quiet hours will be enforced, but general courtesy is encouraged.<strong>This field is optional</strong>. If left blank, the default <strong> we dose not set anything</strong>
+            </Typography>
                 <TextField
                 fullWidth
-                label="Quiet Hours"
+                label="Quiet Hours ( Optional )"
                 name="policies.quietHours"
                 value={hotelData.policies.quietHours}
                 onChange={handleChange}
@@ -2313,7 +2374,10 @@ const validateStep5 = () => {
             <Typography variant="subtitle1" gutterBottom>
                 Accepted Payment Methods
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 2, fontStyle: 'italic', textAlign: 'justify' }}>
+            Select the payment methods <strong>that your accommodation accepts</strong>. This information will be displayed on your website and in your booking.
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
                 {paymentMethods.map((method) => (
                 <Chip
                     key={method}
@@ -2363,7 +2427,7 @@ const validateStep5 = () => {
                     color="primary"
                 />
                 }
-                label="Tax and Charges"
+                label="have any Tax fees and Charges ?"
             />
             </Grid>
 
@@ -2372,7 +2436,7 @@ const validateStep5 = () => {
             <Grid item xs={12} sm={6}>
                 <TextField
                 fullWidth
-                label="Tax and Charges Amount"
+                label="Tax and Charges Amount ( LKR )"
                 name="policies.taxAndChargesAmount"
                 type="number"
                 value={hotelData.policies.taxAndChargesAmount}
@@ -2386,6 +2450,9 @@ const validateStep5 = () => {
 
             {/* Additional Charges */}
             <Grid item xs={12}>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Specify the Details About Additional policies and Charges/tax for your accommodation, including any Other conditions, deadlines, or applicable charges. <strong>This field is optional</strong>. If left blank, the default policy will be set as: <strong>' Additional charges may apply for extra guests, special requests, or facilities usage.'</strong>
+            </Typography>
                 <TextField
                 fullWidth
                 label="Details About Additional policies and Charges/tax (Optional)"
@@ -2430,7 +2497,10 @@ const validateStep5 = () => {
       
         {/* Onsite Activities */}
         <Box sx={{ marginBottom: 4 }}>
-            <Typography variant="h7" gutterBottom>Onsite Activities</Typography>
+            <Typography variant="h7" gutterBottom>🏌️‍♀️Onsite Activities ( Optional )</Typography>
+            <Typography variant="body2" sx={{ color: '#666', mb: 1, mt: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+            Select the onsite activities <strong>available at your accommodation</strong> to enhance guest experiences. These may include recreational, wellness, or entertainment options provided within the property.
+            </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
                 {commonOnsiteActivities.map((activity, index) => {
                     const isSelected = hotelData.activities.onsiteActivities.includes(activity);
@@ -2451,7 +2521,10 @@ const validateStep5 = () => {
       
             {/* Nearby Locations */}
             <Box sx={{ marginBottom: 4 }}>
-              <Typography variant="h7" gutterBottom>Nearby Locations</Typography>
+              <Typography variant="h7" gutterBottom>🏯 Nearby Locations ( Optional )</Typography>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, mt: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+              Specify and select nearby <strong>locations that guests may find</strong> interesting or useful during their stay. Choose from the recommended list or add custom locations relevant to your accommodation.
+              </Typography>
               <Box sx={{ position: 'relative' }}>
                 <TextField
                   fullWidth
@@ -2486,7 +2559,10 @@ const validateStep5 = () => {
       
             {/* Nearby Activities */}
             <Box sx={{ marginBottom: 4 }}>
-              <Typography variant="h7" gutterBottom>Nearby Attractions & Activities</Typography>
+              <Typography variant="h7" gutterBottom>🏕️ Other Nearby Attractions & Activities ( Optional )</Typography>
+              <Typography variant="body2" sx={{ color: '#666', mb: 1, mt: 1, fontStyle: 'italic', textAlign: 'justify' }}>
+              List <strong>additional nearby attractions and activities</strong> that guests can explore during their stay. <strong>Use the 'Add' option</strong> to include multiple attractions, such as landmarks, adventure spots, cultural sites, or entertainment venues.
+              </Typography>
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                 <TextField
                   fullWidth
@@ -2544,11 +2620,11 @@ const validateStep5 = () => {
             <Grid item xs={12}>
                 
             <Typography variant="h6" gutterBottom sx={{ color: '#555', fontWeight: 600, mb: 2 }}>
-            Step 08 - Hotel Images
+            Step 08 - accommodation Images
             </Typography>
             
-            <Typography variant="body1" color="textSecondary" gutterBottom>
-                Please upload exactly 6 images. Maximum of 6 images allowed.
+            <Typography variant="body1" color="textSecondary" gutterBottom sx={{textAlign: 'justify'}}>
+            Please upload <strong>exactly 6 images</strong> showcasing your accommodation. A maximum of 6 images is allowed. These images will be <strong>featured in your advertisement</strong>, so ensure they are high-quality and visually appealing to attract potential guests.
             </Typography>
             </Grid>
     
@@ -2656,13 +2732,23 @@ const validateStep5 = () => {
           
           {/* Other Info Input Field */}
           <Box sx={{ mb: 3 }}>
+          <Typography variant="body1" color="textSecondary" gutterBottom sx={{textAlign: 'justify'}}>
+            If there are <strong>any additional details or important information</strong> about your accommodation that haven’t been covered, you can enter them here. <strong>Use the 'Add' option</strong> to include multiple pieces of information as needed. <strong>Examples are below.</strong>
+          </Typography>
+
+          <Box component="ul" sx={{ pl: 2, mt: 1, mb: 2 }}>
+            <Typography component="li" variant="body2" color="textSecondary">✔️ Booking Confirmation is immediate.</Typography>
+            <Typography component="li" variant="body2" color="textSecondary">✔️ No hidden charges apply.</Typography>
+            <Typography component="li" variant="body2" color="textSecondary">✔️ Flexible check-in and check-out options available. Ect,</Typography>
+          </Box>
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <TextField
                 fullWidth
                 variant="outlined"
                 value={hotelData.otherInfoInput}
                 onChange={handleOtherInfoInputChange}
-                placeholder="Type to add other info"
+                placeholder="Type to add other info ( Optional )"
               />
               {hotelData.otherInfoInput && (
                 <Button variant="contained" onClick={addOtherInfo}>
@@ -2686,6 +2772,15 @@ const validateStep5 = () => {
   
           {/* New Fields */}
           <Box sx={{ mb: 3 }}>
+          <Typography variant="body1" color="textSecondary" gutterBottom sx={{ mb: 1, color: 'rgb(124, 66, 107)', textAlign: 'justify' }}>
+          <strong>Please carefully fill</strong> in the <strong>details below,</strong> as we will verify them against your <strong>previously provided information</strong>. If any <strong>false or misleading details are detected</strong>, your advertisement will be <strong>immediately removed without a refund of the advertisement fee</strong>. Ensure that <strong>all information is accurate</strong> and genuine to avoid any issues.
+          </Typography>
+          <Typography variant="body1" color="textSecondary" gutterBottom sx={{ mb: 1, color: 'rgb(124, 66, 107)', textAlign: 'justify' }}>
+          <strong>If your accommodation</strong> does not have a <strong>stars, verification, certificate, or license,</strong> that’s <strong>completely fine—your ad will not be removed</strong>. However, <strong>if you falsely claim to have verification when you don’t, we will take strict action against such misleading information.</strong> Always provide accurate details only.
+          </Typography>
+          <Typography variant="body1" color="textSecondary" gutterBottom sx={{ mb: 3, color: 'rgb(124, 66, 107)', textAlign: 'justify'}}>
+          <strong>If you do not have a certificate or license Ect</strong>, this information will <strong>simply not be displayed</strong> directly in the advertisement for guests. <strong>So, Don't worry about it</strong>.  We collect this information to ensure the <strong>comfort, security, and responsibility</strong> of guests and tourists while also protecting the <strong>reputation</strong> of <strong>Sri Lanka</strong> as a trusted travel destination.
+          </Typography>
             <FormControl component="fieldset">
               <FormLabel component="legend">Does the hotel have stars?</FormLabel>
               <RadioGroup
@@ -2726,10 +2821,24 @@ const validateStep5 = () => {
   
           {/* Other Radio Button Fields */}
           {[
-            { label: 'Is Verified?', name: 'isVerified' },
-            { label: 'Has Certificate?', name: 'isHaveCertificate' },
-            { label: 'Has License?', name: 'isHaveLicense' },
-            { label: 'Accepts Teams?', name: 'acceptTeams' },
+            { label: 'Is Your Accommodation Verified / Approved by the Sri Lanka Tourism Board ?', name: 'isVerified' },
+            { label: 'Does Your Accommodation / Business Have a Government-Issued Certificate in Sri Lanka ?', name: 'isHaveCertificate' },
+            { label: 'Does Your Accommodation / Business Have a Government-Issued or Tourism Board-Issued License in Sri Lanka ?', name: 'isHaveLicense' },
+            {
+              label: (
+                <>
+                  Accepts Our Terms & Conditions ?{" "}
+                  <span
+                    style={{ color: "rgb(124, 66, 107)", textDecoration: "underline", cursor: "pointer" }}
+                    onClick={() => setOpenTerms(true)}
+                  >
+                    View Terms & Conditions.
+                  </span>
+                  
+                </>
+              ),
+              name: "acceptTeams",
+            },
           ].map((field) => (
             <Box key={field.name} sx={{ mb: 3 }}>
               <FormControl component="fieldset">
@@ -2769,6 +2878,58 @@ const validateStep5 = () => {
       </Container>
         )}
       </form>
+
+      {/* Terms & Conditions Modal */}
+      <Modal open={openTerms} onClose={() => setOpenTerms(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: isMobile ? "90%" : 500,
+            maxHeight: "90vh",
+            overflowY: "auto",
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 3,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Terms & Conditions
+          </Typography>
+
+          <Typography variant="body2" paragraph>
+            Please read and agree to our terms and conditions before proceeding. By accepting, you confirm that all provided information is accurate, and we will verify them against your previously provided details. If any false or misleading details are detected, your advertisement will be <strong>immediately removed</strong> or subject to <strong>relevant actions</strong> without a refund of the advertisement fee. Ensure that all information is accurate and genuine to avoid any issues.
+          </Typography>
+
+          <Typography variant="body2" paragraph>
+            If your accommodation does not have a star rating, verification, certificate, or license, that’s completely fine—your ad will not be removed. However, if you falsely claim to have verification when you don’t, <strong>we will take strict action</strong> against such misleading information. Always provide accurate details only.
+          </Typography>
+
+          <Typography variant="body2" paragraph>
+            If you do not have a certificate or license, this information will simply not be displayed directly in the advertisement for guests.
+          </Typography>
+
+          <Typography variant="body2" paragraph>
+            <strong>📢 Why We Collect This Information?</strong>  
+            We collect this information to <strong>ensure the comfort, security, and responsibility of guests and tourists</strong> while also protecting the reputation of Sri Lanka as a trusted travel destination.
+          </Typography>
+
+          <Typography variant="body2" paragraph>
+            <strong>Promotion & Agent Program:</strong>  
+            I acknowledge and accept that the rooms listed in this advertisement are open to promotions for agents. I agree to pay the relevant earning rate for each agent who successfully books through my advertisement using an agent code.
+          </Typography>
+
+          <Box textAlign="right" mt={2}>
+            <Button variant="contained" onClick={() => setOpenTerms(false)}>
+              Close
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
     </Container>
   );
 };
