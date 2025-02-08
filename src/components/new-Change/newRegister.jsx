@@ -516,12 +516,17 @@ const Register = () => {
 
           <TextField
             fullWidth
-            label="Contact Number ( Ex: 071-2223331 )"
+            label="Contact With All Characters ( Ex: 0712223331 )"
             name="contactNumber"
             value={formData.contactNumber}
             onChange={handleInputChange}
             type="text"
             variant="outlined"
+            inputProps={{
+              type: 'number', // Restricts input to numbers
+              inputMode: 'numeric', // Ensures numeric keyboard on mobile devices
+              pattern: '[0-9]*', // Ensures only numbers are allowed
+          }}
           />
         </Box>
         <TextField

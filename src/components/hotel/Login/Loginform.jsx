@@ -561,11 +561,13 @@ const LoginForm = () => {
                         <label className="popup-label">
                             Contact Number:
                             <input
-                                type="text"
+                                type="tel"
                                 value={contactNumber}
-                                onChange={(e) => setContactNumber(e.target.value)}
+                                onChange={(e) => setContactNumber(e.target.value.replace(/\D/, ""))} // Removes non-numeric characters
                                 placeholder="Enter Contact Number ( Ex: 0711112223 )"
                                 className="popup-input"
+                                pattern="[0-9]*" // Ensures only numbers are allowed
+                                inputMode="numeric" // Opens numeric keyboard on mobile
                             />
                         </label>
                         {/* Submit Button */}
