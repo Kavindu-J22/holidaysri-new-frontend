@@ -1038,7 +1038,7 @@ const validateStep5 = () => {
       cancelButtonColor: "#d33",
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate("/paymentsPage", { state: finalData });
+        navigate("/hotelAddpaymentsPage", { state: finalData });
       }
     });
   };
