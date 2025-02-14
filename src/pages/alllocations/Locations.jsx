@@ -80,7 +80,7 @@ const ExploreDestinations = () => {
   useEffect(() => {
     async function getAllLocations() {
       try {
-        const res = await axios.get("http://localhost:8000/location/");
+        const res = await axios.get("https://holidaysri-backend.onrender.com/location/");
         setLocations(res.data);
         setFilteredLocations(res.data);
       } catch (error) {
