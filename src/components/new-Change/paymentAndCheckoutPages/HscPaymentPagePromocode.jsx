@@ -30,7 +30,7 @@ const HSCPayment = () => {
   useEffect(() => {
     const userEmail = localStorage.getItem('userEmail');
     axios
-      .get(`http://localhost:8000/coin/coins/${userEmail}`)
+      .get(`https://holidaysri-backend.onrender.com/coin/coins/${userEmail}`)
       .then((response) => {
         setUserCurrentHsc(response.data.coins); // Assuming response.data.amount contains the HSC balance
       })
@@ -53,7 +53,7 @@ const HSCPayment = () => {
       
       // Step 1: Validate user ID and ProfileStatus
       console.log("Validating user ID and profile status...");
-      const userResponse = await axios.get(`http://localhost:8000/api/user/findByEmail/${userEmail}`);
+      const userResponse = await axios.get(`https://holidaysri-backend.onrender.com/api/user/findByEmail/${userEmail}`);
       const user = userResponse.data.user;
   
       if (user._id !== userId || user.ProfileStatus === "inactive") {
@@ -66,7 +66,7 @@ const HSCPayment = () => {
 
       // Step 2: Update user subscription and agent status
       console.log("Updating user subscription and agent status...");
-      await axios.put(`http://localhost:8000/api/user/updateUsers/${userEmail}`, {
+      await axios.put(`https://holidaysri-backend.onrender.com/api/user/updateUsers/${userEmail}`, {
         isSubscribed: "Subscribed",
         isAgent: "True",
       });
@@ -78,7 +78,7 @@ const HSCPayment = () => {
   
         // Update Promocode Owner's Earn Record
         try {
-          await axios.put("http://localhost:8000/newPromocodes/update-earns", {
+          await axios.put("https://holidaysri-backend.onrender.com/newPromocodes/update-earns", {
             promocode: UsedPromocode,
             earns: Earns,
           });
@@ -91,7 +91,7 @@ const HSCPayment = () => {
   
         // Add Earn record to database
         try {
-          await axios.post("http://localhost:8000/earnings/addEarn", {
+          await axios.post("https://holidaysri-backend.onrender.com/earnings/addEarn", {
             buyeremail: userEmail,
             category: "Promo Codes",
             amount: Earns,
@@ -110,7 +110,7 @@ const HSCPayment = () => {
       // Step 4: Add Payment Activity to database
       console.log("Adding payment activity to database...");
       try {
-        await axios.post("http://localhost:8000/paymentAct/payment-activities", {
+        await axios.post("https://holidaysri-backend.onrender.com/paymentAct/payment-activities", {
           itemID: Title,
           quantity: 1,
           item: item,
@@ -133,7 +133,7 @@ const HSCPayment = () => {
       console.log("Updating coin balance...");
       const newBalance = userCurrentHsc - calculatedHSCAmount;
       try {
-        const coinResponse = await axios.put(`http://localhost:8000/coin/updateCoins/${userEmail}`, {
+        const coinResponse = await axios.put(`https://holidaysri-backend.onrender.com/coin/updateCoins/${userEmail}`, {
           coins: newBalance,
         });
         if (coinResponse.data.success) {
@@ -153,7 +153,7 @@ const HSCPayment = () => {
       // Step 6: Add new promocode to the system
       console.log("Adding new promocode to the system...");
       try {
-        await axios.post("http://localhost:8000/newPromocodes/add", {
+        await axios.post("https://holidaysri-backend.onrender.com/newPromocodes/add", {
           userEmail: userEmail,
           promocodeType: Title,
           promocode: item,
@@ -187,7 +187,7 @@ const HSCPayment = () => {
   
     try {
       // Check if the promocode already exists
-      const response = await axios.post('http://localhost:8000/newPromocodes/check-exists', { promocode: item });
+      const response = await axios.post('https://holidaysri-backend.onrender.com/newPromocodes/check-exists', { promocode: item });
   
       if (response.data.exists) {
         // If the promocode already exists, set an error message

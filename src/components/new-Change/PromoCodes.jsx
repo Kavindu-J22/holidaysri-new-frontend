@@ -20,17 +20,17 @@ const PromoCodePage = () => {
     async function fetchData() {
       try {
         // Fetch rate data based on the id
-        const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
+        const response = await axios.get(`https://holidaysri-backend.onrender.com/rate/get/${id}`);
         setData(response.data.rate);
         setExchangeRate(response.data.rate.exchangeateUSD);
 
         // Fetch promocodes that are on and not expired
-        const promoResponse = await axios.get('http://localhost:8000/newPromocodes/all');
+        const promoResponse = await axios.get('https://holidaysri-backend.onrender.com/newPromocodes/all');
         const filteredPromos = promoResponse.data.filter(promo => promo.advertise === "on" && new Date(promo.expirationDate) > new Date());
 
         // Fetch user data for each promo and include profile pictures
         const agentsWithPictures = await Promise.all(filteredPromos.map(async (promo) => {
-          const { data } = await axios.get(`http://localhost:8000/api/user/findByEmail/${promo.userEmail}`);
+          const { data } = await axios.get(`https://holidaysri-backend.onrender.com/api/user/findByEmail/${promo.userEmail}`);
           const { ProfilePicture } = data.user || {};
           return { ...promo, profilePicture: ProfilePicture };
         }));
@@ -39,7 +39,7 @@ const PromoCodePage = () => {
         setPromoAgents(agentsWithPictures.sort((a, b) => b.boostPoints - a.boostPoints));
 
         // Fetch user friends data
-        const friendsResponse = await axios.get('http://localhost:8000/friends/getAllFriends', {
+        const friendsResponse = await axios.get('https://holidaysri-backend.onrender.com/friends/getAllFriends', {
           params: { email: userEmail }
         });
         console.log('Friends Response:', friendsResponse.data); // Log to verify response
@@ -48,7 +48,7 @@ const PromoCodePage = () => {
           .map(friend => friend.email.toLowerCase())); // Convert to lowercase
 
         // Fetch user favorites data
-        const favoritesResponse = await axios.get('http://localhost:8000/favorites/getFavorites', {
+        const favoritesResponse = await axios.get('https://holidaysri-backend.onrender.com/favorites/getFavorites', {
           params: { email: userEmail }
         });
         console.log('Favorites Response:', favoritesResponse.data); // Log to verify response
@@ -82,7 +82,7 @@ const PromoCodePage = () => {
   
     try {
       // Check if the friend is already in the user's friend list
-      const checkFriendResponse = await axios.post('http://localhost:8000/friends/check-friend', { email: userEmail, friendEmail });
+      const checkFriendResponse = await axios.post('https://holidaysri-backend.onrender.com/friends/check-friend', { email: userEmail, friendEmail });
       console.log("Check Friend Response:", checkFriendResponse.data); // Log the response for debugging
   
       if (checkFriendResponse.data.isFriend) {
@@ -90,7 +90,7 @@ const PromoCodePage = () => {
         alert("This user is already in your friend list.");
       } else {
         // Add the friend if they are not already in the list
-        const addFriendResponse = await axios.post('http://localhost:8000/friends/add-friend', { email: userEmail, friendEmail });
+        const addFriendResponse = await axios.post('https://holidaysri-backend.onrender.com/friends/add-friend', { email: userEmail, friendEmail });
         console.log("Add Friend Response:", addFriendResponse.data); // Log the response for debugging
   
         // Alert the user that the friend has been added successfully
@@ -123,12 +123,12 @@ const PromoCodePage = () => {
     console.log("Checking if the promoCode is in favorites:", promoCode); // Log the promoCode
   
     try {
-      const checkFavoriteResponse = await axios.post('http://localhost:8000/favorites/check-favorite', { email: userEmail, item: promoCode });
+      const checkFavoriteResponse = await axios.post('https://holidaysri-backend.onrender.com/favorites/check-favorite', { email: userEmail, item: promoCode });
       console.log("Check favorite response:", checkFavoriteResponse.data); // Log the response from check-favorite
   
       if (!checkFavoriteResponse.data.isFavorite) {
         console.log("Item not in favorites. Adding it now...");
-        const addFavoriteResponse = await axios.post('http://localhost:8000/favorites/add-favorite', { email: userEmail, item: promoCode });
+        const addFavoriteResponse = await axios.post('https://holidaysri-backend.onrender.com/favorites/add-favorite', { email: userEmail, item: promoCode });
         console.log("Add favorite response:", addFavoriteResponse.data); // Log the response from add-favorite
         alert("Promo code added to your favorites!");
       } else {

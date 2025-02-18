@@ -193,7 +193,7 @@ const SidebarWithNavbar = () => {
     if (userEmail) {
       // Fetch user details by email and set to local storage
       axios
-        .get(`http://localhost:8000/api/user/findByEmail/${userEmail}`)
+        .get(`https://holidaysri-backend.onrender.com/api/user/findByEmail/${userEmail}`)
         .then((response) => {
           if (response.data.success && response.data.user) {
             const {
@@ -240,7 +240,7 @@ const SidebarWithNavbar = () => {
     if (userEmail) {
       // Fetch coins
       axios
-        .get(`http://localhost:8000/coin/coins/${userEmail}`)
+        .get(`https://holidaysri-backend.onrender.com/coin/coins/${userEmail}`)
         .then((response) => {
           if (response.data.success) {
             setCoins(response.data.coins);
@@ -252,7 +252,7 @@ const SidebarWithNavbar = () => {
   
       // Fetch diamonds
       axios
-        .get(`http://localhost:8000/diamond/diamonds/${userEmail}`)
+        .get(`https://holidaysri-backend.onrender.com/diamond/diamonds/${userEmail}`)
         .then((response) => {
           if (response.data.success) {
             setDiamond(response.data.diamonds);
@@ -264,7 +264,7 @@ const SidebarWithNavbar = () => {
 
       // Fetch gems
       axios
-      .get(`http://localhost:8000/gem/gems/${userEmail}`)
+      .get(`https://holidaysri-backend.onrender.com/gem/gems/${userEmail}`)
       .then((response) => {
         if (response.data.success) {
           setGem(response.data.allGems);
@@ -276,7 +276,7 @@ const SidebarWithNavbar = () => {
 
       // Fetch tokens
       axios
-      .get(`http://localhost:8000/token/tokens/${userEmail}`)
+      .get(`https://holidaysri-backend.onrender.com/token/tokens/${userEmail}`)
       .then((response) => {
         if (response.data.success) {
           setTokens(response.data.allTokens);
@@ -288,7 +288,7 @@ const SidebarWithNavbar = () => {
 
       // Fetch vouchers
       axios
-      .get(`http://localhost:8000/voucher/vouchers/${userEmail}`)
+      .get(`https://holidaysri-backend.onrender.com/voucher/vouchers/${userEmail}`)
       .then((response) => {
         if (response.data.success) {
           setVoucher(response.data.vouchers);
@@ -300,7 +300,7 @@ const SidebarWithNavbar = () => {
 
       // Fetch RewardPoints
       axios
-      .get(`http://localhost:8000/reward/rewards/${userEmail}`)
+      .get(`https://holidaysri-backend.onrender.com/reward/rewards/${userEmail}`)
       .then((response) => {
         if (response.data.success) {
           setRewardPoint(response.data.points);
@@ -312,7 +312,7 @@ const SidebarWithNavbar = () => {
 
     // Fetch TimeCurrency
     axios
-      .get(`http://localhost:8000/TimeCurrency/timeCurency/${userEmail}`)
+      .get(`https://holidaysri-backend.onrender.com/TimeCurrency/timeCurency/${userEmail}`)
       .then((response) => {
         if (response.data.success) {
           setTimeCurrency({
@@ -331,7 +331,7 @@ const SidebarWithNavbar = () => {
 
     // Fetch Gifts
       axios
-      .get(`http://localhost:8000/gift/gifts/${userEmail}`)
+      .get(`https://holidaysri-backend.onrender.com/gift/gifts/${userEmail}`)
       .then((response) => {
         if (response.data.success) {
           setGift(response.data.gifts);

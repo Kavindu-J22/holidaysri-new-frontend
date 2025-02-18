@@ -171,7 +171,7 @@ const DestinationDetailPage = () => {
     const fetchLocation = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/location/get/${id}`
+          `https://holidaysri-backend.onrender.com/location/get/${id}`
         );
         setLocation(response.data.location);
         setCurrrentDistrict(response.data.location.district);
@@ -222,7 +222,7 @@ const DestinationDetailPage = () => {
   
     try {
       // Post the new comment
-      await axios.post(`http://localhost:8000/location/${id}/feedback`, {
+      await axios.post(`https://holidaysri-backend.onrender.com/location/${id}/feedback`, {
         userEmail,
         comment: userComment,
       });
@@ -231,7 +231,7 @@ const DestinationDetailPage = () => {
       setUserComment("");
   
       // Optionally, refresh the location data to show the updated comment section
-      const response = await axios.get(`http://localhost:8000/location/get/${id}`);
+      const response = await axios.get(`https://holidaysri-backend.onrender.com/location/get/${id}`);
       setLocation(response.data.location);
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -268,7 +268,7 @@ const DestinationDetailPage = () => {
       }
   
       // Proceed to add the rating if the user hasn't rated yet
-      await axios.post(`http://localhost:8000/location/${id}/rating`, {
+      await axios.post(`https://holidaysri-backend.onrender.com/location/${id}/rating`, {
         userEmail,
         rating: userRating,
       });
@@ -277,7 +277,7 @@ const DestinationDetailPage = () => {
       setUserRating(0);
   
       // Optionally, refresh the location data to show the updated ratings
-      const response = await axios.get(`http://localhost:8000/location/get/${id}`);
+      const response = await axios.get(`https://holidaysri-backend.onrender.com/location/get/${id}`);
       setLocation(response.data.location);
     } catch (error) {
       console.error("Error adding rating:", error);
@@ -308,7 +308,7 @@ const DestinationDetailPage = () => {
 
     try {
         // Check if the item is already in favorites
-        const response = await axios.get(`http://localhost:8000/allfavorite/user/${userEmail}`);
+        const response = await axios.get(`https://holidaysri-backend.onrender.com/allfavorite/user/${userEmail}`);
         const isFavorite = response.data.some(fav => fav.item === id && fav.category === "destination");
 
         if (isFavorite) {
@@ -317,7 +317,7 @@ const DestinationDetailPage = () => {
         }
 
         // Add to favorites
-        await axios.post("http://localhost:8000/allfavorite/add-favorite", {
+        await axios.post("https://holidaysri-backend.onrender.com/allfavorite/add-favorite", {
             email: userEmail,
             category: "destination",
             item: id,
@@ -340,7 +340,7 @@ const handleSavelocation = async (locationName) => {
 
     try {
         // Check if the item is already in the save list
-        const response = await axios.get(`http://localhost:8000/saveList/user/${userEmail}`);
+        const response = await axios.get(`https://holidaysri-backend.onrender.com/saveList/user/${userEmail}`);
         const isSaved = response.data.some(save => save.itemId === id && save.category === "destination");
 
         if (isSaved) {
@@ -349,7 +349,7 @@ const handleSavelocation = async (locationName) => {
         }
 
         // Save location
-        await axios.post("http://localhost:8000/saveList/add-item", {
+        await axios.post("https://holidaysri-backend.onrender.com/saveList/add-item", {
             email: userEmail,
             itemId: id,
             category: "destination",

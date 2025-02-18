@@ -84,7 +84,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/auth/registeruser",
+        "https://holidaysri-backend.onrender.com/api/auth/registeruser",
         {
           name,
           email,

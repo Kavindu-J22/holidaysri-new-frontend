@@ -32,7 +32,7 @@ const Checkout = () => {
     // Fetch rates when the component mounts
     const fetchRates = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
+        const response = await axios.get('https://holidaysri-backend.onrender.com/rate/get/677c3cf4d1f1323d5ca309a4');
         const { HSCRate, allPromocodeDiscountRate } = response.data.rate;
         setHSCRate(HSCRate);
         setDiscountRateforDis(allPromocodeDiscountRate)
@@ -68,7 +68,7 @@ const Checkout = () => {
     const applyPromoCode = async () => {
       try {
           // Step 1: Validate PromoCode via API
-          const response = await axios.post('http://localhost:8000/newPromocodes/check-exists', { promocode: promoCodeInput });
+          const response = await axios.post('https://holidaysri-backend.onrender.com/newPromocodes/check-exists', { promocode: promoCodeInput });
   
           // Check if promo code is valid
           if (!response.data.exists) {
@@ -85,7 +85,7 @@ const Checkout = () => {
           setSuccess(`Valid PromoCode. Discount applied and ${usedValidPromocodeOwner} ${usedValidPromocodType} used.`);
   
           // Fetch rate info 
-          const rateResponse = await axios.get('http://localhost:8000/rate/get/677c3cf4d1f1323d5ca309a4');
+          const rateResponse = await axios.get('https://holidaysri-backend.onrender.com/rate/get/677c3cf4d1f1323d5ca309a4');
           const allPromocodeDiscountRate = rateResponse.data.rate.allPromocodeDiscountRate;
           const specialPromocodeDiscountRate = rateResponse.data.rate.specialPromocodeDiscountRate;
           const diamondPromocodeEarnRate = rateResponse.data.rate.diamondPromocodeEarnRate;
@@ -154,7 +154,7 @@ const Checkout = () => {
   const fetchFavoritePromoCodes = async () => {
     const userEmail = localStorage.getItem('userEmail');
     try {
-      const response = await axios.get(`http://localhost:8000/favorites/getFavorites?email=${userEmail}`);
+      const response = await axios.get(`https://holidaysri-backend.onrender.com/favorites/getFavorites?email=${userEmail}`);
       if (Array.isArray(response.data)) {
         setFavoritePromoCodes(response.data);
       } else {

@@ -5,7 +5,7 @@ const PayHereForm = () => {
   const details = {
     merchantId: '234525',
     returnUrl: 'https://holidaysri.com/subscribe',
-    cancelUrl: 'http://localhost:8000/api/auth/registerseller',
+    cancelUrl: 'https://holidaysri-backend.onrender.com/api/auth/registerseller',
     notifyUrl: 'https://holidaysri-backend.onrender.com/vehicle/allPartnerProfiles',
     firstName: 'Holiday',
     lastName: 'Sri',
