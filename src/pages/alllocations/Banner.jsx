@@ -27,7 +27,7 @@ export default function Banner() {
             fontWeight: "200",
           }}
         >
-          Discover Paradise: Embark on a Journey Through Sri Lanka's Enchanting Beauty{" "}
+          Discover Paradise With Holidaysri: Embark on a Journey Through Sri Lanka's Enchanting Beauty{" "}
         </h2>
       </Grid>
       </div>

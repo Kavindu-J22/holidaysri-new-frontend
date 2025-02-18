@@ -267,7 +267,7 @@ const handlePrevious = () => {
               '&:hover': { backgroundColor: 'rgb(18, 96, 124)' },
               fontSize: { xs: '0.8rem', sm: '1rem' },
             }}
-            onClick={() => navigate('/signin')} // Navigate to Sign In page
+            onClick={() => navigate('/login')} // Navigate to Sign In page
           >
             Sign In &nbsp; <FaSignInAlt /> 
           </Button>
@@ -279,7 +279,7 @@ const handlePrevious = () => {
               '&:hover': { backgroundColor: 'rgb(25, 160, 170)' },
               fontSize: { xs: '0.8rem', sm: '1rem' },
             }}
-            onClick={() => navigate('/signup')} // Navigate to Sign Up page
+            onClick={() => navigate('/register')} // Navigate to Sign Up page
           >
             Sign Up &nbsp; <GiArchiveRegister />
           </Button>
@@ -302,7 +302,7 @@ const handlePrevious = () => {
               '&:hover': { backgroundColor: 'rgb(18, 104, 72, 0.7)' },
               fontSize: { xs: '0.8rem', sm: '1rem' },
             }}
-            onClick={() => navigate('/dashboard')} // Navigate to the dashboard page
+            onClick={() => navigate('/profile-Dashboard')} // Navigate to the dashboard page
           >
             Go to your Dashboard &nbsp; <MdDashboardCustomize />
           </Button>

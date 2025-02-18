@@ -12,7 +12,7 @@ const Loafer = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        background: `url('https://res.cloudinary.com/dqdcmluxj/image/upload/v1733950122/lodback_rehp6e.webp') no-repeat center center`, // Replace with your image URL
+        background: 'black', // Replace with your image URL
         backgroundSize: 'cover', // Ensures the image covers the entire background
         textAlign: 'center',
         position: 'relative',
@@ -21,39 +21,23 @@ const Loafer = () => {
 
       {/* Logo Behind the GIF */}
       <img
-        src={logo}
+        src="https://res.cloudinary.com/dqdcmluxj/image/upload/v1738033679/clideo_editor_d5e6636056944e7f9dbf6bc6d9acae0d-ezgif.com-crop_1_p7heeg.gif"
         alt="Logo"
-        style={{
-          position: 'absolute',
-          width: '220px',
-          height: '220px',
-          marginBottom: '115px',
-          opacity: 0.4,
-          zIndex: 1, // Place logo behind the GIF
-          animation: 'fadeInlogo 0.8s ease-in-out infinite alternate',
+        style={{  
+          width: '250px',
+          height: 'auto',
+          marginBottom: '5px',
         }}
       />
 
-      {/* Lottie Animation with Border Radius */}
-      <div
-        style={{
-          borderRadius: '100px',
-          overflow: 'hidden', // Ensures border-radius applies to the GIF
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Optional shadow for a modern look
-          position: 'relative',
-          opacity: 0.7, // Slight transparency for the logo
-          zIndex: 2, // Place GIF above the logo
-        }}
-      >
-        <Lottie animationData={animationData} loop style={{ width: 300, height: 300 }} />
-      </div>
 
       {/* Text Below the GIF */}
       <h1
         style={{
-          marginTop: '50px',
-          fontSize: '24px',
-          color: '#333',
+          marginTop: '10px',
+          marginBottom: '10px',
+          fontSize: '22px',
+          color: '#444',
           fontFamily: "'Roboto', sans-serif", // Modern font
           animation: 'fadeIn 1s ease-in-out infinite alternate', // Simple animation
           position: 'relative',
@@ -65,18 +49,21 @@ const Loafer = () => {
 
       {/* Circular Loader Below the Text */}
       <div
-        style={{
-          marginTop: '15px',
-          width: '50px',
-          height: '50px',
-          border: '5px solid #ddd',
-          borderTop: '5px solid #4CAF50', // Customizable color for the circular loader
-          borderRadius: '50%',
-          animation: 'spin 0.7s linear infinite', // Animation for spinning
-          position: 'relative',
-          zIndex: 2, // Place loader above the logo
-        }}
-      ></div>
+      style={{
+        marginTop: '15px',
+        width: '40px', // Slightly increased size for better visibility
+        height: '40px',
+        border: '4px solid #ddd',
+        borderTop: '4px solid rgb(83, 180, 245)', // Main color for the spinner
+        borderRadius: '50%',
+        animation: 'spin 0.7s linear infinite', // Spinning animation
+        position: 'relative',
+        zIndex: 2, // Place above other elements
+        boxShadow: '0 0 20px rgb(164, 201, 250)', // "Glove" glow effect
+        background: 'linear-gradient(45deg, rgba(15, 83, 172, 0.1), rgba(255, 255, 255, 0.1))', // Subtle inner glow
+      }}
+    ></div>
+
 
       {/* Keyframes for Animations */}
       <style>
