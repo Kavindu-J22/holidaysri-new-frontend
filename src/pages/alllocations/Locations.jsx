@@ -315,7 +315,7 @@ const ExploreDestinations = () => {
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             background: 'linear-gradient(135deg, rgb(53, 51, 51) 0%, rgb(26, 25, 25) 100%)',
             backdropFilter: "blur(10px)",
-            color: "rgb(171, 178, 194)",
+            color: "rgb(208, 213, 223)",
             border: '1px solid rgba(255, 255, 255, 0.12)',
             position: "relative",
             transition: "transform 0.3s ease",
@@ -340,16 +340,16 @@ const ExploreDestinations = () => {
               {location.locationName}
             </h3>
             
-            <p style={{ margin: "5px 0", color: "rgb(156, 157, 160)" }}>
+            <p style={{ margin: "5px 0", color: "rgb(208, 213, 223)" }}>
               <strong>Province:</strong> {location.province}
             </p>
-            <p style={{ margin: "5px 0", color: "rgb(156, 157, 160)" }}>
+            <p style={{ margin: "5px 0", color: "rgb(208, 213, 223)" }}>
               <strong>District:</strong> {location.district}
             </p>
-            <p style={{ margin: "5px 0", color: "#7f8c8d" }}>
+            <p style={{ margin: "5px 0", color: "rgb(209, 231, 221)" }}>
               <strong>Climate:</strong> {location.climate}
             </p>
-            <p style={{ margin: "10px 0", color: "rgb(134, 136, 141)" }}>
+            <p style={{ margin: "10px 0", color: "rgb(187, 192, 201)" }}>
               {showMore[location._id]
                 ? location.details
                 : `${location.details.substring(0, 100)}...`}
