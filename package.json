@@ -24,7 +24,7 @@
     "axios": "^1.6.7",
     "chart.js": "^4.4.7",
     "crypto-js": "^4.2.0",
-    "date-fns": "^2.29.3",
+    "date-fns": "^3.2.0",
     "download": "^8.0.0",
     "firebase": "^10.9.0",
     "fortawesome": "^0.0.1-security",
