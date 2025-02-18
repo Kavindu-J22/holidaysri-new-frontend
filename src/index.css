@@ -5,11 +5,16 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 75%;
+}
+
 body {
     margin: 0;
     padding: 0;
     background-color: #000000;
     overflow-x: hidden;
+    font-size: 75%;
 }
 :root {
 
