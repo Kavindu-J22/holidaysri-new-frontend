@@ -188,7 +188,7 @@ const AddHotel = () => {
   useEffect(() => {
     const fetchLocations = async () => {
         try {
-        const response = await axios.get('http://localhost:8000/location/');
+        const response = await axios.get('https://holidaysri-backend.onrender.com/location/');
         setLocations(response.data);
         } catch (error) {
         console.error('Error fetching locations:', error);
@@ -201,7 +201,7 @@ const AddHotel = () => {
       async function fetchRateData() {
         try {
           // Fetch rate data based on the id
-          const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
+          const response = await axios.get(`https://holidaysri-backend.onrender.com/rate/get/${id}`);
           setData(response.data.rate);
           setHotelAdvertiseRate(response.data.rate.hotelAdvertiseRate / response.data.rate.HSCRate);
           setHotelRoomAditionalRoomRate(response.data.rate.hotelRoomAditionalRoomRate / response.data.rate.HSCRate);

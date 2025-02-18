@@ -29,7 +29,7 @@ const PromoCodePage = () => {
   useEffect(() => {
     console.log('Fetching all promo codes for validation');
     
-    axios.get('http://localhost:8000/newPromocodes/all')
+    axios.get('https://holidaysri-backend.onrender.com/newPromocodes/all')
       .then(response => {
         // Ensure response data is in the expected format
         if (Array.isArray(response.data)) {
@@ -111,7 +111,7 @@ const PromoCodePage = () => {
       : promoCode;
   
     try {
-      const response = await axios.get('http://localhost:8000/newPromocodes/all');
+      const response = await axios.get('https://holidaysri-backend.onrender.com/newPromocodes/all');
       const userEmail = localStorage.getItem('userEmail');
       
       if (Array.isArray(response.data)) {

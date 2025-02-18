@@ -12,7 +12,7 @@ const TextPage = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(`http://localhost:8000/rate/get/${id}`);
+        const response = await axios.get(`https://holidaysri-backend.onrender.com/rate/get/${id}`);
         setData(response.data.rate);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -31,7 +31,7 @@ const TextPage = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`http://localhost:8000/rate/updateRate/${id}`, data);
+      await axios.put(`https://holidaysri-backend.onrender.com/rate/updateRate/${id}`, data);
       alert('Record updated successfully!');
     } catch (error) {
       console.error('Error updating record:', error);

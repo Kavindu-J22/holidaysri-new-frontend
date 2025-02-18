@@ -101,7 +101,7 @@ const AddLocation = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:8000/location/add', locationData);
+      const response = await axios.post('https://holidaysri-backend.onrender.com/location/add', locationData);
       setSuccess('Location added successfully!');
       setError('');
       // Reset form fields

@@ -56,7 +56,7 @@ const LoginForm = () => {
             };
 
             // Save the user to MongoDB
-            const apiResponse = await fetch("http://localhost:8000/api/auth/registeruser", {
+            const apiResponse = await fetch("https://holidaysri-backend.onrender.com/api/auth/registeruser", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -99,7 +99,7 @@ const LoginForm = () => {
                 contactNumber: contactNumber,
             };
 
-            const updateResponse = await fetch(`http://localhost:8000/api/user/update-contact/${userEmail}`, {
+            const updateResponse = await fetch(`https://holidaysri-backend.onrender.com/api/user/update-contact/${userEmail}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
