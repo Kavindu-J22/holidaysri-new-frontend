@@ -1044,7 +1044,8 @@ const validateStep5 = () => {
   };
 
   return (
-    <Container sx={{ mt: 8, p: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
+    <div style={{ padding: "10px 20px", margin: "0 auto", maxWidth: "100%", marginTop: "70px" }}>
+    <Container sx={{ p: 4, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
       <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
       <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2', display: 'flex', alignItems: 'center' }}>
@@ -2931,6 +2932,7 @@ const validateStep5 = () => {
       </Modal>
 
     </Container>
+    </div>
   );
 };
 
