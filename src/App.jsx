@@ -87,6 +87,8 @@ import PromocodeCheckout from "./components/new-Change/paymentAndCheckoutPages/p
 import PromoHscpayments from "./components/new-Change/paymentAndCheckoutPages/HscPaymentPagePromocode";
 import NewDestination from "./pages/alllocations/newDestination";
 import HotelPaymentPagePromo from "./components/new-Change/paymentAndCheckoutPages/hotelAddpaymentsPage";
+import PostYOurAdd from "./components/new-Change/postYourAdd";
+import AddHotels from "./components/hotel/AddHotel/AddHotelAdd";
 
 // Old Imports
 import LoginMobile from "./components/hotel/Login/LoginMobile";
@@ -99,62 +101,62 @@ import RatesPage from "./components/Offers/Offers";
 // Sidebar items with icons
 const navItems = [
   { name: "All Advertisements", path: "/", icon: <HomeIcon /> },
-  { name: "Post Your Advertiesment", path: "/destinations", icon: <CampaignIcon /> },
-  { name: "Plan Your Dream Tour with Us", path: "/destinations", icon: <AirplaneTicketIcon /> },
+  { name: "Post Your Advertiesment", path: "/postYourAdd", icon: <CampaignIcon /> },
+  { name: "Plan Your Dream Tour with Us", path: "/#", icon: <AirplaneTicketIcon /> },
   { name: "Explore Destinations", path: "/destinations", icon: <TravelExploreIcon /> },
-  { name: "Hotels & Accommodations", path: "/hotels", icon: <HotelIcon /> },
-  { name: "Cafes & restaurants", path: "/hotels", icon: <IoRestaurantSharp /> },
-  { name: "Foods & Beverages", path: "/hotels", icon: <Fastfood /> },
-  { name: "Live Rides Updates", path: "/vehicles", icon: <DepartureBoardIcon /> },
-  { name: "Vehicle Rentals & Hire Services", path: "/vehicles", icon: <DirectionsCarIcon /> },
+  { name: "Hotels & Accommodations", path: "/#", icon: <HotelIcon /> },
+  { name: "Cafes & restaurants", path: "/#", icon: <IoRestaurantSharp /> },
+  { name: "Foods & Beverages", path: "/#", icon: <Fastfood /> },
+  { name: "Live Rides Updates", path: "/#", icon: <DepartureBoardIcon /> },
+  { name: "Vehicle Rentals & Hire Services", path: "/#", icon: <DirectionsCarIcon /> },
   { name: "Promo codes & Travel Agents", path: "/Promocodes", icon: <LocalOfferIcon /> },
-  { name: "Find Travel Budys", path: "/travel-partner", icon: <GroupsIcon /> },
-  { name: "Expert Tour Guiders", path: "/tour-guide", icon: <GuideIcon /> },
+  { name: "Find Travel Budys", path: "/#", icon: <GroupsIcon /> },
+  { name: "Expert Tour Guiders", path: "/#", icon: <GuideIcon /> },
   {
     name: "Other Special Categories",
     icon: <BsFillMotherboardFill />,
     subcategories: [
-      { name: "Rent, Buy Or Sell Your Property", path: "/other-categories/doctors", icon: <AiFillPropertySafety /> },
-      { name: "Meet Expert Doctors", path: "/other-categories/doctors", icon: <MedicalServicesIcon /> },
-      { name: "Professional Lawyers", path: "/other-categories/lawyers", icon: <GavelIcon /> }, 
-      { name: "Experienced Advisors & Counselors", path: "/other-categories/consultants", icon: <RiMentalHealthFill /> },
-      { name: "Expert Architects", path: "/other-categories/consultants", icon: <MdArchitecture /> },
-      { name: "Talented Entertainers", path: "/other-categories/consultants", icon: <MusicNoteIcon  /> },
-      { name: "Expert Event Planners", path: "/other-categories/consultants", icon: <FaPersonBurst  /> },
-      { name: "Creative Photographers", path: "/other-categories/consultants", icon: <CameraAltIcon  /> },
-      { name: "Compassionate Caregivers & Earn Time Currency", path: "/other-categories/consultants", icon: <FaPersonBreastfeeding  /> },
-      { name: "Trusted Astrologists", path: "/other-categories/consultants", icon: <FaStroopwafel  /> },
-      { name: "Other Professionals & Services", path: "/other-categories/consultants", icon: <FaPersonHalfDress  /> },
-      { name: "Technology Related Services", path: "/other-categories/collectibles", icon: <GrTechnology /> },
-      { name: "Pet Care & Services", path: "/other-categories/consultants", icon: <MdOutlinePets /> },
-      { name: "Emergency Services", path: "/other-categories/consultants", icon: <FaHelmetSafety /> },
-      { name: "Educational & Tutoring Services", path: "/other-categories/collectibles", icon: <MdCastForEducation /> },
-      { name: "Exclusive Gift Packs", path: "/other-categories/gift-packs", icon: <RedeemIcon /> },
-      { name: "Souvenirs & Collectibles", path: "/other-categories/collectibles", icon: <CategoryIcon /> },
-      { name: "Other Accessories & Tech Gadgets", path: "/other-categories/collectibles", icon: <FaSitemap /> },
-      { name: "Fashion & Clothing Items", path: "/other-categories/collectibles", icon: <GiClothes  /> },
-      { name: "Daily Grocery Essentials", path: "/other-categories/collectibles", icon: <ShoppingCartIcon /> },
-      { name: "Organic Herbal Products", path: "/other-categories/collectibles", icon: <SpaIcon  /> },
-      { name: "Rent a Land for Camping or Parking purpose's ", path: "/other-categories/collectibles", icon: <GiCampingTent /> },
-      { name: "Fitness & Health Support : Gym, Spas, Yoga, Ect.", path: "/other-categories/collectibles", icon: <IoFitness  /> },
-      { name: "Exciting Job Opportunities", path: "/other-categories/consultants", icon: <WorkIcon  /> },
-      { name: "Crypto Consulting & Signals", path: "/other-categories/consultants", icon: <TrendingUpIcon  /> },
+      { name: "Rent, Buy Or Sell Your Property", path: "/#", icon: <AiFillPropertySafety /> },
+      { name: "Meet Expert Doctors", path: "/#", icon: <MedicalServicesIcon /> },
+      { name: "Professional Lawyers", path: "/#", icon: <GavelIcon /> }, 
+      { name: "Experienced Advisors & Counselors", path: "/#", icon: <RiMentalHealthFill /> },
+      { name: "Expert Architects", path: "/#", icon: <MdArchitecture /> },
+      { name: "Talented Entertainers", path: "/#", icon: <MusicNoteIcon  /> },
+      { name: "Expert Event Planners", path: "/#", icon: <FaPersonBurst  /> },
+      { name: "Creative Photographers", path: "/#", icon: <CameraAltIcon  /> },
+      { name: "Compassionate Caregivers & Earn Time Currency", path: "/#", icon: <FaPersonBreastfeeding  /> },
+      { name: "Trusted Astrologists", path: "/#", icon: <FaStroopwafel  /> },
+      { name: "Other Professionals & Services", path: "/#", icon: <FaPersonHalfDress  /> },
+      { name: "Technology Related Services", path: "/#", icon: <GrTechnology /> },
+      { name: "Pet Care & Services", path: "/#", icon: <MdOutlinePets /> },
+      { name: "Emergency Services", path: "/#", icon: <FaHelmetSafety /> },
+      { name: "Educational & Tutoring Services", path: "/#", icon: <MdCastForEducation /> },
+      { name: "Exclusive Gift Packs", path: "/#", icon: <RedeemIcon /> },
+      { name: "Souvenirs & Collectibles", path: "/#", icon: <CategoryIcon /> },
+      { name: "Other Accessories & Tech Gadgets", path: "/#", icon: <FaSitemap /> },
+      { name: "Fashion & Clothing Items", path: "/#", icon: <GiClothes  /> },
+      { name: "Daily Grocery Essentials", path: "/#", icon: <ShoppingCartIcon /> },
+      { name: "Organic Herbal Products", path: "/#", icon: <SpaIcon  /> },
+      { name: "Rent a Land for Camping or Parking purpose's ", path: "/#", icon: <GiCampingTent /> },
+      { name: "Fitness & Health Support : Gym, Spas, Yoga, Ect.", path: "/#", icon: <IoFitness  /> },
+      { name: "Exciting Job Opportunities", path: "/#", icon: <WorkIcon  /> },
+      { name: "Crypto Consulting & Signals", path: "/#", icon: <TrendingUpIcon  /> },
     ],
   },
-  { name: "Foreign Tour Packages ", path: "/tour-packages", icon: <TourIcon /> },
-  { name: "Local Tour Packages", path: "/tour-packages", icon: <HikingIcon /> },
-  { name: "Customize Tour Package", path: "/tour-packages", icon: <CardTravelIcon /> },
-  { name: "Events Updates & Manage or Customize Your Event", path: "/events-manage", icon: <EventIcon /> },
-  { name: "Delivery Partners", path: "/tour-guide", icon: <MdDeliveryDining /> },
-  { name: "Travel Health & Safety", path: "/tour-guide", icon: <MdHealthAndSafety /> },
-  { name: "Memories, Gallery & Share Your Ideas With Others", path: "/photos", icon: <PhotoLibraryIcon /> },
-  { name: "Donations / Raise Your Fund", path: "/photos", icon: <BiSolidDonateHeart /> },
-  { name: "Exclusive Offers & Promotions", path: "/prising", icon: <FlashOnIcon /> },
+  { name: "Foreign Tour Packages ", path: "/#", icon: <TourIcon /> },
+  { name: "Local Tour Packages", path: "/#", icon: <HikingIcon /> },
+  { name: "Customize Tour Package", path: "/#", icon: <CardTravelIcon /> },
+  { name: "Events Updates & Manage or Customize Your Event", path: "/#", icon: <EventIcon /> },
+  { name: "Delivery Partners", path: "/#", icon: <MdDeliveryDining /> },
+  { name: "Travel Health & Safety", path: "/#", icon: <MdHealthAndSafety /> },
+  { name: "Memories, Gallery & Share Your Ideas With Others", path: "/#", icon: <PhotoLibraryIcon /> },
+  { name: "Donations / Raise Your Fund", path: "/#", icon: <BiSolidDonateHeart /> },
+  { name: "Exclusive Offers & Promotions", path: "/#", icon: <FlashOnIcon /> },
   { name: "Pricing & Memberships", path: "/prising", icon: <AttachMoneyIcon /> },
   { name: "Unlock Your Holidaysri Coins and Treasure", path: "/coins", icon: <CurrencyExchangeIcon /> },
-  { name: "Gift, Rewards and Tasks for Earning : Mission Board", path: "/coins", icon: <FaGifts /> },
-  { name: "Com.Partners & Partnerships", path: "/partners", icon: <HandshakeIcon /> },
-  { name: "Customer Support & Feedback", path: "/partners", icon: <SupportAgentIcon /> },
+  { name: "Gift, Rewards and Tasks for Earning : Mission Board", path: "/#", icon: <FaGifts /> },
+  { name: "Com.Partners & Partnerships", path: "/#", icon: <HandshakeIcon /> },
+  { name: "Customer Support & Feedback", path: "/#", icon: <SupportAgentIcon /> },
 ];
 
 // Component for rendering pages
@@ -670,7 +672,9 @@ const SidebarWithNavbar = () => {
     <Route path="/promoCheckouts" element={<PromocodeCheckout />} />
     <Route path="/HSCPaymentPromocode" element={<PromoHscpayments />} />
     <Route path="/destination/:id" element={<NewDestination />} />
+    <Route path="/HotelAddsPublish" element={<AddHotels />} />
     <Route path="/hotelAddpaymentsPage" element={<HotelPaymentPagePromo />} />
+    <Route path="/postYourAdd" element={<PostYOurAdd />} />
 
     {/* No-side bar pages */}
     <Route path="/register" element={<NewRegister />} />
